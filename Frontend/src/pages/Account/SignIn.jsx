@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { logoLight } from "../../assets/images";
 import useApiFetch from "../../hooks/useApiFetch";
 import { data } from "autoprefixer";
@@ -16,8 +16,6 @@ const SignIn = () => {
   const [errPassword, setErrPassword] = useState("");
   // ============= Error Msg End here ===================
   const [successMsg, setSuccessMsg] = useState("");
-  // ============= useAuth and Navigate Start here =============
-  const navigate = useNavigate();
   // ============= Event Handler Start here =============
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -52,9 +50,7 @@ const SignIn = () => {
           password: password,
         },
         success: (data) => {
-          login(data.role);
-          navigate("/");
-          // window.location = "/";
+          window.location = "/";
           Cookies.set("token", `Bearer ${data.token}`);
           setEmail("");
           setPassword("");
