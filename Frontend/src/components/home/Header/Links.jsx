@@ -12,9 +12,9 @@ const NavLink = ({ to, text }) => (
 );
 
 const Links = () => {
-  const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
 
   // function logout() {
     // constructor propTypes = {
@@ -23,7 +23,15 @@ const Links = () => {
   // }
 
   useEffect(() => {
-    getUser();
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (storedUser) {
+      setLoggedIn(true);
+      setUser(storedUser);
+      setLoading(false);
+    } else {
+      getUser();
+    }
   }, []);
 
   function getUser() {
@@ -35,12 +43,18 @@ const Links = () => {
         setLoggedIn(true);
         setUser(res?.user);
         setLoading(false);
+        localStorage.setItem("user", JSON.stringify(res?.user));
+      },
+      error: () => {
+        setLoading(false);
       },
     });
   }
+
   if (loading) {
-    return <div> Loading... </div>;
+    return <p>Loading...</p>;
   }
+
   return (
     <>
       {!loggedIn ? (
