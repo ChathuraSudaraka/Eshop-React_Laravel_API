@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ForgotPassModal from "./Modal/ForgotPasswordModal";
+import useApiFetch from "../../hooks/useApiFetch";
 
 const FPASS = () => {
   // ============= Initial State Start here =============
@@ -16,9 +17,7 @@ const FPASS = () => {
     // Email validation regular expression
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!enteredEmail) {
-      setErrEmail("Enter your email");
-    } else if (!emailRegex.test(enteredEmail)) {
+    if (enteredEmail.trim() !== "" && !emailRegex.test(enteredEmail)) {
       setErrEmail("Enter a valid email address");
     }
   };
@@ -29,6 +28,35 @@ const FPASS = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleSubmit = async () => {
+    // Email validation regular expression
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!email) {
+      setErrEmail("Enter your email");
+    } else if (!emailRegex.test(email)) {
+      setErrEmail("Enter a valid email address");
+    } else {
+      setErrEmail(""); // Clear the error message if the email is valid
+
+      try {
+        const response = await useApiFetch({
+          method: "POST",
+          url: "/forgot-password",
+          body: {
+            email: email,
+          },
+          success: (data) => {
+            console.log("Success:", data);
+            openModal();
+          },
+        });
+      } catch (error) {
+        console.error("Error in forgot password API call:", error);
+      }
+    }
   };
 
   return (
@@ -58,13 +86,13 @@ const FPASS = () => {
           </p>
         )}
         <button
-          onClick={handleEmail}
+          onClick={handleSubmit}
           className="bg-primeColor hover:bg-black text-gray-200 hover:text-white w-full h-10 rounded-md duration-300"
         >
           Continue
         </button>
       </div>
-      {isModalOpen && <ForgotPassModal closeModal={closeModal} />}
+      {isModalOpen && <ForgotPassModal onClose={closeModal} />}
     </div>
   );
 };
