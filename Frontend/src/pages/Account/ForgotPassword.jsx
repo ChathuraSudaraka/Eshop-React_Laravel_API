@@ -2,8 +2,26 @@ import React, { useState } from "react";
 import ForgotPassModal from "./Modal/ForgotPasswordModal";
 
 const FPASS = () => {
+  // ============= Initial State Start here =============
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState("");
+  // ============= Error msg Start here =============
+  const [errEmail, setErrEmail] = useState("");
+
+  const handleEmail = (e) => {
+    const enteredEmail = e.target.value;
+    setEmail(enteredEmail);
+    setErrEmail("");
+
+    // Email validation regular expression
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!enteredEmail) {
+      setErrEmail("Enter your email");
+    } else if (!emailRegex.test(enteredEmail)) {
+      setErrEmail("Enter a valid email address");
+    }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -11,10 +29,6 @@ const FPASS = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
   };
 
   return (
@@ -35,13 +49,16 @@ const FPASS = () => {
           type="email"
           placeholder="john@workemail.com"
           value={email}
-          onChange={handleEmailChange}
+          onChange={handleEmail}
         />
-        <p className="text-sm text-red-500 font-semibold px-4">
-          <span className="font-bold italic mr-1">!</span>
-        </p>
+        {errEmail && (
+          <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
+            <span className="font-bold italic mr-1">!</span>
+            {errEmail}
+          </p>
+        )}
         <button
-          onClick={openModal}
+          onClick={handleEmail}
           className="bg-primeColor hover:bg-black text-gray-200 hover:text-white w-full h-10 rounded-md duration-300"
         >
           Continue

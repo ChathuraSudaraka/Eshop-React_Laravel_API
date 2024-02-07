@@ -25,3 +25,10 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 Route::post('/register', [RegisteredUserController::class, 'store']);
 Route::post('/login', [AuthenticatedSessionController::class, 'create']);
+Route::middleware(['auth:sanctum'])->post('/logout', function(Request $request) {
+    $request->user()->currentAccessToken()->delete();
+    return response()->json([
+        "status" => "success",
+        "message" => "Logged out successfully"
+    ]);
+});

@@ -3,11 +3,9 @@ import { Link } from "react-router-dom";
 import useApiFetch from "../../../hooks/useApiFetch";
 import Cookies from "js-cookie";
 
-const NavLink = ({ to, text, }) => (
+const NavLink = ({ to, text }) => (
   <Link to={to}>
-    <li
-      className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer"
-    >
+    <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
       {text}
     </li>
   </Link>
@@ -17,13 +15,6 @@ const Links = () => {
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState({});
-
-  function logout() {
-    // Clear the user cookie and update the component state
-    Cookies.remove("userCookie"); // Change "userCookie" to your actuak cookie name
-    setLoggedIn(false);
-    setUser({});
-  }
 
   useEffect(() => {
     getUser();
@@ -41,9 +32,21 @@ const Links = () => {
       },
     });
   }
+
+  function logout() {
+    useApiFetch({
+      method: "POST",
+      url: "/logout",
+      body: {},
+      success: () => {
+        Cookies.remove("token");
+        setLoggedIn(false);
+      },
+    });
+  }
+
   if (loading) {
     // return <div> Loading... </div>;
-  } else {
   }
   return (
     <>

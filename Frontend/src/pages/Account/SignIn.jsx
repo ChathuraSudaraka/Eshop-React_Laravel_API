@@ -3,10 +3,11 @@ import { BsCheckCircleFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import { logoLight } from "../../assets/images";
 import useApiFetch from "../../hooks/useApiFetch";
-import { data } from "autoprefixer";
 import Cookies from "js-cookie";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignIn = () => {
+  const [showPassword, setShowPassword] = useState(false);
   // ============= Initial State Start here =============
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +29,9 @@ const SignIn = () => {
     setErrPassword("");
   };
   // ============= Event Handler End here ===============
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const handleSignUp = async (e) => {
     e.preventDefault();
 
@@ -52,7 +56,7 @@ const SignIn = () => {
           password: password,
         },
         success: (data) => {
-          navigate('/');
+          navigate("/");
           // window.location = "/";
           Cookies.set("token", `Bearer ${data.token}`);
           setEmail("");
@@ -175,7 +179,7 @@ const SignIn = () => {
                 </div>
 
                 {/* Password */}
-                <div className="flex flex-col gap-.5">
+                <div className="flex flex-col gap-.5 relative">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
                     Password
                   </p>
@@ -183,9 +187,16 @@ const SignIn = () => {
                     onChange={handlePassword}
                     value={password}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Create password"
                   />
+                  <span
+                    onClick={togglePasswordVisibility}
+                    className="cursor-pointer absolute top-10 right-3 transform -translate-y-1/2"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+
                   {errPassword && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
                       <span className="font-bold italic mr-1">!</span>
