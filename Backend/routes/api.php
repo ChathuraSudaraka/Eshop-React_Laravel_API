@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\OtpverifyController;
 use App\Http\Controllers\PasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,3 +36,4 @@ Route::middleware(['auth:sanctum'])->post('/logout', function (Request $request)
 });
 
 Route::post('/forgot-password', [PasswordController::class, 'forgotPassword']);
+Route::post('/otp-verify', [OtpverifyController::class, 'otpVerify']);

@@ -73,5 +73,6 @@ class PasswordController extends Controller
             'message' => $output['message'],
             'pendingRequests' => $output['pendingRequests'],
         ]);
+        
     }
 }

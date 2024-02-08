@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import OtpInput from "react-otp-input";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useApiFetch from "../../../hooks/useApiFetch";
 
 Modal.setAppElement("#root"); // Set the root element for accessibility
 
@@ -22,19 +23,40 @@ const customStyles = {
   },
 };
 
-const ForgotPassModal = ({ closeModal }) => {
-  const [otp, setOtp] = useState("");
+const ForgotPassModal = ({ isOpen, closeModal }) => {
+  // const [isModalOpen, setIsModalOpen] = useState(true);
 
-  const handleUpdate = () => {
-    closeModal();
+  const [otp, setOtp] = useState("");
+  const navigate = useNavigate();
+
+  // const closeModal = () => {
+  //   setIsModalOpen(false);
+  // };
+
+  const handleUpdate = async () => {
+    if (otp.length !== 6) {
+      alert("Please enter a valid OTP");
+    } else {
+      try {
+        const response = await useApiFetch({
+          method: "POST",
+          url: "/otp-verify",
+          body: {
+            otp: otp,
+          },
+          success: (data) => {
+            closeModal();
+            navigate("/changepass");
+          },
+        });
+      } catch (error) {
+        console.error("Error in login API call:", error);
+      }
+    }
   };
 
   return (
-    <Modal
-      isOpen={true}
-      onRequestClose={closeModal}
-      style={customStyles}
-    >
+    <Modal isOpen={isOpen} style={customStyles} onRequestClose={closeModal}>
       <div className="relative border border-gray-200 dark:border-border-color dark:bg-blog-component-bg bg-white rounded-lg w-full max-w-md p-4">
         <div className="text-center">
           <h3 className="text-lg font-medium text-gray-900">Enter OTP</h3>
@@ -52,14 +74,20 @@ const ForgotPassModal = ({ closeModal }) => {
           />
         </div>
         <div className="mt-4 flex justify-end">
-          <Link
-            to="/changepass"
+          <button
             type="button"
             className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
             onClick={handleUpdate}
           >
             Submit
-          </Link>
+          </button>
+          <button
+            onClick={closeModal}
+            type="button"
+            className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
+          >
+            Close
+          </button>
         </div>
       </div>
     </Modal>

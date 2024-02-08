@@ -26,10 +26,6 @@ const FPASS = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   const handleSubmit = async () => {
     // Email validation regular expression
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,7 +36,6 @@ const FPASS = () => {
       setErrEmail("Enter a valid email address");
     } else {
       setErrEmail(""); // Clear the error message if the email is valid
-
       try {
         const response = await useApiFetch({
           method: "POST",
@@ -92,7 +87,12 @@ const FPASS = () => {
           Continue
         </button>
       </div>
-      {isModalOpen && <ForgotPassModal onClose={closeModal} />}
+      {isModalOpen && (
+        <ForgotPassModal
+          isOpen={isModalOpen}
+          closeModal={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
