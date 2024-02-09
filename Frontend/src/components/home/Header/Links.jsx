@@ -17,7 +17,15 @@ const Links = () => {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    getUser();
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (storedUser) {
+      setLoggedIn(true);
+      setUser(storedUser);
+      setLoading(false);
+    } else {
+      getUser();
+    }
   }, []);
 
   function getUser() {
@@ -26,9 +34,14 @@ const Links = () => {
       url: "/user",
       notify: false,
       success: (res) => {
+        console.log(res?.user);
+
         setLoggedIn(true);
         setUser(res?.user);
         setLoading(false);
+
+        // Store user data in local storage
+        localStorage.setItem("user", JSON.stringify(res?.user));
       },
     });
   }
@@ -39,33 +52,42 @@ const Links = () => {
       url: "/logout",
       body: {},
       success: () => {
+        // Remove user data from local storage
+        localStorage.removeItem("user");
         Cookies.remove("token");
         setLoggedIn(false);
       },
     });
   }
 
-  if (loading) {
-    // return <div> Loading... </div>;
-  }
   return (
     <>
-      {!loggedIn ? (
-        <>
-          <NavLink to="/signin" text="Login" />
-          <NavLink to="/signup" text="Sign Up" />
-        </>
+      {loading ? (
+        <div>Loading...</div>
       ) : (
         <>
-          <NavLink to="/profile" text="Profile" />
-          <NavLink to="/payment" text="Others" />
-          <NavLink to="/adminLogin" text="Admin" />
-          <li
-            className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer"
-            onClick={logout}
-          >
-            Log Out
-          </li>
+          {!loggedIn ? (
+            <>
+              <NavLink to="/signin" text="Login" />
+              <NavLink to="/signup" text="Sign Up" />
+            </>
+          ) : (
+            <>
+              {user.role_id === 1 && (
+                <>
+                  <NavLink to="/profile" text="Admin Profile" />
+                  <NavLink to="/other" text="Admin Other" />
+                </>
+              )}
+              {user.role_id === 2 && <NavLink to="/profile" text="Profile" />}
+              <li
+                className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer"
+                onClick={logout}
+              >
+                Log Out
+              </li>
+            </>
+          )}
         </>
       )}
     </>

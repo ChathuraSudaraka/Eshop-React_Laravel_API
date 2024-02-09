@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
-
-    public function create(Request $request) 
+    public function create(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
@@ -25,14 +24,15 @@ class AuthenticatedSessionController extends Controller
                 "status" => "error",
                 "message" => "Invalid credentials",
             ], 401);
-
         }
+
+        $user = auth()->user();
 
         return response()->json([
             "status" => "success",
             "message" => "User logged in successfully",
-            "user" => auth()->user(),
-            "token" => auth()->user()->createToken("auth_token")->plainTextToken,
+            "user" => $user,
+            "token" => $user->createToken("auth_token")->plainTextToken,
         ]);
     }
 

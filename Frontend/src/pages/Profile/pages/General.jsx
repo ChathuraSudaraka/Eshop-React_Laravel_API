@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../layouts/sidebar/Sidebar";
-import { Select } from "@material-tailwind/react";
+import useApiFetch from "../../../hooks/useApiFetch";
 
 const General = () => {
   const [image, setImage] = useState(null);
@@ -98,6 +98,23 @@ const General = () => {
       setChangesMade(false); // Reset changesMade state after submission
     } else {
       console.log("Form is invalid. Please check the errors.");
+    }
+  };
+
+  const useEffect = async () => {
+    try {
+      // Fetch user data from an API
+      const response = await useApiFetch({
+        method: "GET",
+        url: "/user",
+        success: (data) => {
+          setFirstName(data.firstName);
+          setLastName(data.lastName);
+          setEmail(data.email);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
     }
   };
 

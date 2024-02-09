@@ -42,3 +42,6 @@ Route::post('/reset-password', [PasswordChangeController::class, 'resetPassword'
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/change-password', [PasswordChangeController::class, 'changePassword']);
 });
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::post('/apiadmin-login', [PasswordController::class, 'adminLogin']);
+// });

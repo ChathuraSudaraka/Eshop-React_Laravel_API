@@ -75,4 +75,34 @@ class PasswordController extends Controller
         ]);
 
     }
+
+    // public function adminLogin(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required',
+    //     ]);
+
+    //     $user = User::where('email', $request->email)->first();
+
+    //     if (!$user || !password_verify($request->password, $user->password)) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Invalid email or password.',
+    //         ], 401); // 401 for unauthorized access
+    //     }
+
+    //     // Check if the user has the admin role (assuming 'role_id' is the column name)
+    //     if ($user->role_id !== 1) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Access denied. User does not have admin privileges.',
+    //         ], 403); // 403 for forbidden access
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Login successful.',
+    //     ]);
+    // }
 }

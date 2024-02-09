@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { BsCheckCircleFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logoLight } from "../../assets/images";
+import useApiFetch from "../../hooks/useApiFetch";
 
 const AdminLogin = () => {
   // ============= Initial State Start here =============
@@ -11,9 +12,6 @@ const AdminLogin = () => {
   // ============= Error Msg Start here =================
   const [errEmail, setErrEmail] = useState("");
   const [errPassword, setErrPassword] = useState("");
-
-  // ============= Error Msg End here ===================
-  const [successMsg, setSuccessMsg] = useState("");
   // ============= Event Handler Start here =============
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -23,8 +21,9 @@ const AdminLogin = () => {
     setPassword(e.target.value);
     setErrPassword("");
   };
+  const navigate = useNavigate();
   // ============= Event Handler End here ===============
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
     if (!email) {
@@ -32,7 +31,7 @@ const AdminLogin = () => {
     }
 
     if (!password) {
-      setErrPassword("Create a password");
+      setErrPassword("Enter the password");
     } else {
       if (password.length < 6) {
         setErrPassword("Password must be at least 6 characters");
@@ -40,11 +39,21 @@ const AdminLogin = () => {
     }
     // ============== Getting the value ==============
     if (email && password) {
-      setSuccessMsg(
-        `Hello dear, Thank you for your attempt. We are processing to validate your access. Till then stay connected and additional assistance will be sent to you by your mail at ${email}`
-      );
-      setEmail("");
-      setPassword("");
+      try {
+        const response = await useApiFetch({
+          method: "POST",
+          url: "/apiadmin-login",
+          body: {
+            email: email,
+            password: password,
+          },
+          success: (data) => {
+            navigate('/admin')
+          },
+        });
+      } catch (error) {
+        console.error("Error during admin login:", error);
+      }
     }
   };
   return (
@@ -118,7 +127,7 @@ const AdminLogin = () => {
         </div>
       </div>
       <div className="w-full lgl:w-1/2 h-full">
-        {successMsg ? (
+        {/* {successMsg ? (
           <div className="w-full lgl:w-[500px] h-full flex flex-col justify-center">
             <p className="w-full px-4 py-10 text-green-500 font-medium font-titleFont">
               {successMsg}
@@ -131,8 +140,7 @@ const AdminLogin = () => {
                 Sign Up
               </button>
             </Link>
-          </div>
-        ) : (
+          </div> */}
           <form className="w-full lgl:w-[450px] h-screen flex items-center justify-center">
             <div className="px-6 py-4 w-full h-[90%] flex flex-col justify-center overflow-y-scroll scrollbar-thin scrollbar-thumb-primeColor">
               <h1 className="font-titleFont underline underline-offset-4 decoration-[1px] font-semibold text-3xl mdl:text-4xl mb-4">
@@ -146,6 +154,7 @@ const AdminLogin = () => {
                   </p>
                   <input
                     onChange={handleEmail}
+                    name="email"
                     value={email}
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                     type="email"
@@ -179,9 +188,10 @@ const AdminLogin = () => {
                   )}
                 </div>
 
-                <Link to="/admin">
+                <Link>
+                {/* to="/admin" */}
                   <button
-                    // onClick={handleSignUp}
+                    onClick={handleSignUp}
                     className="bg-primeColor hover:bg-black text-gray-200 hover:text-white cursor-pointer w-full text-base font-medium h-10 rounded-md  duration-300"
                   >
                     Sign In
@@ -199,7 +209,6 @@ const AdminLogin = () => {
               </div>
             </div>
           </form>
-        )}
       </div>
     </div>
   );
