@@ -69,10 +69,10 @@ class PasswordController extends Controller
         ]);
 
         return response()->json([
-            'status' => 'success',  
+            'status' => 'success',
             'message' => $output['message'],
             'pendingRequests' => $output['pendingRequests'],
         ]);
-        
+
     }
 }

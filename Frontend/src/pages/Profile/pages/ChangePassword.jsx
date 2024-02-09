@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "../layouts/sidebar/Sidebar";
+import useApiFetch from "../../../hooks/useApiFetch";
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -7,9 +8,13 @@ const ChangePassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     // Input validation
-    if (!currentPassword.trim() || !newPassword.trim() || !confirmPassword.trim()) {
+    if (
+      !currentPassword.trim() ||
+      !newPassword.trim() ||
+      !confirmPassword.trim()
+    ) {
       setError("All fields are required");
       return;
     }
@@ -17,10 +22,26 @@ const ChangePassword = () => {
     if (newPassword !== confirmPassword) {
       setError("New password and confirm password must match");
       return;
+    } else {
+      try {
+        const response = await useApiFetch({
+          method: "POST",
+          notify: true,
+          url: "/change-password",
+          body: {
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+            confirmPassword: confirmPassword,
+          },
+          success: (data) => {
+            console.log("Success:", data);
+          },
+        });
+      } catch (error) {
+        console.error("Error in change password API call:", error);
+        // Handle the error, you might want to set an error state or show a notification
+      }
     }
-
-    // Implement your logic to handle password change
-    console.log("Password changed successfully!");
   };
 
   return (
@@ -31,7 +52,10 @@ const ChangePassword = () => {
           <h2 className="text-2xl font-bold mb-4">Change Password</h2>
           <div className="bg-white p-4 border  border-gray-400 shadow">
             <div className="mb-4">
-              <label htmlFor="currentPassword" className="text-base font-semibold">
+              <label
+                htmlFor="currentPassword"
+                className="text-base font-semibold"
+              >
                 Current Password
               </label>
               <input
@@ -57,7 +81,10 @@ const ChangePassword = () => {
               />
             </div>
             <div className="mb-4">
-              <label htmlFor="confirmPassword" className="text-base font-semibold">
+              <label
+                htmlFor="confirmPassword"
+                className="text-base font-semibold"
+              >
                 Confirm New Password
               </label>
               <input

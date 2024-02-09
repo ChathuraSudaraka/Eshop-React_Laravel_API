@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ForgotPassModal from "./Modal/ForgotPasswordModal";
+import ForgotPassModal from "./Modal/OTPModal";
 import useApiFetch from "../../hooks/useApiFetch";
 
 const FPASS = () => {

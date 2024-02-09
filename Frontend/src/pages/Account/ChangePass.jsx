@@ -50,7 +50,7 @@ const ChangePass = () => {
       try {
         const response = await useApiFetch({
           method: "POST",
-          url: "/change-password",
+          url: "/reset-password",
           body: {
             newPassword: newPassword,
             email: email,

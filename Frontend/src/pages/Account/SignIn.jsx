@@ -57,7 +57,6 @@ const SignIn = () => {
         },
         success: (data) => {
           navigate("/");
-          // window.location = "/";
           Cookies.set("token", `Bearer ${data.token}`);
           setEmail("");
           setPassword("");

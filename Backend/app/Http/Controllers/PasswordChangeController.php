@@ -48,4 +48,32 @@ class PasswordChangeController extends Controller
             'message' => 'Password reset successfully.',
         ], 200);
     }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'currentPassword' => 'required',
+            'newPassword' => 'required|min:8',
+            'confirmPassword' => 'required|same:newPassword',
+        ]);
+
+        $user = auth()->user(); // Retrieve the authenticated user
+
+        // Verify the current password
+        if (!Hash::check($request->currentPassword, $user->password)) {
+            return response()->json([
+                'error' => 'The provided current password does not match our records.',
+            ], 400);
+        }
+
+        // Password verification passed, proceed with changing the password
+        $user->update([
+            'password' => Hash::make($request->newPassword),
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password changed successfully.'
+        ]);
+    }
 }
