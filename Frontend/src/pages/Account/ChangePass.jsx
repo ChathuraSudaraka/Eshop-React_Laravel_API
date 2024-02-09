@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import useApiFetch from "../../hooks/useApiFetch";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ChangePass = () => {
   const [newPassword, setNewPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
   const [isValidPasswords, setIsValidPasswords] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const email = queryParams.get("email");
+  const otp = queryParams.get("otp");
 
   const handleNewPasswordChange = (e) => {
     const inputPassword = e.target.value;
@@ -31,10 +38,34 @@ const ChangePass = () => {
     setShowPassword(!showPassword);
   };
 
-  const openModal = () => {
-    // You can check isValidPasswords before opening the modal
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // You can use 'email' and 'otp' here
+  }, [email, otp]);
+
+  const handlePassword = async () => {
+    // Assuming isValidPasswords is a function or variable indicating password validity
     if (isValidPasswords) {
-      // Open modal logic here
+      try {
+        const response = await useApiFetch({
+          method: "POST",
+          url: "/change-password",
+          body: {
+            newPassword: newPassword,
+            email: email,
+            otp: otp,
+          },
+          success: (data) => {
+            navigate("/correctPass");
+          },
+        });
+      } catch (error) {
+        console.error("Error in change password API call:", error);
+      }
+    } else {
+      // Handle invalid passwords (show an error message, etc.)
+      console.error("Invalid passwords");
     }
   };
 
@@ -103,7 +134,7 @@ const ChangePass = () => {
         )}
 
         <button
-          onClick={openModal}
+          onClick={handlePassword}
           className={`bg-primeColor hover:bg-black text-gray-200 hover:text-white w-full h-10 rounded-md duration-300 ${
             isValidPasswords ? "" : "cursor-not-allowed opacity-50"
           }`}

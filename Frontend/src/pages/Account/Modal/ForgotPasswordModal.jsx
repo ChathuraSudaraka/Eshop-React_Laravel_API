@@ -23,7 +23,7 @@ const customStyles = {
   },
 };
 
-const ForgotPassModal = ({ isOpen, closeModal }) => {
+const ForgotPassModal = ({ isOpen, closeModal, email }) => {
   // const [isModalOpen, setIsModalOpen] = useState(true);
 
   const [otp, setOtp] = useState("");
@@ -46,7 +46,7 @@ const ForgotPassModal = ({ isOpen, closeModal }) => {
           },
           success: (data) => {
             closeModal();
-            navigate("/changepass");
+            navigate(`/changepass?email=${email}&otp=${otp}`);
           },
         });
       } catch (error) {

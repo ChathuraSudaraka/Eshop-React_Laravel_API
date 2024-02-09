@@ -91,6 +91,7 @@ const FPASS = () => {
         <ForgotPassModal
           isOpen={isModalOpen}
           closeModal={() => setIsModalOpen(false)}
+          email={email}
         />
       )}
     </div>

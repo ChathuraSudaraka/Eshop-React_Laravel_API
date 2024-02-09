@@ -23,8 +23,6 @@ class OtpverifyController extends Controller
             ], 400);
         }
 
-        $otp->otp()->delete();
-
         return response()->json([
             'status' => 'success',
             'message' => 'OTP verified successfully.',
