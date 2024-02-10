@@ -75,18 +75,18 @@ const ForgotPassModal = ({ isOpen, closeModal, email }) => {
         </div>
         <div className="mt-4 flex justify-end">
           <button
-            type="button"
-            className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
-            onClick={handleUpdate}
-          >
-            Submit
-          </button>
-          <button
             onClick={closeModal}
             type="button"
             className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
           >
             Close
+          </button>
+          <button
+            type="button"
+            className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
+            onClick={handleUpdate}
+          >
+            Submit
           </button>
         </div>
       </div>

@@ -76,7 +76,8 @@ const Links = () => {
               {user.role_id === 1 && (
                 <>
                   <NavLink to="/profile" text="Admin Profile" />
-                  <NavLink to="/other" text="Admin Other" />
+                  <NavLink to="/admin" text="Admin Panel" />
+                  <NavLink to="/payment" text="Admin Other" />
                 </>
               )}
               {user.role_id === 2 && <NavLink to="/profile" text="Profile" />}
