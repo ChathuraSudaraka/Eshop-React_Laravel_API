@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import useApiFetch from "../../hooks/useApiFetch";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import sideStatus from "./ShopStatus";
+import { Link, useLocation } from "react-router-dom";
 import LeftSide from "./ShopStatus";
 
 const ChangePass = () => {
   const [newPassword, setNewPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
   const [isValidPasswords, setIsValidPasswords] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showRetypePassword, setShowRetypePassword] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
+  const [errNewPassword, setErrNewPassword] = useState("");
+  const [errRetypePassword, setErrRetypePassword] = useState("");
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -20,12 +22,14 @@ const ChangePass = () => {
   const handleNewPasswordChange = (e) => {
     const inputPassword = e.target.value;
     setNewPassword(inputPassword);
+    setErrNewPassword("");
     validatePasswords(inputPassword, retypePassword);
   };
 
   const handleRetypePasswordChange = (e) => {
     const inputPassword = e.target.value;
     setRetypePassword(inputPassword);
+    setErrRetypePassword("");
     validatePasswords(newPassword, inputPassword);
   };
 
@@ -37,18 +41,30 @@ const ChangePass = () => {
     setIsValidPasswords(isPasswordValid && doPasswordsMatch);
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const toggleNewPasswordVisibility = () => {
+    setShowNewPassword(!showNewPassword);
   };
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // You can use 'email' and 'otp' here
-  }, [email, otp]);
+  const toggleRetypePasswordVisibility = () => {
+    setShowRetypePassword(!showRetypePassword);
+  };
 
   const handlePassword = async () => {
-    // Assuming isValidPasswords is a function or variable indicating password validity
+    // Validate new password
+    if (!newPassword) {
+      setErrNewPassword("Enter new password");
+    } else if (newPassword.length < 6) {
+      setErrNewPassword("Password must be at least 6 characters");
+    }
+
+    // Validate retype password
+    if (!retypePassword) {
+      setErrRetypePassword("Retype new password");
+    } else if (retypePassword !== newPassword) {
+      setErrRetypePassword("Passwords do not match");
+    }
+
+    // If both passwords are valid, make API call
     if (isValidPasswords) {
       try {
         const response = await useApiFetch({
@@ -60,16 +76,12 @@ const ChangePass = () => {
             otp: otp,
           },
           success: (data) => {
-            // navigate("/correctPass");
             setSuccessMsg("Password changed successfully");
           },
         });
       } catch (error) {
         console.error("Error in change password API call:", error);
       }
-    } else {
-      // Handle invalid passwords (show an error message, etc.)
-      console.error("Invalid passwords");
     }
   };
 
@@ -82,12 +94,12 @@ const ChangePass = () => {
             <p className="w-full px-4 py-10 text-green-500 font-medium font-titleFont">
               {successMsg}
             </p>
-            <Link to="/signup">
+            <Link to="/signin">
               <button
                 className="w-full h-10 bg-primeColor text-gray-200 rounded-md text-base font-titleFont font-semibold 
             tracking-wide hover:bg-black hover:text-white duration-300"
               >
-                Sign Up
+                Login
               </button>
             </Link>
           </div>
@@ -98,7 +110,8 @@ const ChangePass = () => {
                 Change Password
               </h1>
               <div className="flex flex-col gap-3">
-                <div className="flex flex-col gap-.5">
+                {/* New Password */}
+                <div className="flex flex-col gap-.5 relative">
                   <label
                     htmlFor="newPassword"
                     className="text-base font-semibold text-gray-600"
@@ -108,21 +121,28 @@ const ChangePass = () => {
                   <input
                     id="newPassword"
                     className={`w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none ${
-                      isValidPasswords ? "border-gray-400" : "border-red-500"
-                    } outline-none`}
-                    type={showPassword ? "text" : "password"}
+                      errNewPassword ? "border-red-500" : "border-gray-400"
+                    }`}
+                    type={showNewPassword ? "text" : "password"}
                     placeholder="Enter new password"
                     value={newPassword}
                     onChange={handleNewPasswordChange}
                   />
                   <span
-                    onClick={togglePasswordVisibility}
-                    className="absolute right-3 top-2 cursor-pointer"
+                    onClick={toggleNewPasswordVisibility}
+                    className="absolute right-3 top-8 cursor-pointer"
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showNewPassword ? <FaEyeSlash /> : <FaEye />}
                   </span>
+                  {errNewPassword && (
+                    <p className="text-sm text-red-500 font-semibold px-4">
+                      <span className="font-bold italic mr-1">!</span>
+                      {errNewPassword}
+                    </p>
+                  )}
                 </div>
-                <div className="flex flex-col gap-.5">
+                {/* Retype New Password */}
+                <div className="flex flex-col gap-.5 relative">
                   <label
                     htmlFor="retypePassword"
                     className="text-base font-semibold text-gray-600"
@@ -132,28 +152,26 @@ const ChangePass = () => {
                   <input
                     id="retypePassword"
                     className={`w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none ${
-                      isValidPasswords ? "border-gray-400" : "border-red-500"
-                    } outline-none`}
-                    type={showPassword ? "text" : "password"}
+                      errRetypePassword ? "border-red-500" : "border-gray-400"
+                    }`}
+                    type={showRetypePassword ? "text" : "password"}
                     placeholder="Retype new password"
                     value={retypePassword}
                     onChange={handleRetypePasswordChange}
                   />
                   <span
-                    onClick={togglePasswordVisibility}
-                    className="absolute right-3 top-2 cursor-pointer"
+                    onClick={toggleRetypePasswordVisibility}
+                    className="absolute right-3 top-8 cursor-pointer"
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showRetypePassword ? <FaEyeSlash /> : <FaEye />}
                   </span>
+                  {errRetypePassword && (
+                    <p className="text-sm text-red-500 font-semibold px-4">
+                      <span className="font-bold italic mr-1">!</span>
+                      {errRetypePassword}
+                    </p>
+                  )}
                 </div>
-
-                {!isValidPasswords && (
-                  <p className="text-sm text-red-500 font-semibold px-4">
-                    <span className="font-bold italic mr-1">
-                      Passwords do not match or are too short
-                    </span>
-                  </p>
-                )}
 
                 <button
                   onClick={handlePassword}

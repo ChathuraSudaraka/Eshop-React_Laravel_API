@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { BsCheckCircleFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { logoLight } from "../../assets/images";
 import useApiFetch from "@/hooks/useApiFetch";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import LeftSide from "./ShopStatus";
@@ -133,11 +131,11 @@ const SignUp = () => {
     }
   };
   return (
-    <div className="w-full h-screen flex items-center justify-start">
+    <div className="w-full h-screen flex items-center justify-center">
       <LeftSide/>
       <div className="w-full lgl:w-1/2 h-full">
         {successMsg ? (
-          <div className="w-[500px]">
+          <div className="w-full lgl:w-[500px] h-full flex flex-col justify-center">
             <p className="w-full px-4 py-10 text-green-500 font-medium font-titleFont">
               {successMsg}
             </p>
@@ -269,7 +267,7 @@ const SignUp = () => {
                   )}
                 </div>
                 {/* Password */}
-                <div className="flex flex-col gap-.5">
+                <div className="flex flex-col gap-.5 relative">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
                     Password
                   </p>
@@ -282,7 +280,7 @@ const SignUp = () => {
                   />
                   <span
                     onClick={togglePasswordVisibility}
-                    className="cursor-pointer absolute right-9 transform -translate-y-1/2"
+                    className="cursor-pointer absolute top-10 right-3 transform -translate-y-1/2"
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </span>
