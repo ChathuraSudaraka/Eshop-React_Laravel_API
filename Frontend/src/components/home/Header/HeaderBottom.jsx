@@ -9,7 +9,7 @@ import { paginationItems } from "../../../constants/productBlock";
 import Links from "./Links";
 
 const HeaderBottom = () => {
-  const products = useSelector((state) => state.orebiReducer.products);
+  const products = useSelector((state) => state.eshopReducer.products);
   const [show, setShow] = useState(false);
   const [showUser, setShowUser] = useState(false);
   const navigate = useNavigate();

@@ -7,7 +7,7 @@ import ProductUpdate from "../layouts/modal/ProductUpdateModal";
 import { paginationItems } from "@/constants/productBlock";
 
 const UpdateProduct = () => {
-  const products = useSelector((state) => state.orebiReducer.products);
+  const products = useSelector((state) => state.eshopReducer.products);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
