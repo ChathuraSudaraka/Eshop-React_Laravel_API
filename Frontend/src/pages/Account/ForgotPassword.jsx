@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ForgotPassModal from "./Modal/OTPModal";
 import useApiFetch from "../../hooks/useApiFetch";
-import LeftSide from "../../components/Account/ShopStatus";
+import LeftSide from "./ShopStatus";
 
 const FPASS = () => {
   // ============= Initial State Start here =============

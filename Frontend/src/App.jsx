@@ -70,6 +70,7 @@ const router = createBrowserRouter(
       <Route path="/adminLogin" element={<AdminLogin />}></Route>
       <Route path="/forgotpassword" element={<FPASS />}></Route>
       <Route path="/changepass" element={<ChangePass />}></Route>
+      {/* ====================== Profile Route ==================== */}
       <Route path="/profile" element={<General />}></Route>
       <Route path="/changePassword" element={<ChangePassword />}></Route>
       <Route path="/paymentMethod" element={<PaymentMethod />}></Route>

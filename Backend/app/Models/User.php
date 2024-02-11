@@ -36,7 +36,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'email',
     ];
 
     /**
@@ -52,5 +51,9 @@ class User extends Authenticatable
     public function otp()
     {
         return $this->hasOne(Otp::class);
+    }
+
+    public function image() {
+        return $this->hasOne(ProfileImg::class);
     }
 }

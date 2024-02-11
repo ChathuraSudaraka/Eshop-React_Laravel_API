@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import LeftSide from "../../components/Account/ShopStatus";
+import LeftSide from "./ShopStatus";
 
 const PaymentSignUp = () => {
   // ============= Initial State Start here =============

@@ -7,6 +7,7 @@ const General = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [mobile, setM] = useState("");
 
   // Validation state variables
   const [firstNameError, setFirstNameError] = useState("");
@@ -101,22 +102,25 @@ const General = () => {
     }
   };
 
-  const useEffect = async () => {
-    try {
-      // Fetch user data from an API
-      const response = await useApiFetch({
-        method: "GET",
-        url: "/user",
-        success: (data) => {
-          setFirstName(data.firstName);
-          setLastName(data.lastName);
-          setEmail(data.email);
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
+  const getUser = async () => {
+    const response = await useApiFetch({
+      method: "GET",
+      url: "/user",
+      success: (data) => {
+        console.log("User data:", data);
+        setFirstName(data.user.fname);
+        setLastName(data.user.lname);
+        setEmail(data.user.email);
+        set(data.user.email);
+      },
+    });
   };
+
+  useEffect(() => {
+    (async () => {
+      await getUser();
+    })();
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -240,7 +244,7 @@ const General = () => {
                     }`}
                     type="number"
                     placeholder="Enter your mobile number"
-                    value={email}
+                    value={mobile}
                     onChange={handleEmailChange}
                     disabled={fieldsLocked}
                   />

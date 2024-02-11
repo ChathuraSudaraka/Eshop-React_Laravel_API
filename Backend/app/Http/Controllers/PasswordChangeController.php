@@ -35,10 +35,14 @@ class PasswordChangeController extends Controller
             ], 400);
         }
 
+        $user->update([
+            'password' => Hash::make($request->newPassword),
+        ]);
 
-        // Change the password
-        $user->password = Hash::make($request->newPassword);
-        $user->save();
+
+        // // Change the password
+        // $user->password = Hash::make($request->newPassword);
+        // $user->save();
 
         // Delete the used OTP (optional, depending on your logic)
         $otp->delete();

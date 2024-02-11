@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
+    /**
+     * Handle an incoming authentication request.
+     */
     public function create(Request $request)
     {
         $request->validate([
@@ -37,7 +40,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Handle an incoming authentication request (using LoginRequest).
      */
     public function store(LoginRequest $request): Response
     {

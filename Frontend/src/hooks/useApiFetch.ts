@@ -38,7 +38,7 @@ const useApiFetch = async (options: Options) => {
       ...headers,
       ...options.headers,
     },
-    body: JSON.stringify(options.body),
+    body: options.method === "GET" ? undefined : JSON.stringify(options.body),
   })
     .then((res) => res.json())
     .then((data) => {

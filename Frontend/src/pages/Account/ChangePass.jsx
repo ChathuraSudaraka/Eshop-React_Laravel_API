@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import useApiFetch from "../../hooks/useApiFetch";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import sideStatus from "../../components/Account/ShopStatus";
-import LeftSide from "../../components/Account/ShopStatus";
+import sideStatus from "./ShopStatus";
+import LeftSide from "./ShopStatus";
 
 const ChangePass = () => {
   const [newPassword, setNewPassword] = useState("");

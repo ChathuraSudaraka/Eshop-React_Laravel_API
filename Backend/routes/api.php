@@ -19,29 +19,32 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return response()->json([
-        'status' => 'success',
-        'user' => $request->user()
-    ]);
-});
-
+// Public Routes
 Route::post('/register', [RegisteredUserController::class, 'store']);
 Route::post('/login', [AuthenticatedSessionController::class, 'create']);
+Route::post('/forgot-password', [PasswordController::class, 'forgotPassword']);
+Route::post('/otp-verify', [OtpverifyController::class, 'otpVerify']);
+Route::post('/reset-password', [PasswordChangeController::class, 'resetPassword']);
+
+// Authenticated Routes with Sanctum authentication
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/change-password', [PasswordChangeController::class, 'changePassword']);
+    // Add other routes requiring Sanctum authentication here
+});
+
+// Logout with token deletion
 Route::middleware(['auth:sanctum'])->post('/logout', function (Request $request) {
     $request->user()->currentAccessToken()->delete();
     return response()->json([
         "status" => "success",
         "message" => "Logged out successfully"
     ]);
-});
+})->name('logout');
 
-Route::post('/forgot-password', [PasswordController::class, 'forgotPassword']);
-Route::post('/otp-verify', [OtpverifyController::class, 'otpVerify']);
-Route::post('/reset-password', [PasswordChangeController::class, 'resetPassword']);
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/change-password', [PasswordChangeController::class, 'changePassword']);
+// User endpoint requiring Sanctum authentication
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    return response()->json([
+        'status' => 'success',
+        'user' => $request->user()
+    ]);
 });
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::post('/apiadmin-login', [PasswordController::class, 'adminLogin']);
-// });

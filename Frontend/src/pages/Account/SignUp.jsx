@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { logoLight } from "../../assets/images";
 import useApiFetch from "@/hooks/useApiFetch";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import LeftSide from "../../components/Account/ShopStatus";
+import LeftSide from "./ShopStatus";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);

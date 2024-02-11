@@ -5,7 +5,7 @@ import { logoLight } from "../../assets/images";
 import useApiFetch from "../../hooks/useApiFetch";
 import Cookies from "js-cookie";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import LeftSide from "../../components/Account/ShopStatus";
+import LeftSide from "./ShopStatus";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);

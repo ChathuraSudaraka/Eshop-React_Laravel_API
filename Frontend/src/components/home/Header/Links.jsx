@@ -56,6 +56,7 @@ const Links = () => {
         localStorage.removeItem("user");
         Cookies.remove("token");
         setLoggedIn(false);
+        setLoading(false);
       },
     });
   }
