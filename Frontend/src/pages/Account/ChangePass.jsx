@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import useApiFetch from "../../hooks/useApiFetch";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LeftSide from "./ShopStatus";
 
 const ChangePass = () => {
@@ -18,6 +18,16 @@ const ChangePass = () => {
   const queryParams = new URLSearchParams(location.search);
   const email = queryParams.get("email");
   const otp = queryParams.get("otp");
+
+  const navigateTo = useNavigate();
+  useEffect(() => {
+    if (!email) {
+      navigateTo("/forgotpassword");
+    }
+    if (!otp) {
+      navigateTo("/forgotpassword");
+    }
+  }, [navigateTo]);
 
   const handleNewPasswordChange = (e) => {
     const inputPassword = e.target.value;
