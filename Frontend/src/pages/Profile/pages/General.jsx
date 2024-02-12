@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../layouts/sidebar/Sidebar";
 import useApiFetch from "../../../hooks/useApiFetch";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router";
 
 const General = () => {
   const [image, setImage] = useState(null);
@@ -20,6 +21,17 @@ const General = () => {
   const [addressError, setAddressError] = useState("");
   const [zipError, setZipError] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
+
+  // Navigate to the home page if the user is not logged in
+  const navigateTo = useNavigate();
+  useEffect(() => {
+    if (!Cookies.get("token")) {
+      navigateTo("/signin");
+    }
+
+    // Get user data
+    getUser();
+  }, []);
 
   // Loading effect
   const [loading, setLoading] = useState(true);
@@ -176,10 +188,10 @@ const General = () => {
   // Image Upload Process here
   const handleUpload = async (e) => {
     e.preventDefault();
-  
+
     if (uploadedFile) {
       // If a new image is uploaded, send it to the server
-  
+
       try {
         const response = await useApiFetch({
           method: "POST",
@@ -189,10 +201,10 @@ const General = () => {
           },
           success: (data) => {
             console.log("Image upload response:", data);
-              console.log("Image uploaded successfully");
-              setChangesMade(false);
+            console.log("Image uploaded successfully");
+            setChangesMade(false);
           },
-        })
+        });
       } catch (error) {
         console.error("An error occurred during image upload:", error);
         return;
@@ -201,7 +213,7 @@ const General = () => {
       console.log("Form is valid. Submitting...");
       setChangesMade(false);
     }
-  };  
+  };
 
   return (
     <div className="flex flex-col md:flex-row">

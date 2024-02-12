@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../layouts/sidebar/Sidebar";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router";
 
 const PaymentMethod = () => {
   const [initialCardNumber, setInitialCardNumber] = useState("");
@@ -12,6 +14,12 @@ const PaymentMethod = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
+  const navigateTo = useNavigate();
+  useEffect(() => {
+    if (!Cookies.get("token")) {
+      navigateTo("/signin");
+    }
+  }, [navigateTo]);
 
   useEffect(() => {
     // Store initial values when the component mounts
@@ -32,7 +40,10 @@ const PaymentMethod = () => {
     }
 
     // Adjust the expiration date validation based on your specific criteria
-    if (expirationDate.length !== 5 || !expirationDate.match(/^\d{2}\/\d{2}$/)) {
+    if (
+      expirationDate.length !== 5 ||
+      !expirationDate.match(/^\d{2}\/\d{2}$/)
+    ) {
       setError("Invalid expiration date format (MM/YY)");
       return false;
     }

@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../layouts/sidebar/Sidebar";
 import useApiFetch from "../../../hooks/useApiFetch";
+import { useNavigate } from "react-router";
+import Cookies from "js-cookie";
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+
+  // Navigate to the home page if the user is not logged in
+  const navigateTo = useNavigate();
+
+  useEffect(() => {
+    if (!Cookies.get("token")) {
+      navigateTo("/signin");
+    }
+  }, [navigateTo]);
 
   const handleChangePassword = async () => {
     // Input validation
