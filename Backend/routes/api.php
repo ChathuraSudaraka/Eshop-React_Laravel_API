@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\OtpverifyController;
 use App\Http\Controllers\PasswordChangeController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\UserImageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,12 @@ Route::post('/otp-verify', [OtpverifyController::class, 'otpVerify']);
 Route::post('/reset-password', [PasswordChangeController::class, 'resetPassword']);
 
 // Authenticated Routes with Sanctum authentication
+// routes/web.php or routes/api.php
+Route::middleware('auth:sanctum')->group(function () {
+    // Your authenticated routes, including uploadImage
+    Route::post('/upload-image', [UserImageController::class, 'uploadImage']);
+});
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/change-password', [PasswordChangeController::class, 'changePassword']);
     // Add other routes requiring Sanctum authentication here

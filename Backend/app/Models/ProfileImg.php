@@ -9,7 +9,9 @@ class ProfileImg extends Model
 {
     use HasFactory;
     protected $table = 'profile_img';
+    public $timestamps = false;
     protected $fillable = [
+        'users_id',
         'path',
     ];
 

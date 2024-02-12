@@ -29,8 +29,14 @@ const useApiFetch = async (options: Options) => {
     headers["Authorization"] = auth_token;
   }
 
-  headers["Content-Type"] = "application/json";
   headers["Accept"] = "application/json";
+
+  const formData = new FormData();
+  if (options.body) {
+    for (const key in options.body) {
+      formData.append(key, options.body[key]);
+    }
+  }
 
   await fetch(`http://localhost:8000/api${options.url}`, {
     method: options.method || "GET",
@@ -38,11 +44,11 @@ const useApiFetch = async (options: Options) => {
       ...headers,
       ...options.headers,
     },
-    body: options.method === "GET" ? undefined : JSON.stringify(options.body),
+    body: options.method === "GET" ? undefined : formData,
   })
     .then((res) => res.json())
     .then((data) => {
-      if (data.status == "success") {
+      if (data.status === "success") {
         options.success(data);
         return;
       }
