@@ -13,16 +13,23 @@ const HeaderBottom = () => {
   const [show, setShow] = useState(false);
   const [showUser, setShowUser] = useState(false);
   const navigate = useNavigate();
-  const ref = useRef();
+  const ref = useRef(null);
 
   useEffect(() => {
-    document.body.addEventListener("click", (e) => {
-      if (ref.current.contains(e.target)) {
+    const handleClickOutside = (e) => {
+      if (ref.current && ref.current.contains(e.target)) {
         setShow(true);
       } else {
         setShow(false);
       }
-    });
+    };
+
+    document.body.addEventListener("click", handleClickOutside);
+
+    return () => {
+      // Cleanup: remove the event listener when the component unmounts
+      document.body.removeEventListener("click", handleClickOutside);
+    };
   }, [show, ref]);
 
   const [searchQuery, setSearchQuery] = useState("");
