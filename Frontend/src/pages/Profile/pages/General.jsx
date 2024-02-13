@@ -3,9 +3,18 @@ import Sidebar from "../layouts/sidebar/Sidebar";
 import useApiFetch from "../../../hooks/useApiFetch";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router";
+import { FaCamera } from "react-icons/fa";
+import { useMediaQuery } from "react-responsive";
+import CustomInput from "../layouts/Inputs";
+import CustomButton from "../layouts/Button";
 
 const General = () => {
   const [image, setImage] = useState(null);
+  const [coverImage, setCoverImage] = useState(
+    "https://www.shopavenue.co.za/wp-content/uploads/2018/08/banner-1024x390.jpg"
+  );
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -216,46 +225,60 @@ const General = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <Sidebar />
-      <main className="flex-1 p-4 md:order-2">
+    <div
+      className={`flex ${
+        isMobile ? "flex-col" : "xl:h-screen sm:flex"
+      } overflow-hidden bg-gray-100`}
+    >
+      <Sidebar className="fixed-top" />
+      <main className="flex-1 p-4 md:order-2 overflow-y-auto">
         <div className="mx-auto">
-          <h2 className="text-2xl font-bold mb-4">User Profile</h2>
+          <div className="relative h-48 md:h-80 overflow-hidden">
+            <img
+              className="w-full h-full object-cover"
+              src={coverImage}
+              alt="Cover"
+            />
+            <div className="absolute inset-0 bg-black opacity-40"></div>
+          </div>
           {loading ? (
-            // Loading effect
             <div className="text-center">
               <p className="text-gray-600">Loading...</p>
             </div>
           ) : (
-            <div className="bg-white p-4 border border-gray-400 shadow">
+            <div className="bg-white p-4 border border-gray-400 shadow rounded-lg">
               <div className="flex items-center space-x-4 mb-4">
-                <div className="flex-shrink-0">
-                  <label htmlFor="image" className="cursor-pointer">
-                    {image ? (
-                      <img
-                        src={image}
-                        alt="User"
-                        className="h-20 w-20 border border-gray-700 object-cover"
-                      />
-                    ) : (
-                      <div className="h-20 w-20 bg-gray-300 flex items-center justify-center">
-                        <span className="text-gray-600 text-lg">Upload</span>
-                      </div>
-                    )}
-                    <input
-                      type="file"
-                      id="image"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleImageChange}
+                <div className="relative">
+                  <div className="rounded-full overflow-hidden w-32 h-32 border-4 border-white">
+                    <img
+                      className="w-full h-full object-cover"
+                      src={image || "https://via.placeholder.com/150"}
+                      alt="Profile"
                     />
+                  </div>
+                  <label
+                    htmlFor="file-upload"
+                    className="absolute bottom-0 right-0 bg-gray-300 p-2 rounded-full cursor-pointer"
+                  >
+                    <FaCamera className="text-gray-600" />
                   </label>
+                  <input
+                    id="file-upload"
+                    className="hidden"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
                 </div>
-                <button type="submit" className="" onClick={handleUpload}>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white text-lg font-bodyFont px-4 py-2 rounded-md hover:bg-blue-700 duration-300"
+                  onClick={handleUpload}
+                >
                   Upload
                 </button>
                 <div>
-                  <h3 className="text-xl font-semibold">
+                  <h3 className="text-2xl font-semibold">
                     {firstName} {lastName}
                   </h3>
                   <p className="text-gray-600">{email}</p>
@@ -263,159 +286,83 @@ const General = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div className="mb-4">
-                  <label
-                    htmlFor="firstName"
-                    className="text-base font-titleFont font-semibold px-2"
-                  >
-                    First Name
-                  </label>
-                  <input
-                    id="firstName"
-                    className={`w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor ${
-                      firstNameError && "border-red-500"
-                    }`}
-                    type="text"
-                    placeholder="Enter your first name"
-                    value={firstName}
-                    onChange={handleNameChange}
-                    disabled={fieldsLocked}
-                  />
-                  {firstNameError && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {firstNameError}
-                    </p>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="lastName"
-                    className="text-base font-titleFont font-semibold px-2"
-                  >
-                    Last Name
-                  </label>
-                  <input
-                    id="lastName"
-                    className={`w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor ${
-                      lastNameError && "border-red-500"
-                    }`}
-                    type="text"
-                    placeholder="Enter your last name"
-                    value={lastName}
-                    onChange={handleLastNameChange}
-                    disabled={fieldsLocked}
-                  />
-                  {lastNameError && (
-                    <p className="text-red-500 text-sm mt-1">{lastNameError}</p>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="email"
-                    className="text-base font-titleFont font-semibold px-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    className={`w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor ${
-                      emailError && "border-red-500"
-                    }`}
-                    type="text"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={handleEmailChange}
-                    disabled={fieldsLocked}
-                  />
-                  {emailError && (
-                    <p className="text-red-500 text-sm mt-1">{emailError}</p>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="mobile"
-                    className="text-base font-titleFont font-semibold px-2"
-                  >
-                    Mobile Number
-                  </label>
-                  <input
-                    id="mobile"
-                    className={`w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor ${
-                      mobileError && "border-red-500"
-                    }`}
-                    type="text"
-                    placeholder="Enter your mobile number"
-                    value={mobile}
-                    onChange={handleMobileChange}
-                    disabled={fieldsLocked}
-                  />
-                  {mobileError && (
-                    <p className="text-red-500 text-sm mt-1">{mobileError}</p>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="address"
-                    className="text-base font-titleFont font-semibold px-2"
-                  >
-                    Address
-                  </label>
-                  <input
-                    id="address"
-                    className={`w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor ${
-                      addressError && "border-red-500"
-                    }`}
-                    type="text"
-                    placeholder="Enter your address"
-                    value={address}
-                    onChange={handleAddressChange}
-                    disabled={fieldsLocked}
-                  />
-                  {addressError && (
-                    <p className="text-red-500 text-sm mt-1">{addressError}</p>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="zip"
-                    className="text-base font-titleFont font-semibold px-2"
-                  >
-                    Zip/Postal Code
-                  </label>
-                  <input
-                    id="zip"
-                    className={`w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor ${
-                      zipError && "border-red-500"
-                    }`}
-                    type="text"
-                    placeholder="Enter your Zip/Postal Code"
-                    value={zip}
-                    onChange={handleZipChange}
-                    disabled={fieldsLocked}
-                  />
-                  {zipError && (
-                    <p className="text-red-500 text-sm mt-1">{zipError}</p>
-                  )}
-                </div>
+                {/* First Namw */}
+                <CustomInput
+                  labelText={"First Name"}
+                  value={firstName}
+                  onChange={handleNameChange}
+                  placeholder={"Enter your first name"}
+                  disabled={fieldsLocked}
+                  error={firstNameError}
+                />
+                {/* Last Name */}
+                <CustomInput
+                  labelText={"Last Name"}
+                  value={lastName}
+                  onChange={handleLastNameChange}
+                  placeholder={"Enter your last name"}
+                  disabled={fieldsLocked}
+                  error={lastNameError}
+                />
+                {/* Email */}
+                <CustomInput
+                  labelText={"Email"}
+                  value={email}
+                  onChange={handleEmailChange}
+                  placeholder={"Enter your email"}
+                  disabled={fieldsLocked}
+                  error={emailError}
+                />
+                {/* Mobile */}
+                <CustomInput
+                  labelText={"Mobile Number"}
+                  value={mobile}
+                  onChange={handleMobileChange}
+                  placeholder={"Enter your mobile number"}
+                  disabled={fieldsLocked}
+                  error={mobileError}
+                />
+                {/* Address */}
+                <CustomInput
+                  labelText={"Address"}
+                  value={address}
+                  onChange={handleAddressChange}
+                  placeholder={"Enter your address"}
+                  disabled={fieldsLocked}
+                  error={addressError}
+                />
+                {/* Zip */}
+                <CustomInput
+                  labelText={"Zip/Postal Code"}
+                  value={zip}
+                  onChange={handleZipChange}
+                  placeholder={"Enter your Zip/Postal Code"}
+                  disabled={fieldsLocked}
+                  error={zipError}
+                />
               </div>
 
-              <button
-                type="submit"
-                className={`bg-primeColor text-white text-lg font-bodyFont w-[185px] h-[50px] mr-4 hover:bg-black duration-300 font-bold ${
-                  changesMade ? "" : "opacity-50 cursor-not-allowed"
-                }`}
-                disabled={!changesMade}
-                // onClick={handleSubmit}
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                onClick={handleUnlockFields}
-                className="bg-blue-500 text-white text-lg font-bodyFont w-[185px] h-[50px] hover:bg-blue-700 duration-300 font-bold"
-              >
-                Update
-              </button>
+              <div className="flex justify-between items-center mt-6">
+                {/* Save Button */}
+                <CustomButton
+                  Text={"Save"}
+                  textColor="text-white"
+                  Fsize="text-lg"
+                  className={`hover:bg-black duration-300 font-bold px-8 py-3
+                  ${changesMade ? "" : "opacity-50 cursor-not-allowed"}`}
+                />
+                {/* Update Button */}
+                <CustomButton
+                  onClick={handleUnlockFields}
+                  Text={"Update"}
+                  textColor="text-black"
+                  bgColor="bg-blue-500"
+                  Fsize="text-lg"
+                  className={
+                    "hover:bg-blue-700 duration-300 font-bold px-8 py-3"
+                  }
+                />
+              </div>
             </div>
           )}
         </div>
