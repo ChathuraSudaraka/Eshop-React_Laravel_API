@@ -53,7 +53,13 @@ class User extends Authenticatable
         return $this->hasOne(Otp::class);
     }
 
-    public function image() {
+    public function image()
+    {
         return $this->hasOne(ProfileImg::class, 'users_id');
+    }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class, 'users_id');
     }
 }

@@ -33,7 +33,6 @@ import AdminLogin from "./pages/Account/AdminLogin";
 import FPASS from "./pages/Account/ForgotPassword";
 import ChangePass from "./pages/Account/ChangePass";
 
-
 const Layout = () => {
   return (
     <div>

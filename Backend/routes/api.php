@@ -8,6 +8,7 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\UserImageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,13 +30,10 @@ Route::post('/reset-password', [PasswordChangeController::class, 'resetPassword'
 
 // Authenticated Routes with Sanctum authentication
 // routes/web.php or routes/api.php
-Route::middleware('auth:sanctum')->group(function () {
-    // Your authenticated routes, including uploadImage
-    Route::post('/upload-image', [UserImageController::class, 'uploadImage']);
-});
-
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/upload-image', [UserImageController::class, 'uploadImage']);
     Route::post('/change-password', [PasswordChangeController::class, 'changePassword']);
+    Route::post('/update-user', [RegisteredUserController::class, 'updateUser']);
     // Add other routes requiring Sanctum authentication here
 });
 
@@ -50,8 +48,14 @@ Route::middleware(['auth:sanctum'])->post('/logout', function (Request $request)
 
 // User endpoint requiring Sanctum authentication
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    $address = $request->user()->address()->first();
+    $image = $request->user()->image()->first();
+
     return response()->json([
         'status' => 'success',
-        'user' => $request->user()
+        'address' => $address,
+        'image' => $image,
+        'user' => $request->user(),
+        'message' => 'User data retrieved successfully'
     ]);
 });

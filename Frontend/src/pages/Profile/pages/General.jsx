@@ -9,7 +9,7 @@ import CustomInput from "../layouts/Inputs";
 import CustomButton from "../layouts/Button";
 
 const General = () => {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState();
   const [coverImage, setCoverImage] = useState(
     "https://www.shopavenue.co.za/wp-content/uploads/2018/08/banner-1024x390.jpg"
   );
@@ -154,6 +154,7 @@ const General = () => {
     setFieldsLocked(false);
   };
 
+  // Fetch user data here
   const getUser = async () => {
     try {
       const response = await useApiFetch({
@@ -166,9 +167,14 @@ const General = () => {
             setLastName(data.user.lname);
             setEmail(data.user.email);
             setMobile(data.user.mobile);
-            setAddress(data.user.address);
-            setZip(data.user.zip);
+            setAddress(data.address.line);
+            setZip(data.address.postal_code);
+            setImage(`http://localhost:8000/storage/${data.image.path}`);
 
+            if (data.image.path) {
+              // If there is an image path, set uploadedFile to null
+              setUploadedFile(null);
+            }
             // Save user data to localStorage
             localStorage.setItem("userData", JSON.stringify(data.user));
           } else {
@@ -196,31 +202,71 @@ const General = () => {
 
   // Image Upload Process here
   const handleUpload = async (e) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    if (uploadedFile) {
-      // If a new image is uploaded, send it to the server
-
-      try {
-        const response = await useApiFetch({
-          method: "POST",
-          url: "/upload-image",
-          body: {
-            image: uploadedFile,
-          },
-          success: (data) => {
-            console.log("Image upload response:", data);
-            console.log("Image uploaded successfully");
-            setChangesMade(false);
-          },
-        });
-      } catch (error) {
-        console.error("An error occurred during image upload:", error);
+      // Assuming validate function checks the form validity
+      if (!validate()) {
+        console.log("Form is not valid. Aborting submission.");
         return;
       }
-    } else {
-      console.log("Form is valid. Submitting...");
-      setChangesMade(false);
+
+      if (uploadedFile) {
+        try {
+          const response = await useApiFetch({
+            method: "POST",
+            url: "/upload-image",
+            body: {
+              image: uploadedFile,
+            },
+            success: (data) => {
+              console.log("Image upload response:", data);
+              console.log("Image uploaded successfully");
+              setChangesMade(false);
+            },
+          });
+
+          // Ensure the response indicates success (adjust based on your API)
+          if (response.success) {
+            setChangesMade(false);
+          } else {
+            console.error("Image upload failed:", response.error);
+          }
+        } catch (error) {
+          console.error("An error occurred during image upload:", error);
+          return;
+        }
+      }
+
+      try {
+        const userUpdateResponse = await useApiFetch({
+          method: "POST", // Use POST for user data update
+          url: "/update-user",
+          body: {
+            fname: firstName,
+            lname: lastName,
+            email: email,
+            mobile: mobile,
+            address: address,
+            postal_code: zip,
+          },
+          success: (data) => {
+            console.log("User data updated successfully:", data);
+            setFieldsLocked(true);
+          },
+        });
+
+        // Ensure the response indicates success (adjust based on your API)
+        if (userUpdateResponse.success) {
+          setFieldsLocked(true);
+        } else {
+          console.error("User data update failed:", userUpdateResponse.error);
+        }
+      } catch (error) {
+        console.error("An error occurred during user data update:", error);
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
     }
   };
 
@@ -270,13 +316,6 @@ const General = () => {
                     onChange={handleImageChange}
                   />
                 </div>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white text-lg font-bodyFont px-4 py-2 rounded-md hover:bg-blue-700 duration-300"
-                  onClick={handleUpload}
-                >
-                  Upload
-                </button>
                 <div>
                   <h3 className="text-2xl font-semibold">
                     {firstName} {lastName}
@@ -343,13 +382,14 @@ const General = () => {
               </div>
 
               <div className="flex justify-between items-center mt-6">
-                {/* Save Button */}
+                {/* Save */}
                 <CustomButton
                   Text={"Save"}
                   textColor="text-white"
                   Fsize="text-lg"
                   className={`hover:bg-black duration-300 font-bold px-8 py-3
                   ${changesMade ? "" : "opacity-50 cursor-not-allowed"}`}
+                  onClick={handleUpload}
                 />
                 {/* Update Button */}
                 <CustomButton

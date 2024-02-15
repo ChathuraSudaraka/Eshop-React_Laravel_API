@@ -1,6 +1,13 @@
 import React from "react";
 
-const CustomButton = ({ Text, onClick, className, textColor, bgColor, Fsize }) => {
+const CustomButton = ({
+  Text,
+  onClick,
+  className,
+  textColor,
+  bgColor,
+  Fsize,
+}) => {
   const buttonStyles = {
     color: textColor || "white",
     backgroundColor: bgColor || "bg-primeColor",
