@@ -16,7 +16,7 @@ const Links = () => {
   const [loading, setLoading] = useState(true);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState({});
+  const [role, setRole] = useState('');
   const navigateTo = useNavigate();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const Links = () => {
 
     if (storedUser) {
       setLoggedIn(true);
-      setUser(storedUser);
+      setRole(storedUser.role); // Set role from stored user
       setLoading(false);
     } else {
       getUser();
@@ -38,13 +38,9 @@ const Links = () => {
       url: "/user",
       notify: false,
       success: (res) => {
-        console.log(res?.user);
-
         setLoggedIn(true);
-        setUser(res?.user);
-
+        setRole(res?.user.role); // Set role from fetched user
         localStorage.setItem("user", JSON.stringify(res?.user));
-
         setLoading(false);
       },
       error: () => {
@@ -82,14 +78,17 @@ const Links = () => {
               <CircularProgress size="24px" color="primary" />
             </div>
           )}
-          {user.role_id === 1 && (
+          {role === 'admin' ? ( // Check if user is admin
             <>
               <NavLink to="/profile" text="Admin Profile" />
               <NavLink to="/admin" text="Admin Panel" />
               <NavLink to="/payment" text="Admin Other" />
             </>
+          ) : (
+            <>
+              <NavLink to="/profile" text="Profile" /> {/* Regular user option */}
+            </>
           )}
-          {user.role_id === 2 && <NavLink to="/profile" text="Profile" />}
           <li
             className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer"
             onClick={logout}

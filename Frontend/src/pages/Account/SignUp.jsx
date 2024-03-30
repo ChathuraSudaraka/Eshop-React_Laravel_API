@@ -110,7 +110,7 @@ const SignUp = () => {
           body: {
             fname: clientFName,
             lname: clientLName,
-            gender_gender_id: gend,
+            gender: gend,
             email: email,
             mobile: mobile,
             password: password,
@@ -132,7 +132,7 @@ const SignUp = () => {
   };
   return (
     <div className="w-full h-screen flex items-center justify-center">
-      <LeftSide/>
+      <LeftSide />
       <div className="w-full lgl:w-1/2 h-full">
         {successMsg ? (
           <div className="w-full lgl:w-[500px] h-full flex flex-col justify-center">
@@ -194,32 +194,34 @@ const SignUp = () => {
                 </div>
 
                 {/* Gender */}
-                <div className="inline-flex justify-between gap-2">
+                <div className="gap-2">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
                     Gender
                   </p>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="gender"
-                      value={1}
-                      defaultChecked={gend}
-                      onChange={handleGenderChange}
-                      className="mr-1"
-                    />
-                    Male
-                  </label>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="gender"
-                      value={2}
-                      defaultChecked={gend}
-                      onChange={handleGenderChange}
-                      className="mr-1"
-                    />
-                    Female
-                  </label>
+                  <div className="inline-flex justify-between gap-10">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value={1}
+                        defaultChecked={gend}
+                        onChange={handleGenderChange}
+                        className="mr-1"
+                      />
+                      Male
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value={2}
+                        defaultChecked={gend}
+                        onChange={handleGenderChange}
+                        className="mr-1"
+                      />
+                      Female
+                    </label>
+                  </div>
                   {errGender && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
                       <span className="font-bold italic mr-1">!</span>

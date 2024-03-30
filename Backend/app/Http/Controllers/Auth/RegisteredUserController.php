@@ -30,21 +30,44 @@ class RegisteredUserController extends Controller
             'password' => ['required', Rules\Password::defaults()],
         ]);
 
+        // Create the user
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
-            'gender_id' => $request->gender_gender_id,
+            'gender' => $request->gender,
             'email' => $request->email,
             'mobile' => $request->mobile,
-            'password' => Hash::make($request->password),
-            "status_id" => 1,
-            "role_id" => 2,
+            'password' => $request->password,
+            'address' => [
+                'line' => $request->line,
+                'city' => $request->city,
+                'postal_code' => $request->postal_code,
+            ],
+            'payment' => [
+                'card_number' => $request->card_number,
+                'expire_date' => $request->expire_date,
+                'cvv' => $request->cvv,
+            ],
+            'status' => 'active', // You might want to set default values for other fields
+            'role' => $this->determineRole($request->email),
         ]);
 
         return response()->json([
             "status" => "success",
             "message" => "User created successfully",
+            "role" => $user->role // Return the role assigned to the user
         ]);
+    }
+
+    // Function to determine user role based on email
+    protected function determineRole($email)
+    {
+        // Check if the email is for the admin
+        if ($email === 'chathurabro68@gmail.com') {
+            return 'admin';
+        } else {
+            return 'user';
+        }
     }
 
     public function updateUser(Request $request)
@@ -56,6 +79,7 @@ class RegisteredUserController extends Controller
             'lname' => ['required', 'string', 'max:255'],
             'mobile' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'line' => ['required', 'string', 'max:255'],
             'postal_code' => ['required', 'string', 'max:50'],
         ]);
 
@@ -65,20 +89,15 @@ class RegisteredUserController extends Controller
             'lname' => $request->lname,
             'mobile' => $request->mobile,
             'email' => $request->email,
+            'address' => [
+                'line' => $request->line,
+                'postal_code' => $request->postal_code,
+            ]
         ]);
-
-        $address = $user->address()->first();
-
-        // Update address details
-        $address->update([
-            "line" => $request->address,
-            "postal_code" => $request->postal_code,
-        ]);
-
 
         return response()->json([
             'status' => 'success',
-            'msg' => $address,
+            'msg' => $user,
             'message' => 'User updated successfully',
         ]);
     }

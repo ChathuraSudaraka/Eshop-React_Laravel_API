@@ -14,7 +14,6 @@ class PasswordChangeController extends Controller
         $request->validate([
             'newPassword' => 'required|min:8',
             'email' => 'required|email',
-            'otp' => 'required|numeric',
         ]);
 
         // Find the user by email
@@ -27,11 +26,10 @@ class PasswordChangeController extends Controller
         }
 
         // Find the OTP
-        $otp = $user->otp()->where('otp', $request->otp)->where('expires_at', '>', now())->first();
-
-        if (!$otp) {
+        $otps = $user->otps[count($user->otps) - 1];
+        if ($otps["otp"] != $request->otps) {
             return response()->json([
-                'error' => 'Invalid OTP.',
+                'error' => 'OTP code has been expired.',
             ], 400);
         }
 
@@ -39,13 +37,8 @@ class PasswordChangeController extends Controller
             'password' => Hash::make($request->newPassword),
         ]);
 
-
-        // // Change the password
-        // $user->password = Hash::make($request->newPassword);
-        // $user->save();
-
         // Delete the used OTP (optional, depending on your logic)
-        $otp->delete();
+        $user->otps = [];
 
         return response()->json([
             'status' => 'success',

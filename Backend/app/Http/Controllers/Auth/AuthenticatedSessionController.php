@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
             ], 401);
         }
 
-        $user = auth()->user();
+        $user = request()->user();
 
         return response()->json([
             "status" => "success",

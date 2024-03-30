@@ -167,11 +167,11 @@ const General = () => {
             setLastName(data.user.lname);
             setEmail(data.user.email);
             setMobile(data.user.mobile);
-            setAddress(data.address.line);
-            setZip(data.address.postal_code);
-            setImage(`http://localhost:8000/storage/${data.image.path}`);
+            setAddress(data.user.address.line);
+            setZip(data.user.address.postal_code);
+            setImage(`http://localhost:8000/storage/${data.image?.path}`);
 
-            if (data.image.path) {
+            if (data.image?.path) {
               // If there is an image path, set uploadedFile to null
               setUploadedFile(null);
             }
@@ -247,7 +247,7 @@ const General = () => {
             lname: lastName,
             email: email,
             mobile: mobile,
-            address: address,
+            line: address,
             postal_code: zip,
           },
           success: (data) => {

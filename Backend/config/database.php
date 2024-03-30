@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'mongodb'),
 
     /*
     |--------------------------------------------------------------------------
@@ -34,6 +34,12 @@ return [
     */
 
     'connections' => [
+
+        'mongodb' => [
+            'driver' => 'mongodb',
+            'dsn' => env('DB_URI', 'mongodb://root:Same2u@192.168.230.152:27017'),
+            'database' => 'eshop_viva_db',
+          ],
 
         'sqlite' => [
             'driver' => 'sqlite',

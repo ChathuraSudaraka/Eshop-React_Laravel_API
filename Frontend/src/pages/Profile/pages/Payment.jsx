@@ -72,6 +72,18 @@ const PaymentMethod = () => {
     setIsEditing(true);
   };
 
+  const getPaymentMethod = () => {
+    // Implement your logic for fetching the payment method
+    setCardNumber("1234567890123456");
+    setExpirationDate("12/23");
+    setCvv("123");
+  }
+
+  useEffect(() => {
+    getPaymentMethod();
+  }
+  , []);
+
   const handleUpdate = () => {
     if (validateInputs()) {
       // Implement your logic for updating the data

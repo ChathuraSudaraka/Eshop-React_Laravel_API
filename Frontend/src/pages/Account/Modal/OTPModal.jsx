@@ -24,14 +24,8 @@ const customStyles = {
 };
 
 const ForgotPassModal = ({ isOpen, closeModal, email }) => {
-  // const [isModalOpen, setIsModalOpen] = useState(true);
-
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
-
-  // const closeModal = () => {
-  //   setIsModalOpen(false);
-  // };
 
   const handleUpdate = async () => {
     if (otp.length !== 6) {
@@ -42,15 +36,21 @@ const ForgotPassModal = ({ isOpen, closeModal, email }) => {
           method: "POST",
           url: "/otp-verify",
           body: {
-            otp: otp,
+            otps: otp,
+            email,
           },
           success: (data) => {
-            closeModal();
-            navigate(`/changepass?email=${email}&otp=${otp}`);
+            if (data.status === "success") {
+              closeModal();
+              navigate(`/changepass?email=${email}&otp=${otp}`);
+            } else {
+              alert(data.message); // Show error message if OTP verification fails
+            }
           },
         });
       } catch (error) {
-        console.error("Error in login API call:", error);
+        console.error("Error in OTP verification:", error);
+        alert("Failed to verify OTP. Please try again.");
       }
     }
   };

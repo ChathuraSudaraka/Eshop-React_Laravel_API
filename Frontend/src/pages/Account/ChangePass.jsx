@@ -83,7 +83,7 @@ const ChangePass = () => {
           body: {
             newPassword: newPassword,
             email: email,
-            otp: otp,
+            otps: otp,
           },
           success: (data) => {
             setSuccessMsg("Password changed successfully");

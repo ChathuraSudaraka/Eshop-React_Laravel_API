@@ -13,7 +13,7 @@ class UserImageController extends Controller
 
         // Validate the uploaded file
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Store the image
@@ -21,8 +21,8 @@ class UserImageController extends Controller
 
         // Associate the image with the authenticated user
         $user->image()->updateOrCreate(
-            ['users_id' => $user->id],
-            ['path' => $path]
+            ['users' => $user->id],
+            ['profile_img' => $path]
         );
 
         return response()->json([

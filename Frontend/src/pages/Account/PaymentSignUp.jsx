@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LeftSide from "./ShopStatus";
+import useApiFetch from "../../hooks/useApiFetch";
 
 const PaymentSignUp = () => {
   // ============= Initial State Start here =============
-  const [clientMobile, setClientMobile] = useState("");
   const [Address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
@@ -15,7 +15,6 @@ const PaymentSignUp = () => {
   const [checked, setChecked] = useState(false);
   // ============= Initial State End here ===============
   // ============= Error Msg Start here =================
-  const [errClientMobile, setErrClientMobile] = useState("");
   const [errAddress, setErrAddress] = useState("");
   const [errCity, setErrCity] = useState("");
   const [errCountry, setErrCountry] = useState("");
@@ -26,11 +25,7 @@ const PaymentSignUp = () => {
   // ============= Error Msg End here ===================
   const [successMsg, setSuccessMsg] = useState("");
   // ============= Event Handler Start here =============
-  const handleMobile = (e) => {
-    setClientMobile(e.target.value);
-    setErrClientMobile("");
-  };
-
+  
   const handleAddress = (e) => {
     setAddress(e.target.value);
     setErrAddress("");
@@ -66,16 +61,9 @@ const PaymentSignUp = () => {
     setErrCvv("");
   };
 
-  const handlePaymentSignUp = (e) => {
+  const handlePaymentSignUp = async (e) => {
     e.preventDefault();
     if (checked) {
-      if (!clientMobile) {
-        setErrClientMobile("Enter your mobile number");
-      } else {
-        if (clientMobile.length <= 10) {
-          setErrClientMobile("You have not 10 numbers");
-        }
-      }
       if (!Address) {
         setErrAddress("Enter your address");
       }
@@ -99,7 +87,6 @@ const PaymentSignUp = () => {
       }
       // ============== Getting the value ==============
       if (
-        clientMobile &&
         Address &&
         city &&
         country &&
@@ -108,24 +95,38 @@ const PaymentSignUp = () => {
         expiryDate &&
         cvv
       ) {
-        setSuccessMsg(
-          `Hello dear Sir, Welcome you to Eshop Admin panel. We received your Sign up request. We are processing to validate your access.`
-        );
-        setClientMobile("");
-        setAddress("");
-        setCity("");
-        setCountry("");
-        setPostalCode("");
-        setCardNumber("");
-        setExpiryDate("");
-        setCvv("");
+        await useApiFetch({
+          url: "/payment",
+          method: "POST",
+          body: {
+            line: Address,
+            city: city,
+            country: country,
+            postal_code: postalCode,
+            card_number: cardNumber,
+            expire_date: expiryDate,
+            cvv: cvv,
+          },
+          success: (data) => {
+            setSuccessMsg(
+              `Hello dear Sir, Welcome you to Eshop. We received your Sign up request. We are processing to validate your access.`
+            );
+            setAddress("");
+            setCity("");
+            setCountry("");
+            setPostalCode("");
+            setCardNumber("");
+            setExpiryDate("");
+            setCvv("");
+          },
+        });
       }
     }
   };
 
   return (
     <div className="w-full h-screen flex items-center justify-start">
-      <LeftSide/>
+      <LeftSide />
       <div className="w-full lgl:w-[500px] h-full flex flex-col justify-center">
         {successMsg ? (
           <div className="w-[500px]">
@@ -148,25 +149,6 @@ const PaymentSignUp = () => {
                 Create your Payment Method
               </h1>
               <div className="flex flex-col gap-3">
-                {/* Mobile Number */}
-                <div className="flex flex-col gap-.5">
-                  <p className="font-titleFont text-base font-semibold text-gray-600">
-                    Phone Number
-                  </p>
-                  <input
-                    onChange={handleMobile}
-                    value={clientMobile}
-                    className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                    type="number"
-                    placeholder="eg. 0712345***"
-                  />
-                  {errClientMobile && (
-                    <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
-                      <span className="font-bold italic mr-1">!</span>
-                      {errClientMobile}
-                    </p>
-                  )}
-                </div>
 
                 {/* Address */}
                 <div className="flex flex-col gap-.5">
@@ -199,9 +181,11 @@ const PaymentSignUp = () => {
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                   >
                     {/* Add options for cities */}
-                    <option value="">Select City</option>
-                    <option value="city1">City 1</option>
-                    <option value="city2">City 2</option>
+                    <option>Select City</option>
+                    <option>Colombo</option>
+                    <option>Jaffna</option>
+                    <option>Kandy</option>
+                    <option>Galle</option>
                   </select>
                   {errCity && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
@@ -222,9 +206,10 @@ const PaymentSignUp = () => {
                     className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
                   >
                     {/* Add options for countries */}
-                    <option value="">Select Country</option>
-                    <option value="country1">Country 1</option>
-                    <option value="country2">Country 2</option>
+                    <option>Select Country</option>
+                    <option>Sri Lanka</option>
+                    <option>United States</option>
+                    <option>United Kingdom</option>
                   </select>
                   {errCountry && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">

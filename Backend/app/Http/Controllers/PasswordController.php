@@ -2,19 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ForgetPasswordMail;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PasswordController extends Controller
 {
-    function generateOtp($user)
+    private function generateOtp($user)
     {
-        $maxRequestsPerDay = 100;
+        $max_request_per_day = 100;
 
-        $todayRequests = $user->otp()->where('created_at', '>', now()->subDay())->count();
+        $otps = $user->otps;
+        $today_requests = 0;
+
+        // Get today's requests
+        if (is_array($otps)) {
+            $today_requests = count(array_filter($otps, function ($otp) {
+                return Carbon::parse($otp['created_at'])->isToday();
+            }));
+        } else {
+            $otps = [];
+        }
 
         // Send error message
-        if ($todayRequests >= $maxRequestsPerDay) {
+        if ($today_requests >= $max_request_per_day) {
             return [
                 'status' => 'error',
                 'message' => 'You have exceeded the maximum number of OTP requests. Please try again after 24 hours.',
@@ -25,16 +38,19 @@ class PasswordController extends Controller
         $otp = rand(100000, 999999);
 
         // Save the OTP to the database
-        $user->otp()->create([
+        $user->push('otps', [
+            'id' => count($otps) + 1,
             'otp' => $otp,
-            'expires_at' => now()->addMinutes(20),
+            'is_used' => false,
+            'created_at' => now()->toString(),
+            'expires_at' => now()->addMinutes(15)->toString(),
         ]);
 
         return [
             'status' => 'success',
             'message' => 'OTP sent to your email. Please check your inbox.',
             'otp' => $otp,
-            'pendingRequests' => $maxRequestsPerDay - $todayRequests - 1,
+            'pending_requests' => $max_request_per_day - $today_requests - 1,
         ];
     }
 
@@ -62,18 +78,17 @@ class PasswordController extends Controller
         }
 
         // Send OTP to user's email
-        MailController::forgotPassword([
+        Mail::to($request->email)->queue(new ForgetPasswordMail([
             'email' => $request->email,
-            'name' => "{$user->fname} {$user->lname}",
+            'name' => "$user->fname $user->lname",
             'otp' => $output['otp'],
-        ]);
+        ]));
 
         return response()->json([
             'status' => 'success',
             'message' => $output['message'],
-            'pendingRequests' => $output['pendingRequests'],
+            'pendingRequests' => $output['pending_requests'],
         ]);
-
     }
 
     // public function adminLogin(Request $request)

@@ -10,22 +10,28 @@ class OtpverifyController extends Controller
     public function otpVerify(Request $request)
     {
         $request->validate([
-            'otp' => 'required|numeric',
+            'otps' => 'required|numeric',
         ]);
 
-        $otp = User::whereHas('otp', function ($query) use ($request) {
-            $query->where('otp', $request->otp)->where('expires_at', '>', now());
-        })->first();
+        $user = User::where('email', $request->email)->first();
 
-        if (!$otp) {
+        if (!is_array($user->otps)) {
             return response()->json([
                 'message' => 'Invalid OTP.',
             ], 400);
         }
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'OTP verified successfully.',
-        ]);
+        
+        $otps = $user->otps[count($user->otps) - 1];
+        if ($otps['otp'] == $request->otps) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'OTP verified successfully.',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'Invalid OTP.',
+                'otps' => $otps['otp'],
+            ], 400);
+        }
     }
 }
