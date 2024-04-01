@@ -32,16 +32,107 @@ class PaymentController extends Controller
                 'postal_code' => $request->postal_code,
                 'country' => $request->country,
             ],
-            'payment' => [
-                'card_number' => $request->card_number,
-                'expire_date' => $request->expire_date,
-                'cvv' => $request->cvv,
-            ],
         ]);
+
+        $this->AddpaymentMethod($request);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Payment details added successfully',
+        ]);
+    }
+
+    public function AddpaymentMethod(Request $request)
+    {
+        // Retrieve the authenticated user
+        $user = request()->user();
+
+        // Validate the payment method
+        $request->validate([
+            'card_number' => ['required', 'string', 'max:255'],
+            'card_type' => ['required', 'string', 'max:255'],
+            'expire_date' => ['required', 'string', 'max:255'],
+            'cvv' => ['required', 'string', 'max:255'],
+        ]);
+
+        // Update the user's payment method
+        $user->push(
+            'payment',
+            [
+                'id' => uniqid(),
+                'card_number' => $request->card_number,
+                'card_type' => $request->card_type,
+                'expire_date' => $request->expire_date,
+                'cvv' => $request->cvv,
+            ]
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Payment method updated successfully',
+        ]);
+    }
+
+    public function DeletepaymentMethod(Request $request)
+    {
+        // Retrieve the authenticated user
+        $user = $request->user();
+
+        $user->payment = array_values(array_filter($user->payment, function ($payment) use ($request) {
+            return $payment['id'] !== $request->id;
+        }));
+
+        // Save the changes to the user
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Payment method deleted successfully',
+        ]);
+    }
+
+    public function UpdatepaymentMethod(Request $request, $id)
+    {
+        // Retrieve the authenticated user
+        $user = request()->user();
+        $payment = $user->payment;
+
+        // Check if the payment method exists
+        if ($payment == null || empty($payment)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Payment method not found.',
+            ], 404);
+        }
+        $method = null;
+        foreach ($payment as $key => $payment) {
+            if ($payment['id'] == $id) {
+                $method = $payment;
+                break;
+            }
+        }
+        if ($method == null) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Payment method not found',
+            ], 404);
+        }
+
+        // Update the payment method
+        $user->raw()->updateOne(
+            ['email' => $user->email],
+            ['$set' => [
+                'payment.$[elem].cvv' => $request->cvv,
+                'payment.$[elem].expire_date' => $request->expire_date,
+            ]],
+            ['arrayFilters' => [['elem.id' => $id]]]
+        );
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Payment method deleted successfully',
+            'user' => $user,
+            'method' => $method,
         ]);
     }
 }

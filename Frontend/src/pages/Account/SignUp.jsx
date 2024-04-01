@@ -203,7 +203,7 @@ const SignUp = () => {
                       <input
                         type="radio"
                         name="gender"
-                        value={1}
+                        value="male"
                         defaultChecked={gend}
                         onChange={handleGenderChange}
                         className="mr-1"
@@ -214,7 +214,7 @@ const SignUp = () => {
                       <input
                         type="radio"
                         name="gender"
-                        value={2}
+                        value="female"
                         defaultChecked={gend}
                         onChange={handleGenderChange}
                         className="mr-1"

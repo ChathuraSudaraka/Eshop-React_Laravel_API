@@ -35,6 +35,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/change-password', [PasswordChangeController::class, 'changePassword']);
     Route::post('/update-user', [RegisteredUserController::class, 'updateUser']);
     Route::post('/payment', [PaymentController::class, 'paymentSignUp']);
+    Route::post('/payment-method', [PaymentController::class, 'AddpaymentMethod']);
+    Route::delete('/payment-method-delete/{id}', [PaymentController::class, 'DeletepaymentMethod']);
+    Route::put('/payment-method-edit/{id}', [PaymentController::class, 'UpdatepaymentMethod']);
     // Add other routes requiring Sanctum authentication here
 });
 

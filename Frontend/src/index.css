@@ -32,3 +32,18 @@ nav .active li {
   display: none;
 }
 /* ============= NavLink active End here ================ */
+
+/* Payment button css */
+.payment-button {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.payment-button:hover {
+  transform: scale(1.1);
+}
+
+.payment-button-selected {
+  cursor: pointer;
+  transform: scale(1.1);
+}

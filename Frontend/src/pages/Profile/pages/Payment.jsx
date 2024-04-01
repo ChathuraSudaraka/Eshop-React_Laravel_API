@@ -1,183 +1,157 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../layouts/sidebar/Sidebar";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router";
+import { MdDeleteForever } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
+import AddPaymentMethodModal from "./Modal/AddPaymentMethod";
+import EditPaymentMethodModal from "./Modal/EditPaymentModal";
+import DeletePaymentMethodModal from "./Modal/DeletePaymentMethod"; // Import the DeletePaymentMethodModal
+import CustomButton from "../layouts/Button";
+import useApiFetch from "../../../hooks/useApiFetch";
+import PaymentIcon from "react-payment-icons";
 
 const PaymentMethod = () => {
-  const [initialCardNumber, setInitialCardNumber] = useState("");
-  const [initialExpirationDate, setInitialExpirationDate] = useState("");
-  const [initialCvv, setInitialCvv] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [paymentMethodId, setPaymentMethodId] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState({});
 
-  const [cardNumber, setCardNumber] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
-  const [cvv, setCvv] = useState("");
+  const handleEditPaymentMethod = (card_number, card_type) => {
+    setIsEditModalOpen(true);
+    setPaymentMethod({ card_number, card_type });
+  };
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [error, setError] = useState("");
-  const navigateTo = useNavigate();
+  const handleAddPaymentMethod = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleDeletePaymentMethod = (paymentId) => {
+    setIsDeleteModalOpen(true);
+    setPaymentMethodId(paymentId);
+  };
+
+  const reloadPaymentMethods = async () => {
+    setLoading(true);
+    try {
+      // Fetch the payment methods
+      const response = await useApiFetch({
+        method: "GET",
+        url: "/user",
+        success: (data) => {
+          console.log("User data:", data);
+          if (data && data.user) {
+            setPaymentMethods(data.user.payment);
+            // Save user data to localStorage
+            localStorage.setItem("userData", JSON.stringify(data.user));
+          } else {
+            console.error("Invalid response format:", data);
+            setError("Failed to fetch payment methods. Please try again.");
+          }
+        },
+      });
+    } catch (error) {
+      console.error("Failed to fetch payment methods:", error);
+      setError("Failed to fetch payment methods. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch the payment methods when the component mounts
   useEffect(() => {
-    if (!Cookies.get("token")) {
-      navigateTo("/signin");
-    }
-  }, [navigateTo]);
-
-  useEffect(() => {
-    // Store initial values when the component mounts
-    setInitialCardNumber(cardNumber);
-    setInitialExpirationDate(expirationDate);
-    setInitialCvv(cvv);
-  }, [cardNumber, expirationDate, cvv]);
-
-  const validateInputs = () => {
-    if (!cardNumber.trim() || !expirationDate.trim() || !cvv.trim()) {
-      setError("All fields are required");
-      return false;
-    }
-
-    if (cardNumber.length !== 16) {
-      setError("Card number must be 16 digits");
-      return false;
-    }
-
-    // Adjust the expiration date validation based on your specific criteria
-    if (
-      expirationDate.length !== 5 ||
-      !expirationDate.match(/^\d{2}\/\d{2}$/)
-    ) {
-      setError("Invalid expiration date format (MM/YY)");
-      return false;
-    }
-
-    if (cvv.length !== 3) {
-      setError("CVV must be 3 digits");
-      return false;
-    }
-
-    setError("");
-    return true;
-  };
-
-  const handleCardNumberChange = (e) => {
-    setCardNumber(e.target.value);
-    setIsEditing(true);
-  };
-
-  const handleExpirationDateChange = (e) => {
-    setExpirationDate(e.target.value);
-    setIsEditing(true);
-  };
-
-  const handleCvvChange = (e) => {
-    setCvv(e.target.value);
-    setIsEditing(true);
-  };
-
-  const getPaymentMethod = () => {
-    // Implement your logic for fetching the payment method
-    setCardNumber("1234567890123456");
-    setExpirationDate("12/23");
-    setCvv("123");
-  }
-
-  useEffect(() => {
-    getPaymentMethod();
-  }
-  , []);
-
-  const handleUpdate = () => {
-    if (validateInputs()) {
-      // Implement your logic for updating the data
-      setIsEditing(false);
-    }
-  };
-
-  const handleSave = () => {
-    if (validateInputs()) {
-      // Implement your logic for saving the data
-      setIsEditing(false);
-    }
-  };
+    reloadPaymentMethods();
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row">
       <Sidebar />
       <main className="flex-1 p-4 md:order-2">
         <div className="mx-auto">
-          <h2 className="text-2xl font-bold mb-4">Payment Method</h2>
+          <h2 className="text-2xl font-bold mb-4">Payment Methods</h2>
           <div className="bg-white p-4 border border-gray-400 shadow">
-            <div className="mb-4">
-              <label
-                htmlFor="cardNumber"
-                className="text-base font-titleFont font-semibold px-2"
-              >
-                Card Number
-              </label>
-              <input
-                id="cardNumber"
-                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
-                type="text"
-                placeholder="Enter your card number"
-                value={cardNumber}
-                onChange={handleCardNumberChange}
-                disabled={!isEditing}
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>{error}</p>
+            ) : paymentMethods?.length > 0 ? (
+              paymentMethods.map((paymentMethod) => (
+                <div
+                  key={paymentMethod.id} // Ensure each div has a unique key based on paymentMethod._id
+                  className="bg-white p-5 border border-gray-400 shadow mb-4"
+                >
+                  <div className="mx-4">
+                    <div className="flex justify-between">
+                      <div className="flex">
+                        <PaymentIcon
+                          id={paymentMethod.card_type}
+                          style={{ margin: 10, width: 60 }}
+                          className="payment-icon"
+                        />
+                        <p className="text-lg pt-4">
+                          {paymentMethod.card_number}
+                        </p>
+                      </div>
+                      <div className="flex gap-9 pt-4">
+                        <FaRegEdit
+                          className="text-2xl cursor-pointer"
+                          onClick={() =>
+                            handleEditPaymentMethod(
+                              paymentMethod.card_number,
+                              paymentMethod.card_type
+                            )
+                          }
+                        />
+                        <MdDeleteForever
+                          className="text-2xl cursor-pointer"
+                          onClick={() =>
+                            handleDeletePaymentMethod(paymentMethod.id)
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No payment methods available.</p>
+            )}
+
+            <div className="flex mt-4">
+              <CustomButton
+                onClick={handleAddPaymentMethod} // Pass the function to handle the click event
+                Text={"Add Payment Method"}
+                textColor="text-black"
+                bgColor="bg-blue-500"
+                Fsize="text-lg"
+                className="hover:bg-blue-700 duration-300 font-bold px-8 py-3"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="mb-4">
-                <label
-                  htmlFor="expirationDate"
-                  className="text-base font-titleFont font-semibold px-2"
-                >
-                  Expiration Date
-                </label>
-                <input
-                  id="expirationDate"
-                  className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
-                  type="text"
-                  placeholder="MM/YY"
-                  value={expirationDate}
-                  onChange={handleExpirationDateChange}
-                  disabled={!isEditing}
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="cvv"
-                  className="text-base font-titleFont font-semibold px-2"
-                >
-                  CVV
-                </label>
-                <input
-                  id="cvv"
-                  className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
-                  type="text"
-                  placeholder="Enter CVV"
-                  value={cvv}
-                  onChange={handleCvvChange}
-                  disabled={!isEditing}
-                />
-              </div>
-            </div>
-            {isEditing && (
-              <button
-                onClick={handleUpdate}
-                className="bg-primeColor text-white text-lg font-bodyFont w-[185px] h-[50px] mr-4 hover:bg-black duration-300 font-bold"
-              >
-                Save
-              </button>
-            )}
-            {!isEditing && (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="bg-primeColor text-white text-lg font-bodyFont w-[185px] h-[50px] hover:bg-black duration-300 font-bold"
-              >
-                Update
-              </button>
-            )}
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           </div>
         </div>
       </main>
+      {/* Render the modals */}
+      <AddPaymentMethodModal
+        isOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+        reloadPaymentMethods={reloadPaymentMethods}
+      />
+      <EditPaymentMethodModal
+        isOpen={isEditModalOpen}
+        closeModal={() => setIsEditModalOpen(false)}
+        reloadPaymentMethods={reloadPaymentMethods}
+        paymentMethodId={paymentMethodId}
+        // Pass the paymentMethod object to the modal
+        paymentMethod={paymentMethod}
+      />
+      <DeletePaymentMethodModal
+        isOpen={isDeleteModalOpen}
+        closeModal={() => setIsDeleteModalOpen(false)}
+        reloadPaymentMethods={reloadPaymentMethods}
+        paymentMethodId={paymentMethodId}
+      />
     </div>
   );
 };

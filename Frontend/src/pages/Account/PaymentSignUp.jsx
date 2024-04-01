@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LeftSide from "./ShopStatus";
 import useApiFetch from "../../hooks/useApiFetch";
+import ReactDatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css"; // Import the styles
+import { set } from "date-fns";
 
 const PaymentSignUp = () => {
   // ============= Initial State Start here =============
@@ -9,8 +13,9 @@ const PaymentSignUp = () => {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [card, setCard] = useState("");
   const [cardNumber, setCardNumber] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
+  const [expiryDate, setExpiryDate] = useState(null); // Initialize as null
   const [cvv, setCvv] = useState("");
   const [checked, setChecked] = useState(false);
   // ============= Initial State End here ===============
@@ -19,13 +24,14 @@ const PaymentSignUp = () => {
   const [errCity, setErrCity] = useState("");
   const [errCountry, setErrCountry] = useState("");
   const [errPostalCode, setErrPostalCode] = useState("");
+  const [errCard, setErrCard] = useState("");
   const [errCardNumber, setErrCardNumber] = useState("");
   const [errExpiryDate, setErrExpiryDate] = useState("");
   const [errCvv, setErrCvv] = useState("");
   // ============= Error Msg End here ===================
   const [successMsg, setSuccessMsg] = useState("");
   // ============= Event Handler Start here =============
-  
+
   const handleAddress = (e) => {
     setAddress(e.target.value);
     setErrAddress("");
@@ -46,13 +52,19 @@ const PaymentSignUp = () => {
     setErrPostalCode("");
   };
 
+  const handleCard = (e) => {
+    setCard(e.target.value);
+    setErrCard("");
+  };
+
   const handleCardNumber = (e) => {
     setCardNumber(e.target.value);
     setErrCardNumber("");
   };
 
-  const handleExpiryDate = (e) => {
-    setExpiryDate(e.target.value);
+  const handleExpiryDate = (date) => {
+    // Update to handle Date object
+    setExpiryDate(date);
     setErrExpiryDate("");
   };
 
@@ -76,6 +88,9 @@ const PaymentSignUp = () => {
       if (!postalCode) {
         setErrPostalCode("Enter your postal/zip code");
       }
+      if (!card) {
+        setErrCard("Select your Card Type");
+      }
       if (!cardNumber) {
         setErrCardNumber("Enter your card number");
       }
@@ -91,6 +106,7 @@ const PaymentSignUp = () => {
         city &&
         country &&
         postalCode &&
+        card &&
         cardNumber &&
         expiryDate &&
         cvv
@@ -104,7 +120,8 @@ const PaymentSignUp = () => {
             country: country,
             postal_code: postalCode,
             card_number: cardNumber,
-            expire_date: expiryDate,
+            card_type: card,
+            expire_date: expiryDate.toISOString(), // Convert to ISO string
             cvv: cvv,
           },
           success: (data) => {
@@ -115,8 +132,9 @@ const PaymentSignUp = () => {
             setCity("");
             setCountry("");
             setPostalCode("");
+            setCard("");
             setCardNumber("");
-            setExpiryDate("");
+            setExpiryDate(null); // Reset to null
             setCvv("");
           },
         });
@@ -133,12 +151,12 @@ const PaymentSignUp = () => {
             <p className="w-full px-4 py-10 text-green-500 font-medium font-titleFont">
               {successMsg}
             </p>
-            <Link to="/signin">
+            <Link to="/">
               <button
                 className="w-full h-10 bg-primeColor rounded-md text-gray-200 text-base font-titleFont font-semibold 
             tracking-wide hover:bg-black hover:text-white duration-300"
               >
-                Sign in
+                Back to shopping
               </button>
             </Link>
           </div>
@@ -149,7 +167,6 @@ const PaymentSignUp = () => {
                 Create your Payment Method
               </h1>
               <div className="flex flex-col gap-3">
-
                 {/* Address */}
                 <div className="flex flex-col gap-.5">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
@@ -241,6 +258,30 @@ const PaymentSignUp = () => {
 
                 <hr />
 
+                {/* Card Type (Dropdown) */}
+                <div className="flex flex-col gap-.5">
+                  <p className="font-titleFont text-base font-semibold text-gray-600">
+                    Card Type
+                  </p>
+                  <select
+                    onChange={handleCard}
+                    value={card}
+                    className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
+                  >
+                    {/* Add options for cities */}
+                    <option>Select City</option>
+                    <option>visa</option>
+                    <option>mastercard</option>
+                    <option>amex</option>
+                  </select>
+                  {errCard && (
+                    <p className="text-sm text-red-500 font-titleFont font-semibold px-4">
+                      <span className="font-bold italic mr-1">!</span>
+                      {errCard}
+                    </p>
+                  )}
+                </div>
+
                 {/* Card Number */}
                 <div className="flex flex-col gap-.5">
                   <p className="font-titleFont text-base font-semibold text-gray-600">
@@ -266,12 +307,13 @@ const PaymentSignUp = () => {
                   <p className="font-titleFont text-base font-semibold text-gray-600">
                     Expiration Date
                   </p>
-                  <input
+                  <ReactDatePicker
+                    selected={expiryDate}
                     onChange={handleExpiryDate}
-                    value={expiryDate}
-                    className="w-full h-8 placeholder:text-sm placeholder:tracking-wide px-4 text-base font-medium placeholder:font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                    type="text"
-                    placeholder="eg. MM/YYYY"
+                    className="w-full h-8 px-4 text-base font-medium rounded-md border-[1px] border-gray-400 outline-none"
+                    placeholderText="eg. MM/YYYY"
+                    dateFormat="MM/yyyy"
+                    showMonthYearPicker
                   />
                   {errExpiryDate && (
                     <p className="text-sm text-red-500 font-titleFont font-semibold px-4">

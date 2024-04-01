@@ -182,7 +182,7 @@ const ChangePass = () => {
                     </p>
                   )}
                 </div>
-
+                    
                 <button
                   onClick={handlePassword}
                   className={`bg-primeColor hover:bg-black text-gray-200 hover:text-white w-full h-10 rounded-md duration-300 ${

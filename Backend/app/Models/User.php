@@ -40,7 +40,8 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'otps'
+        'otps',
+        // 'payment',
     ];
 
     /**

@@ -50,7 +50,9 @@ const useApiFetch = async (options: Options) => {
     .then((data) => {
       console.log(data)
       if (data.status === "success") {
-        options.success(data);
+        if (options.success) {
+          options.success(data);
+        }
         return;
       }
       if (options.notify) {
