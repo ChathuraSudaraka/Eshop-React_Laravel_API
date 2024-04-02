@@ -19,9 +19,10 @@ const PaymentMethod = () => {
   const [paymentMethodId, setPaymentMethodId] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState({});
 
-  const handleEditPaymentMethod = (card_number, card_type) => {
+  const handleEditPaymentMethod = (card_number, card_type, id) => {
     setIsEditModalOpen(true);
-    setPaymentMethod({ card_number, card_type });
+    setPaymentMethodId(id);
+    setPaymentMethod({ card_number, card_type, id });
   };
 
   const handleAddPaymentMethod = () => {
@@ -79,7 +80,7 @@ const PaymentMethod = () => {
             ) : paymentMethods?.length > 0 ? (
               paymentMethods.map((paymentMethod) => (
                 <div
-                  key={paymentMethod.id} // Ensure each div has a unique key based on paymentMethod._id
+                  key={paymentMethod.id}
                   className="bg-white p-5 border border-gray-400 shadow mb-4"
                 >
                   <div className="mx-4">
@@ -99,8 +100,10 @@ const PaymentMethod = () => {
                           className="text-2xl cursor-pointer"
                           onClick={() =>
                             handleEditPaymentMethod(
+                              
                               paymentMethod.card_number,
-                              paymentMethod.card_type
+                              paymentMethod.card_type,
+                              paymentMethod.id
                             )
                           }
                         />
@@ -143,7 +146,6 @@ const PaymentMethod = () => {
         closeModal={() => setIsEditModalOpen(false)}
         reloadPaymentMethods={reloadPaymentMethods}
         paymentMethodId={paymentMethodId}
-        // Pass the paymentMethod object to the modal
         paymentMethod={paymentMethod}
       />
       <DeletePaymentMethodModal

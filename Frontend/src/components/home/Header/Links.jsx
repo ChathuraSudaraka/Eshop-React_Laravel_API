@@ -16,7 +16,7 @@ const Links = () => {
   const [loading, setLoading] = useState(true);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState("");
   const navigateTo = useNavigate();
 
   useEffect(() => {
@@ -78,15 +78,15 @@ const Links = () => {
               <CircularProgress size="24px" color="primary" />
             </div>
           )}
-          {role === 'admin' ? ( // Check if user is admin
+          {role === "admin" ? ( // Check if user is admin
             <>
-              <NavLink to="/profile" text="Admin Profile" />
+              <NavLink to="/adminpanel" text="Admin Profile" />
               <NavLink to="/admin" text="Admin Panel" />
               <NavLink to="/payment" text="Admin Other" />
             </>
           ) : (
             <>
-              <NavLink to="/profile" text="Profile" /> {/* Regular user option */}
+              <NavLink to="/" text="Profile" /> {/* Regular user option */}
             </>
           )}
           <li

@@ -3,6 +3,7 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      display: ["focus-group"],
       maxWidth: {
         container: "1440px",
       },

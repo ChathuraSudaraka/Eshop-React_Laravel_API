@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import { isValid, parseISO, format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import useApiFetch from "../../../../hooks/useApiFetch";
+import { toast } from "react-toastify";
 
 Modal.setAppElement("#root"); // Set the root element for accessibility
 
@@ -60,14 +61,27 @@ const EditPaymentMethodModal = ({
     } else {
       try {
         const response = await useApiFetch({
-          method: "PUT",
+          method: "POST",
           url: `/payment-method-edit/${paymentMethodId}`,
           body: {
             expire_date: expirationDate,
             cvv: cvv,
           },
+          success: (data) => {
+            toast.success(data.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            reloadPaymentMethods(); // Reload payment methods after successful addition
+            closeModal(); // Close modal after successful submission
+          },
         });
-
         // You can handle actual response scenarios based on your API
         console.log("Payment method updated successfully:", response);
         reloadPaymentMethods();

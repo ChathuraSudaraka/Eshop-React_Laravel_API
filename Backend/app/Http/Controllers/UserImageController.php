@@ -9,25 +9,31 @@ class UserImageController extends Controller
 {
     public function uploadImage(Request $request)
     {
-        $user = $request->user();
-
-        // Validate the uploaded file
+        // Validate the image
         $request->validate([
-            'profile_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Store the image
-        $path = $request->file('image')->store('profile_images', 'public');
+        // Retrieve the authenticated user
+        $user = $request->user();
 
-        // Associate the image with the authenticated user
-        $user->image()->updateOrCreate(
-            ['users' => $user->id],
-            ['profile_img' => $path]
-        );
+        // Store the image in the public storage
+        $image = $request->file('image');
+        $imageName = time() . '.' . $image->extension();
+        $image->storeAs('/public/profile_images', $imageName);
+
+        // Update the user's profile image
+        $user->update([
+            'profile_img' => $imageName,
+        ]);
+
+        // Get the full image path
+        $imagePath = '/storage/public/profile_images/' . $imageName;
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Image uploaded successfully'
+            'message' => 'Image uploaded successfully',
+            'image_path' => $imagePath,
         ]);
     }
 }

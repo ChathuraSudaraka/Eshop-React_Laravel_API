@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
 import useApiFetch from "../../../../hooks/useApiFetch";
+import { toast } from "react-toastify";
 
 Modal.setAppElement("#root"); // Set the root element for accessibility
 
@@ -34,10 +35,18 @@ const DeletePaymentMethodModal = ({
         method: "DELETE",
         url: `/payment-method-delete/${paymentMethodId}`, // Pass the paymentMethodId in the URL
         success: (data) => {
-          console.log("Payment deleted successfully:", data);
-          // Reload the payment methods
-          reloadPaymentMethods();
-          closeModal();
+          toast.success(data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          reloadPaymentMethods(); // Reload payment methods after successful addition
+          closeModal(); // Close modal after successful submission
         },
       });
     } catch (error) {

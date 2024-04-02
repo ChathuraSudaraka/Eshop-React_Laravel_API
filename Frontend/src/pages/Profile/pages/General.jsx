@@ -7,6 +7,7 @@ import { FaCamera } from "react-icons/fa";
 import { useMediaQuery } from "react-responsive";
 import CustomInput from "../layouts/Inputs";
 import CustomButton from "../layouts/Button";
+import { toast } from "react-toastify";
 
 const General = () => {
   const [image, setImage] = useState();
@@ -169,9 +170,11 @@ const General = () => {
             setMobile(data.user.mobile);
             setAddress(data.user.address.line);
             setZip(data.user.address.postal_code);
-            setImage(`http://localhost:8000/storage/${data.image?.path}`);
+            setImage(
+              `http://localhost:8000/storage/profile_images/${data.user.profile_img}`
+            );
 
-            if (data.image?.path) {
+            if (data.image?.profile_img) {
               // If there is an image path, set uploadedFile to null
               setUploadedFile(null);
             }
@@ -220,6 +223,16 @@ const General = () => {
               image: uploadedFile,
             },
             success: (data) => {
+              toast.success(data.message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              });
               console.log("Image upload response:", data);
               console.log("Image uploaded successfully");
               setChangesMade(false);
@@ -251,6 +264,16 @@ const General = () => {
             postal_code: zip,
           },
           success: (data) => {
+            toast.success(data.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
             console.log("User data updated successfully:", data);
             setFieldsLocked(true);
           },

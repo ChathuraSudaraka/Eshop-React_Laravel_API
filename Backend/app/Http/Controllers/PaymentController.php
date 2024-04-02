@@ -69,7 +69,7 @@ class PaymentController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Payment method updated successfully',
+            'message' => 'Payment method add successfully',
         ]);
     }
 
@@ -91,7 +91,7 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function UpdatepaymentMethod(Request $request, $id)
+    public function EditpaymentMethod(Request $request, $id)
     {
         // Retrieve the authenticated user
         $user = request()->user();
@@ -130,7 +130,7 @@ class PaymentController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Payment method deleted successfully',
+            'message' => 'Payment method Update successfully',
             'user' => $user,
             'method' => $method,
         ]);

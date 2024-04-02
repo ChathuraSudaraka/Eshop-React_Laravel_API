@@ -32,6 +32,7 @@ import UpdateProduct from "./pages/Admin/pages/UpdateProduct";
 import AdminLogin from "./pages/Account/AdminLogin";
 import FPASS from "./pages/Account/ForgotPassword";
 import ChangePass from "./pages/Account/ChangePass";
+import AdminPanelRoute from "./pages/Profile/layouts/AdminPanelRoute";
 
 const Layout = () => {
   return (
@@ -70,11 +71,11 @@ const router = createBrowserRouter(
       <Route path="/forgotpassword" element={<FPASS />}></Route>
       <Route path="/changepass" element={<ChangePass />}></Route>
       {/* ====================== Profile Route ==================== */}
-      <Route path="/profile" element={<General />}></Route>
+      <Route path="/adminpanel" element={<AdminPanelRoute />}></Route>
       <Route path="/changePassword" element={<ChangePassword />}></Route>
       <Route path="/paymentMethod" element={<PaymentMethod />}></Route>
       {/* ====================== Admin Panel ====================== */}
-      <Route path="/admin" element={<Addproduct />}></Route>
+      <Route path="/addproduct" element={<Addproduct />}></Route>
       <Route path="/deleteproduct" element={<DeleteProduct />}></Route>
       <Route path="/updateproduct" element={<UpdateProduct />}></Route>
     </Route>

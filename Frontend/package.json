@@ -43,6 +43,7 @@
     "react-slick": "^0.29.0",
     "react-spinners": "^0.13.8",
     "react-toastify": "^10.0.4",
+    "recharts": "^2.12.3",
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "tailwind-scrollbar": "^2.1.0",
