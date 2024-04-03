@@ -81,7 +81,6 @@ class RegisteredUserController extends Controller
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
             'mobile' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'line' => ['required', 'string', 'max:255'],
             'postal_code' => ['required', 'string', 'max:50'],
         ]);
@@ -91,7 +90,6 @@ class RegisteredUserController extends Controller
             'fname' => $request->fname,
             'lname' => $request->lname,
             'mobile' => $request->mobile,
-            'email' => $request->email,
             'address' => [
                 'line' => $request->line,
                 'postal_code' => $request->postal_code,

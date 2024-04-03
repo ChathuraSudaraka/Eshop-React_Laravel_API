@@ -1,24 +1,29 @@
 import React from "react";
 
 const CustomButton = ({
-  Text,
+  text,
   onClick,
   className,
+  IconclassName,
   textColor,
   bgColor,
-  Fsize,
+  fSize,
+  icon, // new prop for icon
 }) => {
   const buttonStyles = {
-    color: textColor || "white",
-    backgroundColor: bgColor || "bg-primeColor",
-    fontSize: Fsize || "text-base",
+    color: textColor || "white", // Default text color to white
+    backgroundColor: bgColor || "bg-primeColor", // Default background color to primeColor
+    fontSize: fSize || "text-base",
   };
+
   return (
     <button
       onClick={onClick}
-      className={`rounded-md font-semibold font-titleFont ${buttonStyles.color} ${buttonStyles.backgroundColor} ${buttonStyles.fontSize} ${className}`}
+      className={`inline-flex items-center rounded-md font-semibold font-titleFont ${buttonStyles.color} ${buttonStyles.backgroundColor} ${buttonStyles.fontSize} ${className}`}
     >
-      {Text}
+      {icon && <span className={`${IconclassName}`}>{icon}</span>}{" "}
+      {/* Render icon if provided */}
+      {text}
     </button>
   );
 };

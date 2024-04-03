@@ -1,244 +1,192 @@
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
-import Sidebar from "../layouts/sidebar/Sidebar";
+import { ImImage } from "react-icons/im";
+import { FaDollarSign, FaIcons, FaTrash, FaWeight } from "react-icons/fa";
+import DefaultLayout from "../../Profile/layouts/DefaultLayout";
+import {
+  PrimaryDropdown,
+  PrimaryInput,
+  PrimaryInputIcon,
+  PrimaryTextArea,
+} from "../../Profile/layouts/Inputs";
+import CustomButton from "../../Profile/layouts/Button";
+import { IoIosSave, IoIosTrash } from "react-icons/io";
 
 const AddProduct = () => {
-  const [productName, setProductName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("0"); // Initialize with "0"
-  const [category, setCategory] = useState("");
-  const [productColor, setProductColor] = useState(""); // Initial color
-  const [productImage, setProductImage] = useState(null);
+  const [productImages, setProductImages] = useState([]);
+  const [errors, setErrors] = useState([]);
 
-  const [errors, setErrors] = useState({
-    productName: "",
-    description: "",
-    price: "",
-    category: "",
-    productColor: "",
-    productImage: "",
-  });
-
-  const handleAddProduct = () => {
-    // Validate input fields
-    const newErrors = {
-      productName: productName.trim() ? "" : "Product name is required",
-      description: description.trim() ? "" : "Description is required",
-      price: price.trim()
-        ? !isNaN(price) && parseFloat(price) >= 0
-          ? ""
-          : "Price must be a non-negative number"
-        : "Price is required",
-      category: category.trim() ? "" : "Category is required",
-      productColor: productColor.trim() ? "" : "Product color is required",
-      productImage: productImage ? "" : "Product image is required",
-    };
-
-    // Check if there are any validation errors
-    if (Object.values(newErrors).some((error) => error)) {
-      setErrors(newErrors);
+  const handleImageDrop = (acceptedFiles) => {
+    if (productImages.length >= 4) {
+      // Maximum number of images reached, do not add more
       return;
     }
 
-    // Handle the logic to add the product with the entered details
-    // This could involve sending a request to a server or updating local state
-    console.log("Adding product with details:", {
-      productName,
-      description,
-      price,
-      category,
-      productColor,
-      productImage,
+    const newImage = acceptedFiles[0];
+    setProductImages((prevImages) => [...prevImages, newImage]);
+    setErrors((prevErrors) => [...prevErrors, ""]);
+  };
+
+  const handleDeleteImage = (index) => {
+    setProductImages((prevImages) => {
+      const updatedImages = [...prevImages];
+      updatedImages.splice(index, 1);
+      return updatedImages;
     });
-
-    // Clear errors
-    setErrors({
-      productName: "",
-      description: "",
-      price: "",
-      category: "",
-      productColor: "",
-      productImage: "",
+    setErrors((prevErrors) => {
+      const updatedErrors = [...prevErrors];
+      updatedErrors.splice(index, 1);
+      return updatedErrors;
     });
-
-    // Optionally, you can reset the form fields here
-    setProductName("");
-    setDescription("");
-    setPrice(""); // Reset to default value
-    setCategory("");
-    setProductColor("");
-    setProductImage(null);
   };
 
-  const handlePriceChange = (e) => {
-    // Ensure that the entered price is a non-negative number
-    const inputValue = e.target.value;
-
-    // Remove leading zeros
-    const cleanedValue = inputValue.replace(/^0+/, "");
-
-    if (!isNaN(cleanedValue) && parseFloat(cleanedValue) >= 0) {
-      setPrice(cleanedValue);
-    }
+  const handleClick = () => {
+    // Handle click logic here
   };
 
-  const handleImageDrop = (acceptedFiles) => {
-    // Assuming you only want to handle a single file
-    const imageFile = acceptedFiles[0];
-    setProductImage(imageFile);
+  const handleImageError = (index) => {
+    setErrors((prevErrors) => {
+      const updatedErrors = [...prevErrors];
+      updatedErrors[index] = "Image upload failed";
+      return updatedErrors;
+    });
   };
 
-  const colorOptions = [
-    "Red",
-    "Blue",
-    "Green",
-    "Yellow",
-    "Purple",
-    "Orange",
-    // Add more color options as needed
-  ];
+  const renderImages = () => {
+    return productImages.map((image, index) => (
+      <div key={index} className="relative">
+        <img
+          src={URL.createObjectURL(image)}
+          alt={`Product Image ${index + 1}`}
+          className="w-full h-auto rounded-lg"
+          onError={() => handleImageError(index)}
+        />
+        <button
+          onClick={() => handleDeleteImage(index)}
+          className="absolute top-2 right-2 p-1 bg-black text-white rounded-full text-md"
+        >
+          <FaTrash />
+        </button>
+        {errors[index] && (
+          <p className="absolute bottom-0 left-0 right-0 text-red-500 text-sm mt-1">
+            {errors[index]}
+          </p>
+        )}
+      </div>
+    ));
+  };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <Sidebar />
-      <main className="flex-1 p-4 md:order-2 overflow-y-auto">
-        <div className="mx-auto">
-          <h2 className="text-2xl font-bold mb-4">Add Product</h2>
-          <div className="bg-white p-4 border border-gray-400 shadow">
-            <div className="mb-4">
-              <label htmlFor="productName" className="text-base font-semibold">
-                Product Name
-              </label>
-              <input
-                type="text"
-                id="productName"
-                className={`w-full py-2 px-3 border-b-2 text-base font-medium placeholder-gray-400 outline-none focus:border-blue-500 ${
-                  errors.productName ? "border-red-500" : ""
-                }`}
-                placeholder="Enter the product name"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
+    <DefaultLayout>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        {/* Left side */}
+        <div className="content uppercase">
+          <div className="bg-white rounded-lg p-4">
+            <h2 className="text-2xl font-bold mb-4">Product Description</h2>
+            <PrimaryInput labelText="Product Name" />
+            <PrimaryInput labelText="product color" />
+            <PrimaryTextArea labelText="Product Description" />
+          </div>
+          <div className="content mt-2">
+            <div className="bg-white rounded-lg p-4">
+              <h2 className="text-2xl font-bold mb-4">Category</h2>
+              <PrimaryDropdown
+                labelText={"Product Category"}
+                options={"Select category"}
+                items={["Furniture", "Electronics and gadgets", "Stationery"]}
               />
-              {errors.productName && (
-                <p className="text-red-500 text-sm">{errors.productName}</p>
-              )}
+              <div className="flex gap-4">
+                <PrimaryInput labelText="Quantity" type="number" />
+                <div className="w-full">
+                  <PrimaryInput labelText="SKU(Optional)" type="number" />
+                </div>
+              </div>
             </div>
-            <div className="mb-4">
-              <label htmlFor="description" className="text-base font-semibold">
-                Description
-              </label>
-              <textarea
-                id="description"
-                className={`w-full py-2 px-3 border-b-2 text-base font-medium placeholder-gray-400 outline-none focus:border-blue-500 ${
-                  errors.description ? "border-red-500" : ""
-                }`}
-                placeholder="Enter the product description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+          </div>
+          <div className="content uppercase mt-2">
+            <div className="bg-white rounded-lg p-4">
+              <h2 className="text-2xl font-bold mb-4">Shipping and Delivery</h2>
+              <PrimaryInputIcon
+                labelText={"Item Weight"}
+                leftIcon={<FaWeight />}
+                rightIcon={"KG"}
               />
-              {errors.description && (
-                <p className="text-red-500 text-sm">{errors.description}</p>
-              )}
+              <div className="flex justify-between gap-4">
+                <PrimaryInput labelText="Length" />
+                <PrimaryInput labelText="Breadth" />
+                <PrimaryInput labelText="Width" />
+              </div>
             </div>
-            <div className="mb-4">
-              <label htmlFor="price" className="text-base font-semibold">
-                Price
-              </label>
-              <input
-                type="text" // Change input type to text
-                id="price"
-                className={`w-full py-2 px-3 border-b-2 text-base font-medium placeholder-gray-400 outline-none focus:border-blue-500 ${
-                  errors.price ? "border-red-500" : ""
-                }`}
-                placeholder="0"
-                value={price}
-                onChange={handlePriceChange} // Change to handlePriceChange
+          </div>
+        </div>
+        {/* Right side */}
+        <div className="content uppercase">
+          <div className="bg-white rounded-lg p-4 mb-2">
+            <h2 className="text-2xl font-bold mb-4">Publish</h2>
+            <div className="flex justify-between gap-4 ">
+              <CustomButton
+                text="DISCARD"
+                IconclassName="text-2xl mr-1"
+                icon={<IoIosTrash />}
+                textColor="text-red-800"
+                bgColor="bg-gray-300"
+                Fsize="text-lg"
+                className={"hover:bg-blue-700 duration-300 font-bold px-8 py-3"}
               />
-              {errors.price && (
-                <p className="text-red-500 text-sm">{errors.price}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label htmlFor="category" className="text-base font-semibold">
-                Category
-              </label>
-              <select
-                type="text"
-                id="category"
-                className={`w-full py-2 px-3 border-b-2 text-base font-medium placeholder-gray-400 outline-none focus:border-blue-500 ${
-                  errors.category ? "border-red-500" : ""
-                }`}
-                placeholder="Enter the product category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+              <CustomButton
+                text="PUBLISH"
+                IconclassName="text-2xl mr-1"
+                icon={<IoIosSave />}
+                textColor="text-black"
+                bgColor="bg-blue-500"
+                Fsize="text-lg"
+                className={"hover:bg-blue-700 duration-300 font-bold px-8 py-3"}
               />
-              {errors.category && (
-                <p className="text-red-500 text-sm">{errors.category}</p>
-              )}
             </div>
-            <div className="mb-4">
-              <label htmlFor="productColor" className="text-base font-semibold">
-                Product Color
-              </label>
-              <select
-                id="productColor"
-                className={`w-full py-2 px-3 border-b-2 text-base font-medium placeholder-gray-400 outline-none focus:border-blue-500 ${
-                  errors.productColor ? "border-red-500" : ""
-                }`}
-                value={productColor}
-                onChange={(e) => setProductColor(e.target.value)}
-              >
-                <option value="" disabled>
-                  Select product color
-                </option>
-                {colorOptions.map((color, index) => (
-                  <option key={index} value={color}>
-                    {color}
-                  </option>
-                ))}
-              </select>
-              {errors.productColor && (
-                <p className="text-red-500 text-sm">{errors.productColor}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label htmlFor="productImage" className="text-base font-semibold">
-                Product Image
-              </label>
+          </div>
+          <div className="bg-white rounded-lg p-4 mb-2">
+            <h2 className="text-2xl font-bold mb-4">PRODUCT IMAGES</h2>
+            <div className="flex flex-col">
               <Dropzone onDrop={handleImageDrop}>
                 {({ getRootProps, getInputProps }) => (
                   <div
                     {...getRootProps()}
-                    className={`border-dashed border-2 p-4 ${
-                      errors.productImage ? "border-red-500" : ""
-                    }`}
+                    className="border-dashed rounded-lg border-2 p-4 text-center mb-4"
                   >
                     <input {...getInputProps()} />
-                    <p>
-                      Drag 'n' drop an image file here, or click to select one
-                    </p>
+                    <div className="flex flex-col items-center">
+                      <ImImage className="text-2xl" />
+                      <span className="text-blue-500 cursor-pointer uppercase text-sm">
+                        Click to upload
+                        <p className="text-black"> or drag and drop</p>
+                      </span>
+                    </div>
                   </div>
                 )}
               </Dropzone>
-              {errors.productImage && (
-                <p className="text-red-500 text-sm">{errors.productImage}</p>
-              )}
-              {productImage && (
-                <div className="mt-2">
-                  <p>Selected Image: {productImage.name}</p>
-                </div>
-              )}
+              <div className="grid grid-cols-2 gap-2">{renderImages()}</div>
             </div>
-            <button
-              onClick={handleAddProduct}
-              className="bg-primeColor text-white text-lg font-bodyFont w-[185px] h-[50px] mr-4 hover:bg-black duration-300 font-bold"
-            >
-              Add Product
-            </button>
+          </div>
+          <div className="bg-white rounded-lg p-4">
+            <h2 className="text-2xl font-bold mb-4">Pricing</h2>
+            <div className="flex gap-4 ">
+              <div className="w-full">
+                <PrimaryInputIcon
+                  labelText={"price"}
+                  leftIcon={<FaDollarSign />}
+                />
+              </div>
+              <div className="w-full">
+                <PrimaryInputIcon
+                  labelText={"TAX"}
+                  leftIcon={<FaDollarSign />}
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </DefaultLayout>
   );
 };
 

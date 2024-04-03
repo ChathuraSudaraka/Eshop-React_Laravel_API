@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FaSearch } from "react-icons/fa";
-import Sidebar from "../layouts/sidebar/Sidebar";
 import ProductRemoveModal from "../layouts/modal/ProductRemoveModal";
 import { paginationItems } from "@/constants/productBlock";
+import DefaultLayout from "../../Profile/layouts/DefaultLayout";
 
 const DeleteProduct = () => {
   const products = useSelector((state) => state.eshopReducer.products);
@@ -33,11 +33,10 @@ const DeleteProduct = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <Sidebar />
-      <main className="flex-1 p-4 md:order-2 overflow-y-auto">
-        <div className="mx-auto">
-          <h2 className="text-2xl font-bold mb-4">Remove Product</h2>
+    <DefaultLayout>
+        <div className="bg-white p-4 rounded-lg shadow">
+        <h2 className="text-2xl font-bold mb-4">Remove Product</h2>
+
           <div className="relative w-full lg:w-[600px] h-[50px]">
             <input
               className="border-2 border-gray-300 bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none w-full"
@@ -51,7 +50,7 @@ const DeleteProduct = () => {
             </div>
           </div>
 
-          <div className="bg-gray-200 border border-gray-500 h-[580px] mt-4">
+          <div className="bg-gray-200 border rounded-lg border-slate-300 h-[580px] mt-4">
             {searchQuery && (
               <div
                 className={`h-[580px] mx-auto top-16 w-full overflow-y-scroll scrollbar-hide cursor-pointer rounded-md p-4`}
@@ -93,9 +92,8 @@ const DeleteProduct = () => {
             )}
           </div>
         </div>
-      </main>
       {isModalOpen && <ProductRemoveModal closeModal={closeModal} />}
-    </div>
+    </DefaultLayout>
   );
 };
 

@@ -5,9 +5,10 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router";
 import { FaCamera } from "react-icons/fa";
 import { useMediaQuery } from "react-responsive";
-import CustomInput from "../layouts/Inputs";
+import { PrimaryInput } from "../layouts/Inputs";
 import CustomButton from "../layouts/Button";
 import { toast } from "react-toastify";
+import { IoIosSave, IoIosUnlock } from "react-icons/io";
 
 const General = () => {
   const [image, setImage] = useState();
@@ -15,6 +16,7 @@ const General = () => {
     "https://www.shopavenue.co.za/wp-content/uploads/2018/08/banner-1024x390.jpg"
   );
   const isMobile = useMediaQuery({ maxWidth: 768 });
+  const [emailDisabled, setEmailDisabled] = useState(true);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -154,6 +156,18 @@ const General = () => {
   const handleUnlockFields = () => {
     setFieldsLocked(false);
   };
+  const disableEmailField = () => {
+    setEmailDisabled(true);
+  };
+
+  // Function to enable the email field
+  const enableEmailField = () => {
+    setEmailDisabled(false);
+  };
+
+  useEffect(() => {
+    disableEmailField();
+  }, []);
 
   // Fetch user data here
   const getUser = async () => {
@@ -258,7 +272,7 @@ const General = () => {
           body: {
             fname: firstName,
             lname: lastName,
-            email: email,
+            // email: email,
             mobile: mobile,
             line: address,
             postal_code: zip,
@@ -294,12 +308,7 @@ const General = () => {
   };
 
   return (
-    <div
-      className={`flex ${
-        isMobile ? "flex-col" : "xl:h-screen sm:flex"
-      } overflow-hidden bg-gray-100`}
-    >
-      <Sidebar className="fixed-top" />
+    <div className={`flex overflow-hidden bg-gray-100`}>
       <main className="flex-1 p-4 md:order-2 overflow-y-auto">
         <div className="mx-auto">
           <div className="relative h-48 md:h-80 overflow-hidden">
@@ -349,7 +358,7 @@ const General = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 {/* First Namw */}
-                <CustomInput
+                <PrimaryInput
                   labelText={"First Name"}
                   value={firstName}
                   onChange={handleNameChange}
@@ -358,7 +367,7 @@ const General = () => {
                   error={firstNameError}
                 />
                 {/* Last Name */}
-                <CustomInput
+                <PrimaryInput
                   labelText={"Last Name"}
                   value={lastName}
                   onChange={handleLastNameChange}
@@ -367,16 +376,16 @@ const General = () => {
                   error={lastNameError}
                 />
                 {/* Email */}
-                <CustomInput
+                <PrimaryInput
                   labelText={"Email"}
                   value={email}
                   onChange={handleEmailChange}
                   placeholder={"Enter your email"}
-                  disabled={fieldsLocked}
+                  disabled={fieldsLocked || emailDisabled}
                   error={emailError}
                 />
                 {/* Mobile */}
-                <CustomInput
+                <PrimaryInput
                   labelText={"Mobile Number"}
                   value={mobile}
                   onChange={handleMobileChange}
@@ -385,7 +394,7 @@ const General = () => {
                   error={mobileError}
                 />
                 {/* Address */}
-                <CustomInput
+                <PrimaryInput
                   labelText={"Address"}
                   value={address}
                   onChange={handleAddressChange}
@@ -394,7 +403,7 @@ const General = () => {
                   error={addressError}
                 />
                 {/* Zip */}
-                <CustomInput
+                <PrimaryInput
                   labelText={"Zip/Postal Code"}
                   value={zip}
                   onChange={handleZipChange}
@@ -407,8 +416,10 @@ const General = () => {
               <div className="flex justify-between items-center mt-6">
                 {/* Save */}
                 <CustomButton
-                  Text={"Save"}
+                  text="SAVE"
+                  icon={<IoIosSave/>}
                   textColor="text-white"
+                  IconclassName="text-2xl mr-1"
                   Fsize="text-lg"
                   className={`hover:bg-black duration-300 font-bold px-8 py-3
                   ${changesMade ? "" : "opacity-50 cursor-not-allowed"}`}
@@ -417,7 +428,9 @@ const General = () => {
                 {/* Update Button */}
                 <CustomButton
                   onClick={handleUnlockFields}
-                  Text={"Update"}
+                  text="UNLOCK"
+                  IconclassName="text-2xl mr-1"
+                  icon={<IoIosUnlock/>}
                   textColor="text-black"
                   bgColor="bg-blue-500"
                   Fsize="text-lg"

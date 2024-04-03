@@ -22,17 +22,17 @@ import Offer from "./pages/Offer/Offer";
 import Payment from "./pages/payment/Payment";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Shop from "./pages/Shop/Shop";
-import ChangePassword from "./pages/Profile/pages/ChangePassword";
 import PaymentMethod from "./pages/Profile/pages/Payment";
-import General from "./pages/Profile/pages/General";
 import PaymentSignUp from "./pages/Account/PaymentSignUp";
-import Addproduct from "./pages/Admin/pages/AddProduct";
 import DeleteProduct from "./pages/Admin/pages/DeleteProduct";
 import UpdateProduct from "./pages/Admin/pages/UpdateProduct";
 import AdminLogin from "./pages/Account/AdminLogin";
 import FPASS from "./pages/Account/ForgotPassword";
 import ChangePass from "./pages/Account/ChangePass";
-import AdminPanelRoute from "./pages/Profile/layouts/AdminPanelRoute";
+import AddProduct from "./pages/Admin/pages/AddProduct";
+import Dashboard from "./pages/Profile/pages/Dashboard";
+import General from "./pages/Profile/pages/General";
+import Settings from "./pages/Profile/pages/Settings";
 
 const Layout = () => {
   return (
@@ -71,11 +71,12 @@ const router = createBrowserRouter(
       <Route path="/forgotpassword" element={<FPASS />}></Route>
       <Route path="/changepass" element={<ChangePass />}></Route>
       {/* ====================== Profile Route ==================== */}
-      <Route path="/adminpanel" element={<AdminPanelRoute />}></Route>
-      <Route path="/changePassword" element={<ChangePassword />}></Route>
+      <Route path="/general" element={<General />}></Route>
+      <Route path="/settings" element={<Settings />}></Route>
       <Route path="/paymentMethod" element={<PaymentMethod />}></Route>
       {/* ====================== Admin Panel ====================== */}
-      <Route path="/addproduct" element={<Addproduct />}></Route>
+      <Route path="/adminpanel" element={<Dashboard />}></Route>
+      <Route path="/addproduct" element={<AddProduct />}></Route>
       <Route path="/deleteproduct" element={<DeleteProduct />}></Route>
       <Route path="/updateproduct" element={<UpdateProduct />}></Route>
     </Route>
