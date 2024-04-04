@@ -51,12 +51,10 @@ const AddProduct = () => {
           const reader = new FileReader();
 
           reader.onload = (event) => {
-            files.push(event.target.result);
-            setFiles(files);
+            newFiles.push(event.target.result); // Push to a new array
+            setFiles([...files, event.target.result]); // Update state with new array
           };
           reader.readAsDataURL(selectedFiles[i]);
-          
-          // newFiles.push(selectedFiles[i]);
         } else {
           setMessage("Maximum 4 images allowed");
         }
@@ -64,14 +62,11 @@ const AddProduct = () => {
         setMessage("Only images accepted");
       }
     }
-
-    console.log("Files:", files);
   };
 
   const removeImage = (index) => {
-    const newFiles = [...files];
-    newFiles.splice(index, 1);
-    setFiles(newFiles);
+    const newFiles = files.filter((_, i) => i !== index); // Filter out the removed image
+    setFiles(newFiles); // Update state with the new array
   };
 
   const handleProductAdd = async () => {
