@@ -5,6 +5,7 @@ import {
   PrimaryDropdown,
   PrimaryInput,
   PrimaryInputIcon,
+  PrimaryRatio,
   PrimaryTextArea,
 } from "../../Profile/layouts/Inputs";
 import CustomButton from "../../Profile/layouts/Button";
@@ -27,6 +28,14 @@ const AddProduct = () => {
   const [productDiscount, setProductDiscount] = useState("");
   const [files, setFiles] = useState([]);
   const [message, setMessage] = useState("");
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleOptionChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
+
+  // Define your options array
+  const options = ["PUBLIC", "HIDDEN"];
 
   const handleFile = (e) => {
     setMessage("");
@@ -187,7 +196,17 @@ const AddProduct = () => {
         <div className="content uppercase md:col-span-1 sm:col-span-4 xsm:col-span-4">
           <div className="bg-white rounded-lg p-4 mb-2 md:mt-0 sm:mt-2">
             <h2 className="text-2xl font-bold mb-4">Publish</h2>
-            <div className="flex justify-between gap-4 ">
+            <div>
+              <PrimaryRatio
+                value={selectedOption}
+                onChange={handleOptionChange}
+                labelText="visibility"
+                options={options}
+                disabled={false}
+              />
+            </div>
+            <hr />
+            <div className="flex justify-between gap-4 mt-4">
               <CustomButton
                 text="DISCARD"
                 IconclassName="text-2xl mr-1"
@@ -228,8 +247,8 @@ const AddProduct = () => {
                   type="file"
                   onChange={handleFile}
                   className="opacity-0"
-                  multiple="multiple" // Ensure this attribute is present
-                  name="product_img[]" // Make sure to use correct name attribute
+                  multiple="multiple"
+                  name="product_img[]"
                 />
               </label>
             </div>

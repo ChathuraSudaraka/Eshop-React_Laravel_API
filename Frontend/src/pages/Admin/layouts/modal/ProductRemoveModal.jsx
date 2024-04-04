@@ -1,77 +1,62 @@
-import React, { Fragment } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import React from "react";
+import Modal from "react-modal";
 
-const ProductRemoveModal = ({ closeModal }) => {
-  const handleRemove = () => {
-    closeModal();
-  };
+Modal.setAppElement("#root");
 
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    border: "none",
+    borderRadius: "10px",
+    background: "#ffffff",
+    padding: "20px",
+    maxWidth: "95%", // Adjusted width for responsiveness
+    maxHeight: "95%", // Adjusted height for responsiveness
+    width: "auto", // Set width to auto for responsiveness
+    height: "auto", // Set height to auto for responsiveness
+  },
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 1000,
+  },
+};
+
+const ProductRemoveModal = ({ closeModal, isOpen }) => {
   return (
-    <div>
-      <Transition.Root show={true} as={Fragment}>
-        <Dialog
-          as="div"
-          className="fixed inset-0 z-10 overflow-y-auto"
-          onClose={closeModal}
-        >
-          <div className="flex items-center justify-center min-h-screen">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50" />
-            </Transition.Child>
-
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <div className="relative bg-white dark:bg-blog-component-bg dark:border-border-color border border-gray-200 rounded-lg w-full max-w-md p-4">
-                <div className="text-center">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium text-gray-900"
-                  >
-                    Remove Product
-                  </Dialog.Title>
-                </div>
-                <div className="mt-4">
-                  <p className="text-base text-gray-600">
-                    Are you sure you want to remove the product?
-                  </p>
-                </div>
-                <div className="mt-4 flex justify-end">
-                  <button
-                    type="button"
-                    className="ml-2 px-3 py-2 text-sm font-medium text-white bg-red-500 hover:bg-red-600 rounded-md"
-                    onClick={handleRemove}
-                  >
-                    Yes
-                  </button>
-                  <button
-                    type="button"
-                    className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
-                    onClick={closeModal}
-                  >
-                    No
-                  </button>
-                </div>
-              </div>
-            </Transition.Child>
-          </div>
-        </Dialog>
-      </Transition.Root>
-    </div>
+    <Modal
+      isOpen={isOpen}
+      style={customStyles}
+      onRequestClose={closeModal}
+      shouldCloseOnOverlayClick={false}
+    >
+      <div className="uppercase">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Delete Product</h2>
+        </div>
+        <div className="text-center mb-2">
+          <p>Are you sure you want to delete this product?</p>
+        </div>
+        <div className="flex justify-end gap-2">
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded-md"
+            onClick={closeModal}
+          >
+            Cancel
+          </button>
+          <button
+            className="bg-green-500 text-white px-4 py-2 rounded-md"
+            onClick={closeModal}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </Modal>
   );
 };
 

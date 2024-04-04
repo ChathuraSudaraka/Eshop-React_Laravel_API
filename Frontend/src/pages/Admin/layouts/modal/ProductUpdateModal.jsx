@@ -1,14 +1,41 @@
-import React, { Fragment, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import Dropzone from "react-dropzone"; // Import Dropzone
+import React, { useState } from "react";
+import Modal from "react-modal";
+import { PrimaryInput, PrimaryTextArea } from "../../../Profile/layouts/Inputs";
+import { FaImages, FaTrash } from "react-icons/fa";
 
-const ProductUpdate = ({ closeModal }) => {
+Modal.setAppElement("#root");
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    border: "none",
+    borderRadius: "10px",
+    background: "#ffffff",
+    padding: "20px",
+    width: "95%", 
+    height: "95%",
+    maxWidth: "600px",
+    maxHeight: "800px",
+  },
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 1000,
+  },
+};
+
+const ProductUpdate = ({ closeModal, isOpen }) => {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState("");
   const [productColor, setProductColor] = useState("");
-  const [productImage, setProductImage] = useState("");
-  const [errors, setErrors] = useState({});
+  const [files, setFiles] = useState([]);
+  const [productQuantity, setProductQuantity] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleProductNameChange = (e) => {
     setProductName(e.target.value);
@@ -26,26 +53,37 @@ const ProductUpdate = ({ closeModal }) => {
     setProductColor(e.target.value);
   };
 
-  const handleImageDrop = (acceptedFiles, rejectedFiles) => {
-    // Handle accepted files (validations)
-    if (rejectedFiles.length > 0) {
-      setErrors({ productImage: "Invalid file type or size" });
-    } else {
-      // Reset errors if there are no rejected files
-      setErrors({});
-    }
+  const handleFile = (e) => {
+    setMessage("");
+    let selectedFiles = e.target.files;
+    let newFiles = [];
 
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
-      if (!file.type.startsWith("image/")) {
-        setErrors({ productImage: "Please upload an image file" });
-      } else if (file.size > 5242880) {
-        // 5 MB in bytes
-        setErrors({ productImage: "Image size should be less than 5 MB" });
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const fileType = selectedFiles[i]["type"];
+      const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+
+      if (validImageTypes.includes(fileType)) {
+        if (files.length < 4) {
+          newFiles.push(selectedFiles[i]);
+        } else {
+          setMessage("Maximum 4 images allowed");
+        }
       } else {
-        setProductImage(file);
+        setMessage("Only images accepted");
       }
     }
+
+    setFiles([...files, ...newFiles]);
+  };
+
+  const removeImage = (index) => {
+    const newFiles = [...files];
+    newFiles.splice(index, 1);
+    setFiles(newFiles);
+  };
+
+  const handleProductQuantityChange = (e) => {
+    setProductQuantity(e.target.value);
   };
 
   const handleUpdate = () => {
@@ -57,165 +95,110 @@ const ProductUpdate = ({ closeModal }) => {
   };
 
   return (
-    <div>
-      <Transition.Root show={true} as={Fragment}>
-        <Dialog as="div" className="fixed inset-0 z-10" onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-60 transition-opacity" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 z-10 flex items-center justify-center">
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0 scale-95"
-              enterTo="opacity-100 scale-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95"
-            >
-              <Dialog.Panel className="relative border border-gray-200 dark:border-border-color dark:bg-blog-component-bg bg-white rounded-lg w-full max-w-md p-4">
-                <div className="text-center">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium text-gray-900"
-                  >
-                    Update Product
-                  </Dialog.Title>
-                </div>
-                <div className="mt-4">
-                  <div className="flex flex-col gap-2">
-                    <label
-                      htmlFor="productName"
-                      className="text-sm font-titleFont text-gray-600"
-                    >
-                      Product Name
-                    </label>
-                    <input
-                      id="productName"
-                      onChange={handleProductNameChange}
-                      value={productName}
-                      className="w-full h-10 px-3 placeholder-text-sm placeholder-tracking-wide text-base font-medium placeholder-font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                      type="text"
-                      placeholder="Enter product name"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2 mt-4">
-                    <label
-                      htmlFor="productDescription"
-                      className="text-sm font-titleFont text-gray-600"
-                    >
-                      Product Description
-                    </label>
-                    <textarea
-                      id="productDescription"
-                      onChange={handleProductDescriptionChange}
-                      value={productDescription}
-                      className="w-full h-20 px-3 placeholder-text-sm placeholder-tracking-wide text-base font-medium placeholder-font-normal rounded-md border-[1px] border-gray-400 resize-none outline-none"
-                      placeholder="Enter product description"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2 mt-4">
-                    <label
-                      htmlFor="productPrice"
-                      className="text-sm font-titleFont text-gray-600"
-                    >
-                      Product Price
-                    </label>
-                    <input
-                      id="productPrice"
-                      onChange={handleProductPriceChange}
-                      value={productPrice}
-                      className="w-full h-10 px-3 placeholder-text-sm placeholder-tracking-wide text-base font-medium placeholder-font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                      type="text"
-                      placeholder="Enter product price"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-2 mt-4">
-                    <label
-                      htmlFor="productColor"
-                      className="text-sm font-titleFont text-gray-600"
-                    >
-                      Product Color
-                    </label>
-                    <input
-                      id="productColor"
-                      onChange={handleProductColorChange}
-                      value={productColor}
-                      className="w-full h-10 px-3 placeholder-text-sm placeholder-tracking-wide text-base font-medium placeholder-font-normal rounded-md border-[1px] border-gray-400 outline-none"
-                      type="text"
-                      placeholder="Enter product color"
-                    />
-                  </div>
-
-                  <div className="mb-4 mt-3">
-                    <label
-                      htmlFor="productImage"
-                      className="text-base font-semibold"
-                    >
-                      Product Image
-                    </label>
-                    <Dropzone onDrop={handleImageDrop}>
-                      {({ getRootProps, getInputProps }) => (
-                        <div
-                          {...getRootProps()}
-                          className={`border-dashed border-2 p-4 ${
-                            errors.productImage ? "border-red-500" : ""
-                          }`}
-                        >
-                          <input {...getInputProps()} />
-                          <p>
-                            Drag 'n' drop an image file here, or click to select
-                            one
-                          </p>
-                        </div>
-                      )}
-                    </Dropzone>
-                    {errors.productImage && (
-                      <p className="text-red-500 text-sm">
-                        {errors.productImage}
-                      </p>
-                    )}
-                    {productImage && (
-                      <div className="mt-2">
-                        <p>Selected Image: {productImage.name}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="mt-4 flex justify-end">
-                  <button
-                    type="button"
-                    className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
-                    onClick={handleUpdate}
-                  >
-                    Update
-                  </button>
-                  <button
-                    type="button"
-                    className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
-                    onClick={closeModal}
-                  >
-                    Close
-                  </button>
-                </div>
-              </Dialog.Panel>
-            </Transition.Child>
+    <Modal
+      isOpen={isOpen}
+      style={customStyles}
+      onRequestClose={closeModal}
+      shouldCloseOnOverlayClick={false}
+    >
+      <div className="uppercase">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Update Product</h2>
+        </div>
+        <PrimaryInput
+          labelText="Product Name"
+          placeholder="Enter product name"
+          value={productName}
+          onChange={handleProductNameChange}
+        />
+        <PrimaryTextArea
+          labelText="Product Description"
+          placeholder="Enter product description"
+          value={productDescription}
+          onChange={handleProductDescriptionChange}
+        />
+        <PrimaryInput
+          labelText="Product Price"
+          placeholder="Enter product price"
+          value={productPrice}
+          onChange={handleProductPriceChange}
+        />
+        <div className="flex justify-between gap-2">
+          <div className="w-full">
+            <PrimaryInput
+              labelText="Product Color"
+              placeholder="Enter product color"
+              value={productColor}
+              onChange={handleProductColorChange}
+            />
           </div>
-        </Dialog>
-      </Transition.Root>
-    </div>
+          <div className="w-full">
+            <PrimaryInput
+              labelText="Quantity"
+              placeholder="Enter product quantity"
+              value={productQuantity}
+              onChange={handleProductQuantityChange}
+            />
+          </div>
+        </div>
+        <div className="bg-white rounded-lg">
+          <h3 className="text- font-semibold text-gray-600">Product Images</h3>
+          <span className="flex justify-center items-center text-[12px] mb-1 text-red-500">
+            {message}
+          </span>
+          <div className="flex items-center justify-center w-full">
+            <label className="flex cursor-pointer flex-col w-full h-20 border-2 rounded-md border-dashed hover:bg-gray-100 hover:border-gray-300">
+              <div className="flex flex-col items-center justify-center pt-7">
+                <FaImages className="text-5xl text-gray-500" />
+                <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
+                  Select a photo
+                </p>
+              </div>
+              <input
+                type="file"
+                onChange={handleFile}
+                className="opacity-0"
+                multiple="multiple"
+                name="product_img[]"
+              />
+            </label>
+          </div>
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {files.map((file, index) => (
+              <div key={index} className="overflow-hidden relative">
+                <button
+                  onClick={() => removeImage(index)}
+                  className="absolute right-1 top-1 bg-red-500 text-white rounded-full w-6 h-6 flex justify-center items-center text-xs"
+                >
+                  <FaTrash />
+                </button>
+                <img
+                  className="h-20 w-20 rounded-md"
+                  src={URL.createObjectURL(file)}
+                  alt={`product-image-${index}`}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="mt-4 flex justify-end">
+        <button
+          type="button"
+          className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
+          onClick={handleUpdate}
+        >
+          Update
+        </button>
+        <button
+          type="button"
+          className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
+          onClick={closeModal}
+        >
+          Close
+        </button>
+      </div>
+    </Modal>
   );
 };
 

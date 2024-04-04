@@ -145,7 +145,7 @@ const PrimaryDropdown = ({
       <Menu as="div" className="relative text-left">
         <div>
           <Menu.Button
-            className="inline-flex w-full justify-between gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            className="inline-flex w-full justify-between gap-x-1.5 rounded-md bg-white px-3 py-[7px] text-md uppercase text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {selectedValue || options}{" "}
@@ -201,4 +201,50 @@ const PrimaryDropdown = ({
   );
 };
 
-export { PrimaryInput, PrimaryInputIcon, PrimaryTextArea, PrimaryDropdown };
+// Ratio component
+const PrimaryRatio = ({
+  value,
+  onChange,
+  labelText,
+  options = [],
+  disabled,
+}) => {
+  return (
+    <div className="mb-4">
+      <label className="block text-md font-medium text-gray-700 mb-1">
+        {labelText}
+      </label>
+      <div className="flex items-center gap-4">
+        {options &&
+          options.map((option, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <input
+                className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                type="radio"
+                id={option}
+                name={labelText}
+                value={option}
+                checked={value === option}
+                onChange={onChange}
+                disabled={disabled}
+              />
+              <label
+                htmlFor={option}
+                className="text-md font-medium text-gray-700"
+              >
+                {option}
+              </label>
+            </div>
+          ))}
+      </div>
+    </div>
+  );
+};
+
+export {
+  PrimaryInput,
+  PrimaryInputIcon,
+  PrimaryTextArea,
+  PrimaryDropdown,
+  PrimaryRatio,
+};
