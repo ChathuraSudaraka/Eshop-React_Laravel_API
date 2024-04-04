@@ -7,3 +7,5 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: Same2u
     ports:
       - 27017:27017
+    volumes:
+      - ./database/data:/data/db

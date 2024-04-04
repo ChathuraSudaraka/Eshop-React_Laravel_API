@@ -48,7 +48,15 @@ const AddProduct = () => {
 
       if (validImageTypes.includes(fileType)) {
         if (files.length < 4) {
-          newFiles.push(selectedFiles[i]);
+          const reader = new FileReader();
+
+          reader.onload = (event) => {
+            files.push(event.target.result);
+            setFiles(files);
+          };
+          reader.readAsDataURL(selectedFiles[i]);
+          
+          // newFiles.push(selectedFiles[i]);
         } else {
           setMessage("Maximum 4 images allowed");
         }
@@ -57,7 +65,7 @@ const AddProduct = () => {
       }
     }
 
-    setFiles([...files, ...newFiles]);
+    console.log("Files:", files);
   };
 
   const removeImage = (index) => {
@@ -75,7 +83,7 @@ const AddProduct = () => {
           name: productName,
           color: productColor,
           description: productDescription,
-          product_img: files.map((file) => file.url),
+          product_img: JSON.stringify(files),
           category: category,
           qty: Qty,
           sku: SKU,
@@ -263,7 +271,7 @@ const AddProduct = () => {
                   </button>
                   <img
                     className="h-20 w-20 rounded-md"
-                    src={URL.createObjectURL(file)}
+                    src={file}
                     alt={`product-image-${index}`}
                   />
                 </div>

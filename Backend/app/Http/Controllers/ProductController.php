@@ -24,18 +24,8 @@ class ProductController extends Controller
             'discount' => 'nullable|numeric',
             'color' => 'nullable|string',
             'is_hidden' => 'nullable|boolean',
-            'product_img.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'product_img.*' => 'required',
         ]);
-
-        // Handle product image upload
-        $imagePaths = [];
-        if ($request->hasFile('product_img')) {
-            foreach ($request->file('product_img') as $file) {
-                $imageName = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('product_img'), $imageName);
-                $imagePaths[] = 'product_img/' . $imageName;
-            }
-        }
 
         // Create new Product instance
         $product = new Product([
@@ -51,7 +41,7 @@ class ProductController extends Controller
             'price' => $request->input('price'),
             'discount' => $request->input('discount'),
             'color' => $request->input('color'),
-            'product_img' => $imagePaths,
+            'product_img' => json_decode($request->product_img),
             'is_hidden' => $request->input('is_hidden', false),
         ]);
 

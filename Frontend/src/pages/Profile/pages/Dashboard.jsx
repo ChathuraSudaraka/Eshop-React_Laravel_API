@@ -1,6 +1,6 @@
 import React from "react";
 import DefaultLayout from "../layouts/DefaultLayout";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom for navigation
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   return (
