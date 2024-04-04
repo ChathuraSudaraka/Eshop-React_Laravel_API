@@ -6,6 +6,7 @@ use App\Http\Controllers\OtpverifyController;
 use App\Http\Controllers\PasswordChangeController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserImageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/payment-method', [PaymentController::class, 'AddpaymentMethod']);
     Route::delete('/payment-method-delete/{id}', [PaymentController::class, 'DeletepaymentMethod']);
     Route::post('/payment-method-edit/{id}', [PaymentController::class, 'EditpaymentMethod']);
+    Route::post('/product-add', [ProductController::class, 'AddProduct']);
     // Add other routes requiring Sanctum authentication here
 });
 

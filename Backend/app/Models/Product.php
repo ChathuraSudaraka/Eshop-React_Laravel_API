@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use MongoDB\Laravel\Eloquent\Model;
 
 class Product extends Model
 {
-    
+
     protected $fillable = [
         'name',
         'description',
@@ -22,6 +22,10 @@ class Product extends Model
         'discount',
         'color',
         'product_img',
-    ]
+        'is_hidden',
+    ];
 
+    // protected $casts = [
+    //     'product_img' => 'array',
+    // ];
 }
