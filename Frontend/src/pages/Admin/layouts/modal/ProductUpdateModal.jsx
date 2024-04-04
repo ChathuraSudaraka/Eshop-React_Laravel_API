@@ -17,7 +17,7 @@ const customStyles = {
     borderRadius: "10px",
     background: "#ffffff",
     padding: "20px",
-    width: "95%", 
+    width: "95%",
     height: "95%",
     maxWidth: "600px",
     maxHeight: "800px",
@@ -147,7 +147,7 @@ const ProductUpdate = ({ closeModal, isOpen }) => {
             {message}
           </span>
           <div className="flex items-center justify-center w-full">
-            <label className="flex cursor-pointer flex-col w-full h-20 border-2 rounded-md border-dashed hover:bg-gray-100 hover:border-gray-300">
+            <label className="flex cursor-pointer flex-col w-full border-2 rounded-md border-dashed hover:bg-gray-100 hover:border-gray-300">
               <div className="flex flex-col items-center justify-center pt-7">
                 <FaImages className="text-5xl text-gray-500" />
                 <p className="pt-1 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
@@ -182,20 +182,20 @@ const ProductUpdate = ({ closeModal, isOpen }) => {
           </div>
         </div>
       </div>
-      <div className="mt-4 flex justify-end">
+      <div className="mt-4 flex justify-end gap-2">
         <button
           type="button"
-          className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
-          onClick={handleUpdate}
+          className="bg-red-500 text-white px-4 py-2 rounded-md"
+          onClick={closeModal}
         >
-          Update
+          CLOSE
         </button>
         <button
           type="button"
-          className="ml-2 px-3 py-2 text-sm font-medium text-white bg-primeColor hover:bg-black rounded-md"
-          onClick={closeModal}
+          className="bg-green-500 text-white px-4 py-2 rounded-md"
+          onClick={handleUpdate}
         >
-          Close
+          UPDATE
         </button>
       </div>
     </Modal>

@@ -43,7 +43,7 @@ const UpdateProduct = () => {
 
   const openModal = () => {
     setIsModalOpen(true);
-  };  
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -212,7 +212,9 @@ const UpdateProduct = () => {
           </div>
         </div>
       </div>
-      {isModalOpen && <ProductUpdate closeModal={closeModal} isOpen={isModalOpen} />}
+      {isModalOpen && (
+        <ProductUpdate closeModal={closeModal} isOpen={isModalOpen} />
+      )}
     </DefaultLayout>
   );
 };

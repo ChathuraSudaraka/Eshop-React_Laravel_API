@@ -130,7 +130,7 @@ const DeleteProduct = () => {
                             bgColor="bg-blue-500"
                             Fsize="text-lg"
                             className={
-                              "hover:bg-blue-700 duration-300 font-bold px-3 py-2"
+                              "hover:bg-blue-700 duration-300 font-bold px-4 py-2"
                             }
                           />
                           <CustomButton

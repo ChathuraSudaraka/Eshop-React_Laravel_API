@@ -26,6 +26,10 @@ const customStyles = {
   },
 };
 
+const deleteProduct = () => { 
+  // Add delete product functionality
+}
+
 const ProductRemoveModal = ({ closeModal, isOpen }) => {
   return (
     <Modal
@@ -50,7 +54,7 @@ const ProductRemoveModal = ({ closeModal, isOpen }) => {
           </button>
           <button
             className="bg-green-500 text-white px-4 py-2 rounded-md"
-            onClick={closeModal}
+            onClick={deleteProduct}
           >
             Delete
           </button>
