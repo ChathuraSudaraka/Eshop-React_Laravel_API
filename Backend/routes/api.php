@@ -6,6 +6,7 @@ use App\Http\Controllers\OtpverifyController;
 use App\Http\Controllers\PasswordChangeController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserImageController;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ Route::post('/forgot-password', [PasswordController::class, 'forgotPassword']);
 Route::post('/otp-verify', [OtpverifyController::class, 'otpVerify']);
 Route::post('/reset-password', [PasswordChangeController::class, 'resetPassword']);
 Route::get('/product-load', [ProductController::class, 'loadProducts']);
+Route::post('/contact', [PostController::class, 'createContact']);
 // Authenticated Routes with Sanctum authentication
 // routes/web.php or routes/api.php
 Route::middleware(['auth:sanctum'])->group(function () {

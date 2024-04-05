@@ -14,6 +14,7 @@ class ProductController extends Controller
             'name' => 'required|string',
             'description' => 'required|string',
             'category' => 'required|string',
+            'sory_by' => 'nullable|string',
             'qty' => 'required|integer',
             'sku' => 'nullable|string',
             'weight' => 'nullable|numeric',
@@ -32,6 +33,7 @@ class ProductController extends Controller
             'productName' => $request->input('name'),
             'description' => $request->input('description'),
             'category' => $request->input('category'),
+            'sort_by' => $request->input('sort_by'),
             'qty' => $request->input('qty'),
             'sku' => $request->input('sku'),
             'weight' => $request->input('weight'),
@@ -70,62 +72,52 @@ class ProductController extends Controller
 
     public function UpdateProduct(Request $request, $_id)
     {
-        try {
-            // Find the product by its ID
-            $product = Product::where('_id', $_id)->first();
+        // Find the product
+        $product = Product::where('_id', $_id)->first();
 
-            if ($product) {
-                $product->update([
-                    'productName' => $request->input('productName'),
-                    'description' => $request->input('description'),
-                    'price' => $request->input('price'),
-                    'color' => $request->input('color'),
-                    'qty' => $request->input('qty'),
-                    'product_img' => $request->input('product_img')
-                ]);
+        if ($product) {
+            // Update the product
+            $product->update([
+                'productName' => $request->input('name'),
+                'description' => $request->input('description'),
+                'qty' => $request->input('qty'),
+                'price' => $request->input('price'),
+                'color' => $request->input('color'),
+                'product_img' => json_decode($request->product_img),
+            ]);
 
-                // Return a success response
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Product updated successfully'
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Product not found'
-                ], 404);
-            }
-        } catch (\Exception $e) {
+            // Return success response
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Product updated successfully',
+            ]);
+        } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to update product: ' . $e->getMessage()
-            ], 500);
+                'message' => 'Product not found',
+            ], 404);
         }
     }
 
-    public function DeleteProduct(Request $request, $_id)
+    public function DeleteProduct($productId)
     {
-        try {
-            $product = Product::where('_id', $_id)->first();
+        // Find the product
+        $product = Product::where('_id', $productId)->first();
 
-            if ($product) {
-                $product->delete();
+        if ($product) {
+            // Delete the product
+            $product->delete();
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Product deleted successfully'
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Product not found'
-                ], 404);
-            }
-        } catch (\Exception $e) {
+            // Return success response
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Product deleted successfully',
+            ]);
+        } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to delete product: ' . $e->getMessage()
-            ], 500);
+                'message' => 'Product not found',
+            ], 404);
         }
     }
 }

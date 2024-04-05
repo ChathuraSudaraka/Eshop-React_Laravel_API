@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { PrimaryInput, PrimaryTextArea } from "../../../Profile/layouts/Inputs";
 import { FaImages, FaTrash } from "react-icons/fa";
@@ -40,19 +40,19 @@ const ProductUpdate = ({ closeModal, isOpen, LoadProduct, productId }) => {
   const [message, setMessage] = useState("");
 
   const handleProductNameChange = (e) => {
-    setProductName(e.target.value);
+    setProductName((prevState) => e.target.value);
   };
 
   const handleProductDescriptionChange = (e) => {
-    setProductDescription(e.target.value);
+    setProductDescription((prevState) => e.target.value);
   };
 
   const handleProductPriceChange = (e) => {
-    setProductPrice(e.target.value);
+    setProductPrice((prevState) => e.target.value);
   };
 
   const handleProductColorChange = (e) => {
-    setProductColor(e.target.value);
+    setProductColor((prevState) => e.target.value);
   };
 
   const handleFile = (e) => {
@@ -70,11 +70,12 @@ const ProductUpdate = ({ closeModal, isOpen, LoadProduct, productId }) => {
 
           reader.onload = (event) => {
             newFiles.push(event.target.result);
-            setFiles([...files, event.target.result]);
+            setFiles((prevFiles) => [...prevFiles, event.target.result]);
           };
           reader.readAsDataURL(selectedFiles[i]);
         } else {
           setMessage("Maximum 4 images allowed");
+          break;
         }
       } else {
         setMessage("Only images accepted");
@@ -88,15 +89,39 @@ const ProductUpdate = ({ closeModal, isOpen, LoadProduct, productId }) => {
   };
 
   const handleProductQuantityChange = (e) => {
-    setProductQuantity(e.target.value);
+    setProductQuantity((prevState) => e.target.value);
   };
+
+  const loadProduct = async () => {
+    try {
+      const response = await useApiFetch({
+        method: "GET",
+        url: `/product-load/${productId}`,
+        success: (data) => {
+          setProductName(data.productName);
+          setProductDescription(data.productDescription);
+          setProductPrice(data.productPrice);
+          setProductColor(data.productColor);
+          setProductQuantity(data.productQuantity);
+          setFiles(data.product_img || []);
+          console.log("Data fetched successfully:", data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadProduct();
+  }, []);
 
   const handleUpdate = async () => {
     try {
       // Construct the payload with the updated product information
       const response = await useApiFetch({
         method: "POST",
-        url: `/product-update/${productId}`, // Use productId in the URL
+        url: `/product-update/${productId}`,
         body: {
           id: productId, // Pass the product ID
           name: productName,
@@ -211,21 +236,27 @@ const ProductUpdate = ({ closeModal, isOpen, LoadProduct, productId }) => {
             </label>
           </div>
           <div className="flex flex-wrap gap-1.5 mt-2">
-            {files.map((file, index) => (
-              <div key={index} className="overflow-hidden relative">
-                <button
-                  onClick={() => removeImage(index)}
-                  className="absolute right-1 top-1 bg-red-500 text-white rounded-full w-6 h-6 flex justify-center items-center text-xs"
-                >
-                  <FaTrash />
-                </button>
-                <img
-                  className="h-20 w-20 rounded-md"
-                  src={file}
-                  alt={`product-image-${index}`}
-                />
+            {files && files.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5 mt-2">
+                {files.map((file, index) => (
+                  <div key={index} className="overflow-hidden relative">
+                    <button
+                      onClick={() => removeImage(index)}
+                      className="absolute right-1 top-1 bg-red-500 text-white rounded-full w-6 h-6 flex justify-center items-center text-xs"
+                    >
+                      <FaTrash />
+                    </button>
+                    <img
+                      className="h-20 w-20 rounded-md"
+                      src={file}
+                      alt={`product-image-${index}`}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div>No images to display</div>
+            )}
           </div>
         </div>
       </div>

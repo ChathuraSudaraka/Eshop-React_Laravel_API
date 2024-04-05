@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
 import useApiFetch from "../../../../hooks/useApiFetch";
 import { toast } from "react-toastify";
@@ -28,8 +28,24 @@ const customStyles = {
   },
 };
 
-const ProductRemoveModal = ({ closeModal, isOpen, productId }) => {
-  
+const ProductRemoveModal = ({ closeModal, isOpen, productId, loadProduct }) => {
+  // const [products, setProducts] = React.useState([]);
+
+  // const loadProduct = async () => {
+  //   try {
+  //     const response = await useApiFetch({
+  //       method: "GET",
+  //       url: "/product-load",
+  //       success: (data) => {
+  //         console.log("Products loaded successfully:", data);
+  //         setProducts(data.products);
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.error("Error loading products:", error);
+  //   }
+  // };
+
   const deleteProduct = async () => {
     try {
       const response = await useApiFetch({
@@ -47,6 +63,8 @@ const ProductRemoveModal = ({ closeModal, isOpen, productId }) => {
             progress: undefined,
             theme: "light",
           });
+          loadProduct();
+          closeModal();
         },
       });
     } catch (error) {
@@ -54,7 +72,7 @@ const ProductRemoveModal = ({ closeModal, isOpen, productId }) => {
       toast.error("Error deleting product");
     }
   };
-  
+
   return (
     <Modal
       isOpen={isOpen}

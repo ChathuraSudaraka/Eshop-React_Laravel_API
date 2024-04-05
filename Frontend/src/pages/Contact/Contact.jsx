@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
+import useApiFetch from "../../hooks/useApiFetch";
 
 const Contact = () => {
   const location = useLocation();
@@ -11,11 +12,13 @@ const Contact = () => {
 
   const [clientName, setclientName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [messages, setMessages] = useState("");
 
   // ========== Error Messages Start here ============
   const [errClientName, setErrClientName] = useState("");
   const [errEmail, setErrEmail] = useState("");
+  const [errPhone, setErrPhone] = useState("");
   const [errMessages, setErrMessages] = useState("");
   // ========== Error Messages End here ==============
   const [successMsg, setSuccessMsg] = useState("");
@@ -28,6 +31,10 @@ const Contact = () => {
     setEmail(e.target.value);
     setErrEmail("");
   };
+  const handlePhone = (e) => {
+    setPhone(e.target.value);
+    setErrPhone("");
+  };
   const handleMessages = (e) => {
     setMessages(e.target.value);
     setErrMessages("");
@@ -39,9 +46,12 @@ const Contact = () => {
       .toLowerCase()
       .match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i);
   };
+  const PhoneValidation = (phone) => {
+    return String(phone).match(/^[0-9]{10}$/);
+  };
   // ================= Email Validation End here ===============
 
-  const handlePost = (e) => {
+  const handlePost = async (e) => {
     e.preventDefault();
     if (!clientName) {
       setErrClientName("Enter your Name");
@@ -53,6 +63,11 @@ const Contact = () => {
         setErrEmail("Enter a Valid Email");
       }
     }
+    if (!phone) {
+      if (!PhoneValidation(phone)) {
+        setErrPhone("Enter a Valid Phone Number");
+      }
+    }
     if (!messages) {
       setErrMessages("Enter your Messages");
     }
@@ -61,6 +76,23 @@ const Contact = () => {
         `Thank you dear ${clientName}, Your messages has been received successfully. Futher details will sent to you by your email at ${email}.`
       );
     }
+
+    // =========== Post the data to the server ============
+    // fetch data
+    try {
+      const response = await useApiFetch({
+        method: "POST",
+        url: "/contact",
+        body: {
+          name: clientName,
+          email: email,
+          phone: phone,
+          message: messages,
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {}
   };
 
   return (
@@ -107,6 +139,24 @@ const Contact = () => {
                 <p className="text-red-500 text-sm font-titleFont font-semibold mt-1 px-2 flex items-center gap-1">
                   <span className="text-sm italic font-bold">!</span>
                   {errEmail}
+                </p>
+              )}
+            </div>
+            <div>
+              <p className="text-base font-titleFont font-semibold px-2">
+                Mobile Number
+              </p>
+              <input
+                onChange={handlePhone}
+                value={phone}
+                className="w-full py-1 border-b-2 px-2 text-base font-medium placeholder:font-normal placeholder:text-sm outline-none focus-within:border-primeColor"
+                type="phone"
+                placeholder="Enter your mobile number here"
+              />
+              {errPhone && (
+                <p className="text-red-500 text-sm font-titleFont font-semibold mt-1 px-2 flex items-center gap-1">
+                  <span className="text-sm italic font-bold">!</span>
+                  {errPhone}
                 </p>
               )}
             </div>

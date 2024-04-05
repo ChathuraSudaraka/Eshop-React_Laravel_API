@@ -12,6 +12,7 @@ class Product extends Model
         'productName',
         'description',
         'category',
+        'sort_by',
         'qty',
         'sku',
         'weight',

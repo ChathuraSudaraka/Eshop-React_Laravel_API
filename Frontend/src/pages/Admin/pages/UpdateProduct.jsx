@@ -23,6 +23,7 @@ const UpdateProduct = () => {
   const eshopProducts = useSelector((state) => state.eshopReducer.products);
   const inputRef = useRef(null);
   const [selectedOption, setSelectedOption] = useState("");
+  // Update Product Modal data Pass
   const [selectedProductId, setSelectedProductId] = useState(null);
 
   const options = ["PUBLIC", "HIDDEN"];
@@ -93,28 +94,40 @@ const UpdateProduct = () => {
   }, [searchQuery, eshopProducts]);
 
   const openModal = (product) => {
-    // Modify to accept productId
     setIsModalOpen(true);
-    setSelectedProductId(product); // Set the selected product ID
+    setSelectedProductId(product);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedProductId(null); // Reset the selected product ID when closing modal
+    setSelectedProductId(null);
   };
 
   const DataArray = [
     {
-      imageUrl:
-        "https://media1.thrillophilia.com/filestore/ur4lt5i6yjilg39oe4at5j1syxmx_IMG20of20-%202.webp",
-      text: "Product 1 Product 1 Product 1 Product 1 Product 1",
-      date: "2021-10-10",
+      imageUrl: "https://via.placeholder.com/150",
+      text: "Product 1 has been updated",
+      date: "2021-09-09",
     },
     {
-      imageUrl:
-        "https://media1.thrillophilia.com/filestore/ur4lt5i6yjilg39oe4at5j1syxmx_IMG20of20-%202.webp",
-      text: "Product 1 Product 1 Product 1 Product 1 Product 1",
-      date: "2021-10-10",
+      imageUrl: "https://via.placeholder.com/150",
+      text: "Product 2 has been updated",
+      date: "2021-09-09",
+    },
+    {
+      imageUrl: "https://via.placeholder.com/150",
+      text: "Product 3 has been updated",
+      date: "2021-09-09",
+    },
+    {
+      imageUrl: "https://via.placeholder.com/150",
+      text: "Product 4 has been updated",
+      date: "2021-09-09",
+    },
+    {
+      imageUrl: "https://via.placeholder.com/150",
+      text: "Product 5 has been updated",
+      date: "2021-09-09",
     },
   ];
 
@@ -163,7 +176,11 @@ const UpdateProduct = () => {
                   >
                     <img
                       className="w-24 h-24 object-cover rounded-md"
-                      src={item.product_img || ""}
+                      src={
+                        item.product_img && item.product_img.length > 0
+                          ? item.product_img[0]
+                          : ""
+                      }
                       alt="productImg"
                     />
                     <div className="flex flex-col flex-1">
@@ -184,7 +201,7 @@ const UpdateProduct = () => {
                     <div className="grid gap-1">
                       <CustomButton
                         onClick={() => {
-                          openModal(item);
+                          openModal(item._id);
                         }}
                         text="UPDATE"
                         textColor="text-black"
@@ -273,7 +290,7 @@ const UpdateProduct = () => {
           closeModal={closeModal}
           isOpen={isModalOpen}
           LoadProduct={loadProduct}
-          productId={selectedProductId}
+          productId={selectedProductId} // Pass the selected product ID
         />
       )}
     </DefaultLayout>

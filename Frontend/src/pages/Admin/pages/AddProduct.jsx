@@ -18,6 +18,7 @@ const AddProduct = () => {
   const [productColor, setProductColor] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [sort_by, setSortBy] = useState("");
   const [Qty, setQty] = useState("");
   const [SKU, setSKU] = useState("");
   const [Weight, setWeight] = useState("");
@@ -39,11 +40,11 @@ const AddProduct = () => {
 
   const handleFile = (e) => {
     setMessage("");
-    let selectedFiles = e.target.files;
-    let newFiles = [];
+    const selectedFiles = e.target.files;
 
     for (let i = 0; i < selectedFiles.length; i++) {
-      const fileType = selectedFiles[i]["type"];
+      const file = selectedFiles[i];
+      const fileType = file.type;
       const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
 
       if (validImageTypes.includes(fileType)) {
@@ -51,12 +52,12 @@ const AddProduct = () => {
           const reader = new FileReader();
 
           reader.onload = (event) => {
-            newFiles.push(event.target.result); // Push to a new array
-            setFiles([...files, event.target.result]); // Update state with new array
+            setFiles((prevFiles) => [...prevFiles, event.target.result]); // Update state with new file
           };
-          reader.readAsDataURL(selectedFiles[i]);
+          reader.readAsDataURL(file);
         } else {
           setMessage("Maximum 4 images allowed");
+          break; // Exit loop if maximum images reached
         }
       } else {
         setMessage("Only images accepted");
@@ -80,6 +81,7 @@ const AddProduct = () => {
           description: productDescription,
           product_img: JSON.stringify(files),
           category: category,
+          sort_by: sort_by,
           qty: Qty,
           sku: SKU,
           weight: Weight,
@@ -134,13 +136,41 @@ const AddProduct = () => {
           <div className="content mt-2">
             <div className="bg-white rounded-lg p-4">
               <h2 className="text-2xl font-bold mb-4">Category</h2>
-              <PrimaryDropdown
-                labelText={"Product Category"}
-                options={"Select category"}
-                value={category}
-                onChange={(selectedCategory) => setCategory(selectedCategory)}
-                items={["Furniture", "Electronics and gadgets", "Stationery"]}
-              />
+              <div className="flex gap-4">
+                <div className="w-full">
+                  <PrimaryDropdown
+                    labelText={"Product Category"}
+                    options={"Select"}
+                    value={category}
+                    onChange={(selectedCategory) =>
+                      setCategory(selectedCategory)
+                    }
+                    items={[
+                      "Accessories",
+                      "Furniture",
+                      "Electronics",
+                      "Clothes",
+                      "Bags",
+                      "Home Application",
+                    ]}
+                  />
+                </div>
+                <div className="w-full">
+                  <PrimaryDropdown
+                    labelText={"Sort by Category"}
+                    options={"Select"}
+                    value={"sort_by"}
+                    onChange={(selectedCategory) => setSortBy(selectedCategory)}
+                    items={[
+                      "Best Sellers",
+                      "New Arrivals",
+                      "Featured",
+                      "Final Offer",
+                    ]}
+                  />
+                </div>
+              </div>
+
               <div className="flex gap-4">
                 <PrimaryInput
                   labelText="Quantity"
@@ -172,21 +202,21 @@ const AddProduct = () => {
               <div className="flex justify-between gap-4">
                 <div className="w-full">
                   <PrimaryInput
-                    labelText="Length"
+                    labelText="Length (IN)"
                     value={Length}
                     onChange={(e) => setLength(e.target.value)}
                   />
                 </div>
                 <div className="w-full">
                   <PrimaryInput
-                    labelText="Breadth"
+                    labelText="Breadth (IN)"
                     value={Breadth}
                     onChange={(e) => setBreadth(e.target.value)}
                   />
                 </div>
                 <div className="w-full">
                   <PrimaryInput
-                    labelText="Width"
+                    labelText="Width (IN)"
                     value={Width}
                     onChange={(e) => setWidth(e.target.value)}
                   />

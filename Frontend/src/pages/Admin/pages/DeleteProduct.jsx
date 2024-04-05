@@ -60,20 +60,14 @@ const DeleteProduct = () => {
     }
   };
 
-  const deleteProduct = async (productId) => {
-    try {
-      const response = await useApiFetch({
-        method: "DELETE",
-        url: `/product-delete/${productId}`,
-        success: (data) => {
-          console.log("Product deleted successfully:", data);
-          // Reload products after deletion
-          loadProduct();
-        },
-      });
-    } catch (error) {
-      console.error("Error deleting product:", error);
-    }
+  const openModal = (product) => {
+    setIsModalOpen(true);
+    setSelectedProductId(product);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProductId(null);
   };
 
   useEffect(() => {
@@ -150,7 +144,11 @@ const DeleteProduct = () => {
                   >
                     <img
                       className="w-24 h-24 object-cover rounded-md"
-                      src={item.product_img || ""}
+                      src={
+                        item.product_img && item.product_img.length > 0
+                          ? item.product_img[0]
+                          : ""
+                      }
                       alt="productImg"
                     />
                     <div className="flex flex-col flex-1">
@@ -170,7 +168,9 @@ const DeleteProduct = () => {
                     </div>
                     <div className="grid gap-1">
                       <CustomButton
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => {
+                          openModal(item._id);
+                        }}
                         text="DELETE"
                         textColor="text-black"
                         bgColor="bg-blue-500"
@@ -179,6 +179,7 @@ const DeleteProduct = () => {
                           "hover:bg-blue-700 duration-300 font-bold px-5 py-2"
                         }
                       />
+
                       <CustomButton
                         text="VIEW"
                         icon={<AiOutlineUnorderedList />}
@@ -255,9 +256,10 @@ const DeleteProduct = () => {
       </div>
       {isModalOpen && (
         <ProductRemoveModal
-          closeModal={() => setIsModalOpen(false)}
+          closeModal={closeModal}
           isOpen={isModalOpen}
-          deleteProduct={() => deleteProduct(selectedProductId)}
+          productId={selectedProductId}
+          loadProduct={loadProduct}
         />
       )}
     </DefaultLayout>
