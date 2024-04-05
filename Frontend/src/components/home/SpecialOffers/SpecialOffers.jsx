@@ -15,7 +15,7 @@ const SpecialOffers = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:grid-cols-1 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10">
         <Product
           _id="1101"
-          img={spfOne}
+          product_img={spfOne}
           productName="Cap for Boys"
           price="35.00"
           color="Blank and White"
@@ -24,7 +24,7 @@ const SpecialOffers = () => {
         />
         <Product
           _id="1102"
-          img={spfTwo}
+          product_img={spfTwo}
           productName="Tea Table"
           price="180.00"
           color="Gray"
@@ -33,7 +33,7 @@ const SpecialOffers = () => {
         />
         <Product
           _id="1103"
-          img={spfThree}
+          product_img={spfThree}
           productName="Headphones"
           price="25.00"
           color="Mixed"
@@ -42,7 +42,7 @@ const SpecialOffers = () => {
         />
         <Product
           _id="1104"
-          img={spfFour}
+          product_img={spfFour}
           productName="Sun glasses"
           price="220.00"
           color="Black"

@@ -81,12 +81,12 @@ const Links = () => {
           {role === "admin" ? ( // Check if user is admin
             <>
               <NavLink to="/adminpanel" text="Admin Profile" />
-              <NavLink to="/admin" text="Admin Panel" />
               <NavLink to="/payment" text="Admin Other" />
             </>
           ) : (
             <>
-              <NavLink to="/" text="Profile" /> {/* Regular user option */}
+              <NavLink to="/general" text="Profile" />
+              <NavLink to="/paymentmethod" text="Payment" />
             </>
           )}
           <li

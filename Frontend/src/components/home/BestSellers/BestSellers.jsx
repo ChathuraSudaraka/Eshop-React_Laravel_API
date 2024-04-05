@@ -15,7 +15,7 @@ const BestSellers = () => {
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lgl:grid-cols-3 xl:grid-cols-4 gap-10">
         <Product
           _id="1011"
-          img={bestSellerOne}
+          product_img={bestSellerOne}
           productName="Flower Base"
           price="3500.00"
           color="Blank and White"
@@ -24,7 +24,7 @@ const BestSellers = () => {
         />
         <Product
           _id="1012"
-          img={bestSellerTwo}
+          product_img={bestSellerTwo}
           productName="New Backpack"
           price="3800.00"
           color="Gray"
@@ -33,7 +33,7 @@ const BestSellers = () => {
         />
         <Product
           _id="1013"
-          img={bestSellerThree}
+          product_img={bestSellerThree}
           productName="Household materials"
           price="925.00"
           color="Mixed"
@@ -42,7 +42,7 @@ const BestSellers = () => {
         />
         <Product
           _id="1014"
-          img={bestSellerFour}
+          product_img={bestSellerFour}
           productName="Travel Bag"
           price="3220.00"
           color="Black"

@@ -3,15 +3,12 @@ import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 // import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import {
-  Fa500Px,
   FaBars,
   FaBell,
-  FaUserAlt,
   FaUserCircle,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { IoIosLogOut } from "react-icons/io";
-import { AiOutlineSetting, AiOutlineUser } from "react-icons/ai";
+import { AiOutlineCreditCard, AiOutlineLogout, AiOutlineSetting, AiOutlineUser } from "react-icons/ai";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -98,6 +95,27 @@ const Navbar = ({ sidebarToggle, setSidebarToggle }) => {
                   <hr />
                   <Menu.Item>
                     {({ active }) => (
+                      <Link to={"/paymentMethod"}>
+                        <a
+                          className={classNames(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "flex gap-2 px-4 py-2 text-sm"
+                          )}
+                        >
+                          {" "}
+                          <span>
+                            <AiOutlineCreditCard className="text-xl" />
+                          </span>
+                          PAYMENT
+                        </a>
+                      </Link>
+                    )}
+                  </Menu.Item>
+                  <hr />
+                  <Menu.Item>
+                    {({ active }) => (
                       <Link to={"/"}>
                         <a
                           className={classNames(
@@ -109,7 +127,7 @@ const Navbar = ({ sidebarToggle, setSidebarToggle }) => {
                         >
                           {" "}
                           <span>
-                            <IoIosLogOut className="text-xl" />
+                            <AiOutlineLogout className="text-xl" />
                           </span>
                           EXIT
                         </a>

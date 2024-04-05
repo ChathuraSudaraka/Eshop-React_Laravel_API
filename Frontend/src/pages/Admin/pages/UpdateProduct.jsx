@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FaSearch, FaTrashAlt } from "react-icons/fa";
 import ProductUpdate from "../layouts/modal/ProductUpdateModal";
-import { paginationItems } from "@/constants/productBlock";
 import DefaultLayout from "../../Profile/layouts/DefaultLayout";
+import useApiFetch from "../../../hooks/useApiFetch";
 import {
   PrimaryDropdown,
   PrimaryInputIcon,
@@ -15,38 +15,92 @@ import CustomButton from "../../Profile/layouts/Button";
 import { AiOutlineUnorderedList } from "react-icons/ai";
 
 const UpdateProduct = () => {
-  // const products = useSelector((state) => state.eshopReducer.products);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [category, setCategory] = useState("");
   const navigate = useNavigate();
+  const eshopProducts = useSelector((state) => state.eshopReducer.products);
+  const inputRef = useRef(null);
   const [selectedOption, setSelectedOption] = useState("");
+  const [selectedProductId, setSelectedProductId] = useState(null);
+
+  const options = ["PUBLIC", "HIDDEN"];
 
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
   };
 
-  // Define your options array
-  const options = ["ALL", "PUBLIC", "HIDDEN"];
+  useEffect(() => {
+    loadProduct();
+  }, []);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  const loadProduct = async () => {
+    try {
+      const response = await useApiFetch({
+        method: "GET",
+        url: "/product-load",
+        success: (data) => {
+          console.log("Data fetched successfully:", data);
+          setFilteredProducts(data.products);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = eshopProducts.filter((item) => {
+      const productName = item.productName
+        ? item.productName.toLowerCase()
+        : "";
+      const description = (item.description || "").toLowerCase();
+      const categoryMatch =
+        category === "" || category === "ALL" || item.category === category;
+      return (
+        (productName.includes(query) || description.includes(query)) &&
+        categoryMatch
+      );
+    });
+    setFilteredProducts(filtered);
   };
 
   useEffect(() => {
-    const filtered = paginationItems.filter((item) =>
-      item.productName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredProducts(filtered);
-  }, [searchQuery]);
+    if (searchQuery === "") {
+      loadProduct();
+    } else {
+      const filtered = eshopProducts.filter((item) => {
+        const productName = item.productName
+          ? item.productName.toLowerCase()
+          : "";
+        const description = (item.description || "").toLowerCase();
+        return (
+          productName.includes(searchQuery.toLowerCase()) ||
+          description.includes(searchQuery.toLowerCase())
+        );
+      });
+      setFilteredProducts(filtered);
+    }
+  }, [searchQuery, eshopProducts]);
 
-  const openModal = () => {
+  const openModal = (product) => {
+    // Modify to accept productId
     setIsModalOpen(true);
+    setSelectedProductId(product); // Set the selected product ID
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setSelectedProductId(null); // Reset the selected product ID when closing modal
   };
 
   const DataArray = [
@@ -62,13 +116,11 @@ const UpdateProduct = () => {
       text: "Product 1 Product 1 Product 1 Product 1 Product 1",
       date: "2021-10-10",
     },
-    // Add more objects as needed
   ];
 
   return (
     <DefaultLayout>
       <div className="grid md:grid-cols-4 sm:grid-cols-2 xsm:grid-cols-1 md:gap-2">
-        {/* Left Side */}
         <div className="col-span-3">
           <div className="bg-white p-4 rounded-lg shadow">
             <h2 className="text-2xl font-bold mb-4 uppercase">
@@ -81,6 +133,7 @@ const UpdateProduct = () => {
                   rightIcon={<FaSearch />}
                   onChange={handleSearch}
                   value={searchQuery}
+                  ref={inputRef} // Attach the ref to the input field
                 />
               </div>
               <div>
@@ -89,85 +142,88 @@ const UpdateProduct = () => {
                   options={"Select category"}
                   value={category}
                   onChange={(selectedCategory) => setCategory(selectedCategory)}
-                  items={["Furniture", "Electronics and gadgets", "Stationery"]}
+                  items={[
+                    "ALL",
+                    "Furniture",
+                    "Electronics and gadgets",
+                    "Stationery",
+                  ]}
                 />
               </div>
             </div>
 
             <div className="bg-gray-200 border rounded-lg border-slate-300 h-[580px] mt-4">
-              {searchQuery && (
-                <div
-                  className={`h-full mx-auto top-16 w-full overflow-y-scroll scrollbar-hide rounded-md p-2`}
-                >
-                  {searchQuery &&
-                    filteredProducts.map((item) => (
-                      <div
-                        key={item._id}
-                        className="w-full h-28 bg-white mb-2 flex items-center gap-4 rounded-md p-2 cursor-default hover:shadow-sm transition duration-300"
-                      >
-                        <img
-                          className="w-24 h-24 object-cover rounded-md"
-                          src={item.img}
-                          alt="productImg"
-                        />
-                        <div className="flex flex-col flex-1">
-                          <p className="font-semibold text-lg line-clamp-1">
-                            {item.productName}
-                          </p>
-                          <p className="text-xs line-clamp-1">{item.des}</p>
-                          <p className="text-sm line-clamp-1">
-                            Price:{" "}
-                            <span className="text-primeColor font-semibold line-clamp-1">
-                              LKR {item.price}
-                            </span>
-                          </p>
-                        </div>
-                        <div className="grid gap-1">
-                          {/* Update Button */}
-                          <CustomButton
-                            onClick={openModal}
-                            text="UPDATE"
-                            textColor="text-black"
-                            bgColor="bg-blue-500"
-                            Fsize="text-lg"
-                            className={
-                              "hover:bg-blue-700 duration-300 font-bold px-3 py-2"
+              <div
+                className={`h-full mx-auto top-16 w-full overflow-y-scroll scrollbar-hide rounded-md p-2`}
+              >
+                {filteredProducts.map((item) => (
+                  <div
+                    key={item._id}
+                    className="w-full h-28 bg-white mb-2 flex items-center gap-4 rounded-md p-2 cursor-default hover:shadow-sm transition duration-300"
+                  >
+                    <img
+                      className="w-24 h-24 object-cover rounded-md"
+                      src={item.product_img || ""}
+                      alt="productImg"
+                    />
+                    <div className="flex flex-col flex-1">
+                      <p className="font-semibold text-lg line-clamp-1">
+                        {item.productName ? item.productName : "No Name"}
+                      </p>
+                      <p className="text-xs line-clamp-1">
+                        {item.description || "No Description"}
+                      </p>{" "}
+                      {/* Add default value */}
+                      <p className="text-sm line-clamp-1">
+                        Price:{" "}
+                        <span className="text-primeColor font-semibold line-clamp-1">
+                          LKR {item.price || "N/A"} {/* Add default value */}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="grid gap-1">
+                      <CustomButton
+                        onClick={() => {
+                          openModal(item);
+                        }}
+                        text="UPDATE"
+                        textColor="text-black"
+                        bgColor="bg-blue-500"
+                        Fsize="text-lg"
+                        className={
+                          "hover:bg-blue-700 duration-300 font-bold px-3 py-2"
+                        }
+                      />
+                      <CustomButton
+                        text="VIEW"
+                        icon={<AiOutlineUnorderedList />}
+                        textColor="text-white"
+                        IconclassName="text-2xl mr-1"
+                        Fsize="text-lg"
+                        className={
+                          "hover:bg-black duration-300 font-bold px-3 py-2 opacity-50"
+                        }
+                        onClick={() =>
+                          navigate(
+                            `/product/${(item.productName || "")
+                              .toLowerCase()
+                              .split(" ")
+                              .join("")}`, // Add default value
+                            {
+                              state: {
+                                item: item,
+                              },
                             }
-                          />
-                          <CustomButton
-                            text="VIEW"
-                            icon={<AiOutlineUnorderedList />}
-                            textColor="text-white"
-                            IconclassName="text-2xl mr-1"
-                            Fsize="text-lg"
-                            className={
-                              "hover:bg-black duration-300 font-bold px-3 py-2 opacity-50"
-                            }
-                            onClick={() =>
-                              navigate(
-                                `/product/${item.productName
-                                  .toLowerCase()
-                                  .split(" ")
-                                  .join("")}`,
-                                {
-                                  state: {
-                                    item: item,
-                                  },
-                                }
-                              ) &
-                              setShowSearchBar(true) &
-                              setSearchQuery("")
-                            }
-                          />
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              )}
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-        {/* Right Side */}
         <div className="md:col-span-1 sm:col-span-4 xsm:col-span-4 md:mt-0 sm:mt-2">
           <div className="bg-white p-2 rounded-lg shadow uppercase">
             <h2 className="text-2xl font-bold mb-4 mt-2">Product visibility</h2>
@@ -193,9 +249,9 @@ const UpdateProduct = () => {
                       alt="img"
                       className="w-12 border rounded-md"
                     />
-                    <div class="ml-2">
-                      <h1 class="text-sm line-clamp-1">{data.text}</h1>
-                      <h1 class="text-xs">{data.date}</h1>
+                    <div className="ml-2">
+                      <h1 className="text-sm line-clamp-1">{data.text}</h1>
+                      <h1 className="text-xs">{data.date}</h1>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -212,8 +268,13 @@ const UpdateProduct = () => {
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        <ProductUpdate closeModal={closeModal} isOpen={isModalOpen} />
+      {isModalOpen && selectedProductId !== null && (
+        <ProductUpdate
+          closeModal={closeModal}
+          isOpen={isModalOpen}
+          LoadProduct={loadProduct}
+          productId={selectedProductId}
+        />
       )}
     </DefaultLayout>
   );

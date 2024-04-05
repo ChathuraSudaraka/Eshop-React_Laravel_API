@@ -29,6 +29,7 @@ Route::post('/login', [AuthenticatedSessionController::class, 'create']);
 Route::post('/forgot-password', [PasswordController::class, 'forgotPassword']);
 Route::post('/otp-verify', [OtpverifyController::class, 'otpVerify']);
 Route::post('/reset-password', [PasswordChangeController::class, 'resetPassword']);
+Route::get('/product-load', [ProductController::class, 'loadProducts']);
 // Authenticated Routes with Sanctum authentication
 // routes/web.php or routes/api.php
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -40,6 +41,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/payment-method-delete/{id}', [PaymentController::class, 'DeletepaymentMethod']);
     Route::post('/payment-method-edit/{id}', [PaymentController::class, 'EditpaymentMethod']);
     Route::post('/product-add', [ProductController::class, 'AddProduct']);
+    Route::post('/product-update/{productId}', [ProductController::class, 'UpdateProduct']);
+    Route::delete('/product-delete/{productId}', [ProductController::class, 'DeleteProduct']);
     // Add other routes requiring Sanctum authentication here
 });
 

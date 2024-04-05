@@ -29,7 +29,7 @@ class ProductController extends Controller
 
         // Create new Product instance
         $product = new Product([
-            'name' => $request->input('name'),
+            'productName' => $request->input('name'),
             'description' => $request->input('description'),
             'category' => $request->input('category'),
             'qty' => $request->input('qty'),
@@ -53,5 +53,79 @@ class ProductController extends Controller
             'status' => 'success',
             'message' => 'Product added successfully',
         ]);
+    }
+
+    public function loadProducts(Request $request)
+    {
+        // Load all products
+        $products = Product::all();
+
+        // Return success response
+        return response()->json([
+            'status' => 'success',
+            'products' => $products,
+            'message' => 'Products loaded successfully',
+        ]);
+    }
+
+    public function UpdateProduct(Request $request, $_id)
+    {
+        try {
+            // Find the product by its ID
+            $product = Product::where('_id', $_id)->first();
+
+            if ($product) {
+                $product->update([
+                    'productName' => $request->input('productName'),
+                    'description' => $request->input('description'),
+                    'price' => $request->input('price'),
+                    'color' => $request->input('color'),
+                    'qty' => $request->input('qty'),
+                    'product_img' => $request->input('product_img')
+                ]);
+
+                // Return a success response
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Product updated successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Product not found'
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to update product: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function DeleteProduct(Request $request, $_id)
+    {
+        try {
+            $product = Product::where('_id', $_id)->first();
+
+            if ($product) {
+                $product->delete();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Product deleted successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Product not found'
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to delete product: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -43,14 +43,14 @@ class RegisteredUserController extends Controller
                 'city' => $request->city,
                 'postal_code' => $request->postal_code,
             ],
-            'payment' => [
-                [
-                    'card_number' => $request->card_number,
-                    'card_type' => $request->card_type,
-                    'expire_date' => $request->expire_date,
-                    'cvv' => $request->cvv,
-                ]
-            ],
+            // 'payment' => [
+            //     [
+            //         'card_number' => $request->card_number,
+            //         'card_type' => $request->card_type,
+            //         'expire_date' => $request->expire_date,
+            //         'cvv' => $request->cvv,
+            //     ]
+            // ],
             'status' => 'active', // You might want to set default values for other fields
             'role' => $this->determineRole($request->email),
         ]);

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import { PrimaryInput, PrimaryTextArea } from "../../../Profile/layouts/Inputs";
 import { FaImages, FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
+import useApiFetch from "../../../../hooks/useApiFetch";
 
 Modal.setAppElement("#root");
 
@@ -28,7 +30,7 @@ const customStyles = {
   },
 };
 
-const ProductUpdate = ({ closeModal, isOpen }) => {
+const ProductUpdate = ({ closeModal, isOpen, LoadProduct, productId }) => {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState("");
@@ -64,7 +66,13 @@ const ProductUpdate = ({ closeModal, isOpen }) => {
 
       if (validImageTypes.includes(fileType)) {
         if (files.length < 4) {
-          newFiles.push(selectedFiles[i]);
+          const reader = new FileReader();
+
+          reader.onload = (event) => {
+            newFiles.push(event.target.result);
+            setFiles([...files, event.target.result]);
+          };
+          reader.readAsDataURL(selectedFiles[i]);
         } else {
           setMessage("Maximum 4 images allowed");
         }
@@ -72,13 +80,10 @@ const ProductUpdate = ({ closeModal, isOpen }) => {
         setMessage("Only images accepted");
       }
     }
-
-    setFiles([...files, ...newFiles]);
   };
 
   const removeImage = (index) => {
-    const newFiles = [...files];
-    newFiles.splice(index, 1);
+    const newFiles = files.filter((_, i) => i !== index);
     setFiles(newFiles);
   };
 
@@ -86,9 +91,51 @@ const ProductUpdate = ({ closeModal, isOpen }) => {
     setProductQuantity(e.target.value);
   };
 
-  const handleUpdate = () => {
-    // Add logic to dispatch an action for updating the product
-    // ...
+  const handleUpdate = async () => {
+    try {
+      // Construct the payload with the updated product information
+      const response = await useApiFetch({
+        method: "POST",
+        url: `/product-update/${productId}`, // Use productId in the URL
+        body: {
+          id: productId, // Pass the product ID
+          name: productName,
+          description: productDescription,
+          price: productPrice,
+          color: productColor,
+          qty: productQuantity,
+          product_img: JSON.stringify(files),
+        },
+        // Handle the success response
+        success: (data) => {
+          toast.success(data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          closeModal();
+          LoadProduct();
+
+          console.log("Product updated successfully:", data);
+        },
+      });
+
+      // Check if the request was successful
+      if (response.ok) {
+        // Optionally, you can handle success response here
+        console.log("Product updated successfully");
+      } else {
+        // Handle error response
+        console.error("Failed to update product:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating product:", error.message);
+    }
 
     // Close the modal
     closeModal();
@@ -174,7 +221,7 @@ const ProductUpdate = ({ closeModal, isOpen }) => {
                 </button>
                 <img
                   className="h-20 w-20 rounded-md"
-                  src={URL.createObjectURL(file)}
+                  src={file}
                   alt={`product-image-${index}`}
                 />
               </div>

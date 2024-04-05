@@ -8,6 +8,7 @@ import DeletePaymentMethodModal from "./Modal/DeletePaymentMethod"; // Import th
 import CustomButton from "../layouts/Button";
 import useApiFetch from "../../../hooks/useApiFetch";
 import PaymentIcon from "react-payment-icons";
+import { AiOutlineFileAdd } from "react-icons/ai";
 
 const PaymentMethod = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,12 +68,11 @@ const PaymentMethod = () => {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <Sidebar />
-      <main className="flex-1 p-4 md:order-2">
+    <div className={`flex overflow-hidden bg-gray-100`}>
+      <main className="flex-1 p-4 md:order-2 overflow-y-auto">
         <div className="mx-auto">
           <h2 className="text-2xl font-bold mb-4">Payment Methods</h2>
-          <div className="bg-white p-4 border border-gray-400 shadow">
+          <div className="bg-white p-4 border border-gray-400 shadow rounded-lg">
             {loading ? (
               <p>Loading...</p>
             ) : error ? (
@@ -81,7 +81,7 @@ const PaymentMethod = () => {
               paymentMethods.map((paymentMethod) => (
                 <div
                   key={paymentMethod.id}
-                  className="bg-white p-5 border border-gray-400 shadow mb-4"
+                  className="bg-white p-4 border border-gray-400 shadow rounded-lg mb-2"
                 >
                   <div className="mx-4">
                     <div className="flex justify-between">
@@ -100,7 +100,6 @@ const PaymentMethod = () => {
                           className="text-2xl cursor-pointer"
                           onClick={() =>
                             handleEditPaymentMethod(
-                              
                               paymentMethod.card_number,
                               paymentMethod.card_type,
                               paymentMethod.id
@@ -125,7 +124,9 @@ const PaymentMethod = () => {
             <div className="flex mt-4">
               <CustomButton
                 onClick={handleAddPaymentMethod} // Pass the function to handle the click event
-                Text={"Add Payment Method"}
+                text={"Add Payment"}
+                icon={<AiOutlineFileAdd />}
+                IconclassName={"text-xl mr-1"}
                 textColor="text-black"
                 bgColor="bg-blue-500"
                 Fsize="text-lg"

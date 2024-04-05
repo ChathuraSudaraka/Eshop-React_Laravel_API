@@ -417,7 +417,7 @@ const General = () => {
                 {/* Save */}
                 <CustomButton
                   text="SAVE"
-                  icon={<IoIosSave/>}
+                  icon={<IoIosSave />}
                   textColor="text-white"
                   IconclassName="text-2xl mr-1"
                   Fsize="text-lg"
@@ -430,7 +430,7 @@ const General = () => {
                   onClick={handleUnlockFields}
                   text="UNLOCK"
                   IconclassName="text-2xl mr-1"
-                  icon={<IoIosUnlock/>}
+                  icon={<IoIosUnlock />}
                   textColor="text-black"
                   bgColor="bg-blue-500"
                   Fsize="text-lg"

@@ -26,12 +26,19 @@ const Product = (props) => {
       },
     });
   };
+
+  const firstImage = props.product_img ? props.product_img[0] : null;
+
   return (
     <div className="w-full relative group">
       <div className="max-w-90 max-h-80 relative overflow-y-hidden ">
-        <div>
-          <Image className="w-full h-full" imgSrc={props.img} />
-        </div>
+        {props.product_img ? (
+          <Image className="w-full h-[308.5px]" imgSrc={firstImage} />
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex justify-center items-center">
+            <span className="h-[308.5px]"></span>
+          </div>
+        )}
         <div className="absolute top-6 left-8">
           {props.badge && <Badge text="New" />}
         </div>
@@ -50,7 +57,7 @@ const Product = (props) => {
                     _id: props._id,
                     name: props.productName,
                     quantity: 1,
-                    image: props.img,
+                    image: props.product_img,
                     badge: props.badge,
                     price: props.price,
                     colors: props.color,

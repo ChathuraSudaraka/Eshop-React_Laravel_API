@@ -3,16 +3,28 @@ import { useLocation } from "react-router-dom";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import ProductInfo from "../../components/pageProps/productDetails/ProductInfo";
 import ProductsOnSale from "../../components/pageProps/productDetails/ProductsOnSale";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
 
 const ProductDetails = () => {
   const location = useLocation();
   const [prevLocation, setPrevLocation] = useState("");
-  const [productInfo, setProductInfo] = useState([]);
+  const [productInfo, setProductInfo] = useState(null);
 
   useEffect(() => {
-    setProductInfo(location.state.item);
-    setPrevLocation(location.pathname);
-  }, [location, productInfo]);
+    if (location.state && location.state.item) {
+      setProductInfo(location.state.item);
+      setPrevLocation(location.pathname);
+    }
+  }, [location]);
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
   return (
     <div className="w-full mx-auto border-b-[1px] border-b-gray-300">
@@ -24,15 +36,23 @@ const ProductDetails = () => {
           <div className="h-full">
             <ProductsOnSale />
           </div>
-          <div className="h-full xl:col-span-2">
-            <img
-              className="w-full h-full object-cover"
-              src={productInfo.img}
-              alt={productInfo.img}
-            />
+          <div className="h-full xl:col-span-3 p-10">
+            {productInfo && productInfo.product_img && (
+              <Slider {...settings}>
+                {productInfo.product_img.map((image, index) => (
+                  <div key={index} className="slide-item">
+                    <img
+                      className="w-full h-[521px] object-cover"
+                      src={image}
+                      alt={`Product Image ${index + 1}`}
+                    />
+                  </div>
+                ))}
+              </Slider>
+            )}
           </div>
-          <div className="h-full w-full md:col-span-2 xl:col-span-3 xl:p-14 flex flex-col gap-6 justify-center">
-            <ProductInfo productInfo={productInfo} />
+          <div className=" md:col-span-1 xl:col-span-2 xl:p-0 flex flex-col justify-center">
+            {productInfo && <ProductInfo productInfo={productInfo} />}
           </div>
         </div>
       </div>

@@ -1,5 +1,7 @@
 import React from "react";
 import Modal from "react-modal";
+import useApiFetch from "../../../../hooks/useApiFetch";
+import { toast } from "react-toastify";
 
 Modal.setAppElement("#root");
 
@@ -26,11 +28,33 @@ const customStyles = {
   },
 };
 
-const deleteProduct = () => { 
-  // Add delete product functionality
-}
-
-const ProductRemoveModal = ({ closeModal, isOpen }) => {
+const ProductRemoveModal = ({ closeModal, isOpen, productId }) => {
+  
+  const deleteProduct = async () => {
+    try {
+      const response = await useApiFetch({
+        method: "DELETE",
+        url: `/product-delete/${productId}`,
+        success: (data) => {
+          console.log("Product deleted successfully:", data);
+          toast.success(data.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        },
+      });
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Error deleting product");
+    }
+  };
+  
   return (
     <Modal
       isOpen={isOpen}

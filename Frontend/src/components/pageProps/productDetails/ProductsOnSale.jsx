@@ -14,7 +14,7 @@ const ProductsOnSale = () => {
             className="flex items-center gap-4 border-b-[1px] border-b-gray-300 py-2"
           >
             <div>
-              <img className="w-24" src={item.img} alt={item.img} />
+              <img className="w-24" src={item.product_img} alt={item.product_img} />
             </div>
             <div className="flex flex-col gap-2 font-titleFont">
               <p className="text-base font-medium">{item.productName}</p>
