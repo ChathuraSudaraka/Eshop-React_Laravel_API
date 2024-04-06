@@ -45,6 +45,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/product-add', [ProductController::class, 'AddProduct']);
     Route::post('/product-update/{productId}', [ProductController::class, 'UpdateProduct']);
     Route::delete('/product-delete/{productId}', [ProductController::class, 'DeleteProduct']);
+    Route::post('checkout', [PaymentController::class, 'checkout']);
+Route::get('success', [PaymentController::class, 'success'])->name('payment.success');
+Route::get('cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
     // Add other routes requiring Sanctum authentication here
 });
 
@@ -66,6 +69,3 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     ]);
 });
 
-Route::post('checkout', [PaymentController::class, 'checkout']);
-Route::get('success', [PaymentController::class, 'success'])->name('payment.success');
-Route::get('cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');

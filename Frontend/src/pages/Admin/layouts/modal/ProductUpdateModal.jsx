@@ -30,7 +30,7 @@ const customStyles = {
   },
 };
 
-const ProductUpdate = ({ closeModal, isOpen, LoadProduct, productId }) => {
+const ProductUpdate = ({ closeModal, isOpen, productId }) => {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState("");
@@ -96,14 +96,14 @@ const ProductUpdate = ({ closeModal, isOpen, LoadProduct, productId }) => {
     try {
       const response = await useApiFetch({
         method: "GET",
-        url: `/product-load/${productId}`,
+        url: "/product-load",
         success: (data) => {
-          setProductName(data.productName);
-          setProductDescription(data.productDescription);
-          setProductPrice(data.productPrice);
-          setProductColor(data.productColor);
-          setProductQuantity(data.productQuantity);
-          setFiles(data.product_img || []);
+          setProductName(data.products[0].productName);
+          setProductDescription(data.products[0].description);
+          setProductPrice(data.products[0].price);
+          setProductColor(data.products[0].color);
+          setProductQuantity(data.products[0].qty);
+          setFiles(data.products[0].product_img || []);
           console.log("Data fetched successfully:", data);
         },
       });
@@ -143,9 +143,8 @@ const ProductUpdate = ({ closeModal, isOpen, LoadProduct, productId }) => {
             progress: undefined,
             theme: "light",
           });
+          loadProduct();
           closeModal();
-          LoadProduct();
-
           console.log("Product updated successfully:", data);
         },
       });
@@ -161,9 +160,6 @@ const ProductUpdate = ({ closeModal, isOpen, LoadProduct, productId }) => {
     } catch (error) {
       console.error("Error updating product:", error.message);
     }
-
-    // Close the modal
-    closeModal();
   };
 
   return (

@@ -289,6 +289,7 @@ const UpdateProduct = () => {
         <ProductUpdate
           closeModal={closeModal}
           isOpen={isModalOpen}
+          loadProduct={loadProduct}
           productId={selectedProductId}
         />
       )}
