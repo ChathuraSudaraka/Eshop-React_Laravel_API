@@ -6,6 +6,7 @@ import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { resetCart } from "../../redux/eshopSlice";
 import { emptyCart } from "../../assets/images/index";
 import ItemCard from "./ItemCard";
+import useApiFetch from "../../hooks/useApiFetch";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,31 @@ const Cart = () => {
       setShippingCharge(20);
     }
   }, [totalAmt]);
+
+  const checkout = () => {
+    if (products.length > 0) {
+      const items = products.map((item) => {
+        return item._id;
+      });
+      useApiFetch({
+        url: "/checkout",
+        method: "POST",
+        body: { items },
+        success: (data) => {
+          if (!data.message?.links[1].href) {
+            useNotifications().value.push({
+              type: "error",
+              message: "Error occurred while processing the payment",
+            });
+            return;
+          }
+          window.location.href = data.message.links[1].href;
+        },
+      });
+    } else {
+      alert("Cart is empty");
+    }
+  };
   return (
     <div className="max-w-container mx-auto px-4">
       <Breadcrumbs title="Cart" />
@@ -92,11 +118,12 @@ const Cart = () => {
                 </p>
               </div>
               <div className="flex justify-end">
-                <Link to="/paymentgateway">
-                  <button className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300">
-                    Proceed to Checkout
-                  </button>
-                </Link>
+                <button
+                  className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300"
+                  onClick={checkout}
+                >
+                  Proceed to Checkout
+                </button>
               </div>
             </div>
           </div>

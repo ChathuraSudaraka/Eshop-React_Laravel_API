@@ -289,8 +289,7 @@ const UpdateProduct = () => {
         <ProductUpdate
           closeModal={closeModal}
           isOpen={isModalOpen}
-          LoadProduct={loadProduct}
-          productId={selectedProductId} // Pass the selected product ID
+          productId={selectedProductId}
         />
       )}
     </DefaultLayout>

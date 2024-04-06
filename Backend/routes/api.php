@@ -65,3 +65,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
         'message' => 'User data retrieved successfully'
     ]);
 });
+
+Route::post('checkout', [PaymentController::class, 'checkout']);
+Route::get('success', [PaymentController::class, 'success'])->name('payment.success');
+Route::get('cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
