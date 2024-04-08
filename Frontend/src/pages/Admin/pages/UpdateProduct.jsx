@@ -58,40 +58,14 @@ const UpdateProduct = () => {
   };
 
   const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    setSearchQuery(query);
-    const filtered = eshopProducts.filter((item) => {
-      const productName = item.productName
-        ? item.productName.toLowerCase()
-        : "";
-      const description = (item.description || "").toLowerCase();
-      const categoryMatch =
-        category === "" || category === "ALL" || item.category === category;
-      return (
-        (productName.includes(query) || description.includes(query)) &&
-        categoryMatch
-      );
+    const searchQuery = e.target.value.toLowerCase();
+    setSearchQuery(searchQuery);
+    // perform search using filteredProducts state and set the result to filteredProducts state use name to filter
+    const filteredProducts = eshopProducts.filter((product) => {
+      return product.productName.toLowerCase().includes(searchQuery);
     });
-    setFilteredProducts(filtered);
+    setFilteredProducts(filteredProducts);
   };
-
-  useEffect(() => {
-    if (searchQuery === "") {
-      loadProduct();
-    } else {
-      const filtered = eshopProducts.filter((item) => {
-        const productName = item.productName
-          ? item.productName.toLowerCase()
-          : "";
-        const description = (item.description || "").toLowerCase();
-        return (
-          productName.includes(searchQuery.toLowerCase()) ||
-          description.includes(searchQuery.toLowerCase())
-        );
-      });
-      setFilteredProducts(filtered);
-    }
-  }, [searchQuery, eshopProducts]);
 
   const openModal = (product) => {
     setIsModalOpen(true);

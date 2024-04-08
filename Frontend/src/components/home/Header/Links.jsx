@@ -80,26 +80,26 @@ const Links = () => {
           )}
           {role === "admin" ? ( // Check if user is admin
             <>
-              <NavLink to="/adminpanel" text="Admin Profile" />
-              <NavLink to="/payment" text="Admin Other" />
+              <NavLink to="/adminpanel" text="ADMIN PANEL" />
+              <NavLink to="/Vault" text="VAULT" />
             </>
           ) : (
             <>
-              <NavLink to="/general" text="Profile" />
-              <NavLink to="/paymentmethod" text="Payment" />
+              <NavLink to="/general" text="PROFILE" />
+              <NavLink to="/Vault" text="VAULT" />
             </>
           )}
           <li
             className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer"
             onClick={logout}
           >
-            {logoutLoading ? "Logging Out..." : "Log Out"}
+            {logoutLoading ? "Logging Out..." : "LOG OUT"}
           </li>
         </>
       ) : (
         <>
-          <NavLink to="/signin" text="Login" />
-          <NavLink to="/signup" text="Sign Up" />
+          <NavLink to="/signin" text="LOGIN" />
+          <NavLink to="/signup" text="SIGN UP" />
         </>
       )}
     </>
