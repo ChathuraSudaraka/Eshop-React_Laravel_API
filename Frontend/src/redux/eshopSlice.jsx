@@ -5,6 +5,7 @@ const initialState = {
   loggedIn: false,
   user: {},
   products: [], // I added products to the initial state
+  wishlist: [], // Wishlist state
 };
 
 export const eshopSlice = createSlice({
@@ -20,6 +21,20 @@ export const eshopSlice = createSlice({
       } else {
         state.products.push(action.payload);
       }
+    },
+    addToWishlist: (state, action) => {
+      const item = state.wishlist.find(
+        (item) => item._id === action.payload._id
+      );
+      if (!item) {
+        state.wishlist.push(action.payload);
+      }
+    },
+
+    removeFromWishlist: (state, action) => {
+      state.wishlist = state.wishlist.filter(
+        (item) => item._id !== action.payload
+      );
     },
     increaseQuantity: (state, action) => {
       const item = state.products.find(
@@ -56,5 +71,7 @@ export const {
   drecreaseQuantity,
   deleteItem,
   resetCart,
+  addToWishlist,
+  removeFromWishlist,
 } = eshopSlice.actions;
 export default eshopSlice.reducer;

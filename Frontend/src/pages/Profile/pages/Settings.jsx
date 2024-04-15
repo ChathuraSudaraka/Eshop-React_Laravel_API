@@ -6,6 +6,7 @@ import { PrimaryInput } from "../layouts/Inputs";
 import CustomButton from "../layouts/Button";
 import { IoIosSave } from "react-icons/io";
 import { toast } from "react-toastify";
+import { BsLayoutTextWindowReverse } from "react-icons/bs";
 
 const Settings = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -101,6 +102,9 @@ const Settings = () => {
               onClick={handleChangePassword}
             />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          </div>
+          <div className="justify-end">
+            <BsLayoutTextWindowReverse className="text-black text-2xl" />
           </div>
         </div>
       </div>

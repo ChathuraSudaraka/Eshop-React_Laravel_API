@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DefaultLayout from "../layouts/DefaultLayout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Dashboard = () => {
+  const navigateTo = useNavigate();
+  useEffect(() => {
+    if (!Cookies.get("token")) {
+      navigateTo("/signin");
+    }
+  }, []);
+
   return (
     <DefaultLayout>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
