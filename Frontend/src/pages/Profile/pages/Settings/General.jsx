@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../layouts/sidebar/Sidebar";
-import useApiFetch from "../../../hooks/useApiFetch";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router";
 import { FaCamera } from "react-icons/fa";
 import { useMediaQuery } from "react-responsive";
-import { PrimaryInput } from "../layouts/Inputs";
-import CustomButton from "../layouts/Button";
 import { toast } from "react-toastify";
 import { IoIosSave, IoIosUnlock } from "react-icons/io";
+import useApiFetch from "../../../../hooks/useApiFetch";
+import { PrimaryInput } from "../../layouts/Inputs";
+import CustomButton from "../../layouts/Button";
 
 const General = () => {
   const [image, setImage] = useState();

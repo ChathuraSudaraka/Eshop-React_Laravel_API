@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../layouts/sidebar/Sidebar";
 import { MdDeleteForever } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
-import AddPaymentMethodModal from "./Modal/AddPaymentMethod";
-import EditPaymentMethodModal from "./Modal/EditPaymentModal";
-import DeletePaymentMethodModal from "./Modal/DeletePaymentMethod"; // Import the DeletePaymentMethodModal
-import CustomButton from "../layouts/Button";
-import useApiFetch from "../../../hooks/useApiFetch";
+import AddPaymentMethodModal from "../Modal/AddPaymentMethod";
+import EditPaymentMethodModal from "../Modal/EditPaymentModal";
+import DeletePaymentMethodModal from "../Modal/DeletePaymentMethod"; // Import the DeletePaymentMethodModal
+import CustomButton from "../../layouts/Button";
 import PaymentIcon from "react-payment-icons";
 import { AiOutlineFileAdd } from "react-icons/ai";
+import useApiFetch from "../../../../hooks/useApiFetch";
 
 const PaymentMethod = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

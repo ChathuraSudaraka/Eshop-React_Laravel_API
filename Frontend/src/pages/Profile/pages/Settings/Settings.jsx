@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import useApiFetch from "../../../hooks/useApiFetch";
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
-import { PrimaryInput } from "../layouts/Inputs";
-import CustomButton from "../layouts/Button";
 import { IoIosSave } from "react-icons/io";
 import { toast } from "react-toastify";
-import { BsLayoutTextWindowReverse } from "react-icons/bs";
+import { PrimaryInput } from "../../layouts/Inputs";
+import CustomButton from "../../layouts/Button";
+import useApiFetch from "../../../../hooks/useApiFetch";
 
 const Settings = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -70,7 +69,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="mx-auto">
+    <div className="mx-auto dark:bg-black">
       <h2 className="text-2xl font-bold mb-4">Change Password</h2>
       <div className="bg-white p-4 border  border-gray-400 shadow">
         <div className="mb-4">
@@ -102,9 +101,6 @@ const Settings = () => {
               onClick={handleChangePassword}
             />
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          </div>
-          <div className="justify-end">
-            <BsLayoutTextWindowReverse className="text-black text-2xl" />
           </div>
         </div>
       </div>

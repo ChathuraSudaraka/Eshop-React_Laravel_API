@@ -22,7 +22,6 @@ import Offer from "./pages/Offer/Offer";
 import Payment from "./pages/payment/Payment";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Shop from "./pages/Shop/Shop";
-import PaymentMethod from "./pages/Profile/pages/Payment";
 import PaymentSignUp from "./pages/Account/PaymentSignUp";
 import DeleteProduct from "./pages/Admin/pages/DeleteProduct";
 import UpdateProduct from "./pages/Admin/pages/UpdateProduct";
@@ -31,9 +30,8 @@ import FPASS from "./pages/Account/ForgotPassword";
 import ChangePass from "./pages/Account/ChangePass";
 import AddProduct from "./pages/Admin/pages/AddProduct";
 import Dashboard from "./pages/Profile/pages/Dashboard";
-import General from "./pages/Profile/pages/General";
-import Settings from "./pages/Profile/pages/Settings";
 import Wishlist from "./pages/Wishlist/Wishlist";
+import TabsSetting from "./pages/Profile/pages/Settings/TabSetting";
 
 const Layout = () => {
   return (
@@ -73,9 +71,7 @@ const router = createBrowserRouter(
       <Route path="/forgotpassword" element={<FPASS />}></Route>
       <Route path="/changepass" element={<ChangePass />}></Route>
       {/* ====================== Profile Route ==================== */}
-      <Route path="/general" element={<General />}></Route>
-      <Route path="/settings" element={<Settings />}></Route>
-      <Route path="/paymentMethod" element={<PaymentMethod />}></Route>
+      <Route path="/settings" element={<TabsSetting />}></Route>
       {/* ====================== Admin Panel ====================== */}
       <Route path="/adminpanel" element={<Dashboard />}></Route>
       <Route path="/addproduct" element={<AddProduct />}></Route>

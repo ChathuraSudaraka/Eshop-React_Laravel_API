@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { RiHeart2Fill, RiShoppingCart2Fill } from "react-icons/ri";
 import { MdSwitchAccount } from "react-icons/md";
 import { useSelector } from "react-redux";
+import DarkLight from "../../pages/Profile/ThemeController/DarkLight";
 
 const SpecialCase = () => {
   const products = useSelector((state) => state.eshopReducer.products);
@@ -39,6 +40,7 @@ const SpecialCase = () => {
           )}
         </div>
       </Link>
+      <DarkLight/>
     </div>
   );
 };
