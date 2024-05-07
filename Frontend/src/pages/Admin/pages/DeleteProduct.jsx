@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FaSearch, FaTrashAlt } from "react-icons/fa";
 import { paginationItems } from "@/constants/productBlock";
-import DefaultLayout from "../../Profile/layouts/DefaultLayout";
+import DefaultLayout from "../layouts/DefaultLayout";
 import useApiFetch from "../../../hooks/useApiFetch";
 import {
   PrimaryDropdown,

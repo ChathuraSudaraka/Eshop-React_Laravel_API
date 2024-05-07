@@ -3,8 +3,8 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "react-tabs/style/react-tabs.css"; // Import styles for react-tabs
 import Settings from "./Settings";
 import General from "./General";
-import PaymentMethod from "./Payment";
 import "react-tabs/style/react-tabs.css";
+import PaymentMethod from "./Payment";
 
 const TabsSetting = () => {
   return (
@@ -14,7 +14,6 @@ const TabsSetting = () => {
         <TabList>
           <Tab>Personal info</Tab>
           <Tab>Setting</Tab>
-          <Tab>Appearance</Tab>
           <Tab>Payment</Tab>
         </TabList>
 
@@ -27,10 +26,6 @@ const TabsSetting = () => {
           <Settings />
         </TabPanel>
 
-        {/* <TabPanel>
-          <Appearance />
-        </TabPanel> */}
-
         <TabPanel>
           <PaymentMethod />
         </TabPanel>
@@ -39,4 +34,4 @@ const TabsSetting = () => {
   );
 };
 
-export default TabsSetting;
+export default TabsSetting

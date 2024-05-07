@@ -8,6 +8,7 @@ import { IoIosSave, IoIosUnlock } from "react-icons/io";
 import useApiFetch from "../../../../hooks/useApiFetch";
 import { PrimaryInput } from "../../layouts/Inputs";
 import CustomButton from "../../layouts/Button";
+import DefaultLayout from "../../layouts/DefaultLayout";
 
 const General = () => {
   const [image, setImage] = useState();
@@ -307,142 +308,144 @@ const General = () => {
   };
 
   return (
-    <div className={`flex overflow-hidden bg-gray-100`}>
-      <main className="flex-1 p-4 md:order-2 overflow-y-auto">
-        <div className="mx-auto">
-          <div className="relative h-48 md:h-80 overflow-hidden">
-            <img
-              className="w-full h-full object-cover"
-              src={coverImage}
-              alt="Cover"
-            />
-            <div className="absolute inset-0 bg-black opacity-40"></div>
-          </div>
-          {loading ? (
-            <div className="text-center">
-              <p className="text-gray-600">Loading...</p>
+    <DefaultLayout>
+      <div className={`flex overflow-hidden bg-gray-100`}>
+        <main className="flex-1 p-4 md:order-2 overflow-y-auto">
+          <div className="mx-auto">
+            <div className="relative h-48 md:h-80 overflow-hidden">
+              <img
+                className="w-full h-full object-cover"
+                src={coverImage}
+                alt="Cover"
+              />
+              {/* <div className="absolute inset-0 bg-black opacity-40"></div> */}
             </div>
-          ) : (
-            <div className="bg-white p-4 border border-gray-400 shadow rounded-lg">
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="relative">
-                  <div className="rounded-full overflow-hidden w-32 h-32 border-4 border-white">
-                    <img
-                      className="w-full h-full object-cover"
-                      src={image || "https://via.placeholder.com/150"}
-                      alt="Profile"
+            {loading ? (
+              <div className="text-center">
+                <p className="text-gray-600">Loading...</p>
+              </div>
+            ) : (
+              <div className="bg-white p-4 border border-gray-400 shadow rounded-lg">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="relative">
+                    <div className="rounded-full overflow-hidden w-32 h-32 border-4 border-white">
+                      <img
+                        className="w-full h-full object-cover"
+                        src={image || "https://via.placeholder.com/150"}
+                        alt="Profile"
+                      />
+                    </div>
+                    <label
+                      htmlFor="file-upload"
+                      className="absolute bottom-0 right-0 bg-gray-300 p-2 rounded-full cursor-pointer"
+                    >
+                      <FaCamera className="text-gray-600" />
+                    </label>
+                    <input
+                      id="file-upload"
+                      className="hidden"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
                     />
                   </div>
-                  <label
-                    htmlFor="file-upload"
-                    className="absolute bottom-0 right-0 bg-gray-300 p-2 rounded-full cursor-pointer"
-                  >
-                    <FaCamera className="text-gray-600" />
-                  </label>
-                  <input
-                    id="file-upload"
-                    className="hidden"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
+                  <div>
+                    <h3 className="text-2xl font-semibold">
+                      {firstName} {lastName}
+                    </h3>
+                    <p className="text-gray-600">{email}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  {/* First Namw */}
+                  <PrimaryInput
+                    labelText={"First Name"}
+                    value={firstName}
+                    onChange={handleNameChange}
+                    placeholder={"Enter your first name"}
+                    disabled={fieldsLocked}
+                    error={firstNameError}
+                  />
+                  {/* Last Name */}
+                  <PrimaryInput
+                    labelText={"Last Name"}
+                    value={lastName}
+                    onChange={handleLastNameChange}
+                    placeholder={"Enter your last name"}
+                    disabled={fieldsLocked}
+                    error={lastNameError}
+                  />
+                  {/* Email */}
+                  <PrimaryInput
+                    labelText={"Email"}
+                    value={email}
+                    onChange={handleEmailChange}
+                    placeholder={"Enter your email"}
+                    disabled={fieldsLocked || emailDisabled}
+                    error={emailError}
+                  />
+                  {/* Mobile */}
+                  <PrimaryInput
+                    labelText={"Mobile Number"}
+                    value={mobile}
+                    onChange={handleMobileChange}
+                    placeholder={"Enter your mobile number"}
+                    disabled={fieldsLocked}
+                    error={mobileError}
+                  />
+                  {/* Address */}
+                  <PrimaryInput
+                    labelText={"Address"}
+                    value={address}
+                    onChange={handleAddressChange}
+                    placeholder={"Enter your address"}
+                    disabled={fieldsLocked}
+                    error={addressError}
+                  />
+                  {/* Zip */}
+                  <PrimaryInput
+                    labelText={"Zip/Postal Code"}
+                    value={zip}
+                    onChange={handleZipChange}
+                    placeholder={"Enter your Zip/Postal Code"}
+                    disabled={fieldsLocked}
+                    error={zipError}
                   />
                 </div>
-                <div>
-                  <h3 className="text-2xl font-semibold">
-                    {firstName} {lastName}
-                  </h3>
-                  <p className="text-gray-600">{email}</p>
+
+                <div className="flex justify-between items-center mt-6">
+                  {/* Save */}
+                  <CustomButton
+                    text="SAVE"
+                    icon={<IoIosSave />}
+                    textColor="text-white"
+                    IconclassName="text-2xl mr-1"
+                    Fsize="text-lg"
+                    className={`hover:bg-black duration-300 font-bold px-8 py-3
+                  ${changesMade ? "" : "opacity-50 cursor-not-allowed"}`}
+                    onClick={handleUpload}
+                  />
+                  {/* Update Button */}
+                  <CustomButton
+                    onClick={handleUnlockFields}
+                    text="UNLOCK"
+                    IconclassName="text-2xl mr-1"
+                    icon={<IoIosUnlock />}
+                    textColor="text-black"
+                    bgColor="bg-blue-500"
+                    Fsize="text-lg"
+                    className={
+                      "hover:bg-blue-700 duration-300 font-bold px-8 py-3"
+                    }
+                  />
                 </div>
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                {/* First Namw */}
-                <PrimaryInput
-                  labelText={"First Name"}
-                  value={firstName}
-                  onChange={handleNameChange}
-                  placeholder={"Enter your first name"}
-                  disabled={fieldsLocked}
-                  error={firstNameError}
-                />
-                {/* Last Name */}
-                <PrimaryInput
-                  labelText={"Last Name"}
-                  value={lastName}
-                  onChange={handleLastNameChange}
-                  placeholder={"Enter your last name"}
-                  disabled={fieldsLocked}
-                  error={lastNameError}
-                />
-                {/* Email */}
-                <PrimaryInput
-                  labelText={"Email"}
-                  value={email}
-                  onChange={handleEmailChange}
-                  placeholder={"Enter your email"}
-                  disabled={fieldsLocked || emailDisabled}
-                  error={emailError}
-                />
-                {/* Mobile */}
-                <PrimaryInput
-                  labelText={"Mobile Number"}
-                  value={mobile}
-                  onChange={handleMobileChange}
-                  placeholder={"Enter your mobile number"}
-                  disabled={fieldsLocked}
-                  error={mobileError}
-                />
-                {/* Address */}
-                <PrimaryInput
-                  labelText={"Address"}
-                  value={address}
-                  onChange={handleAddressChange}
-                  placeholder={"Enter your address"}
-                  disabled={fieldsLocked}
-                  error={addressError}
-                />
-                {/* Zip */}
-                <PrimaryInput
-                  labelText={"Zip/Postal Code"}
-                  value={zip}
-                  onChange={handleZipChange}
-                  placeholder={"Enter your Zip/Postal Code"}
-                  disabled={fieldsLocked}
-                  error={zipError}
-                />
-              </div>
-
-              <div className="flex justify-between items-center mt-6">
-                {/* Save */}
-                <CustomButton
-                  text="SAVE"
-                  icon={<IoIosSave />}
-                  textColor="text-white"
-                  IconclassName="text-2xl mr-1"
-                  Fsize="text-lg"
-                  className={`hover:bg-black duration-300 font-bold px-8 py-3
-                  ${changesMade ? "" : "opacity-50 cursor-not-allowed"}`}
-                  onClick={handleUpload}
-                />
-                {/* Update Button */}
-                <CustomButton
-                  onClick={handleUnlockFields}
-                  text="UNLOCK"
-                  IconclassName="text-2xl mr-1"
-                  icon={<IoIosUnlock />}
-                  textColor="text-black"
-                  bgColor="bg-blue-500"
-                  Fsize="text-lg"
-                  className={
-                    "hover:bg-blue-700 duration-300 font-bold px-8 py-3"
-                  }
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
+            )}
+          </div>
+        </main>
+      </div>
+    </DefaultLayout>
   );
 };
 

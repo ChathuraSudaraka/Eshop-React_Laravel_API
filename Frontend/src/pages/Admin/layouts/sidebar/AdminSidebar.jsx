@@ -1,20 +1,15 @@
 // Sidebar.js
 import React from "react";
-import {
-  FaDoorClosed,
-  FaHome,
-  FaShoppingBasket,
-  FaTrashAlt,
-} from "react-icons/fa";
+import { FaHome, FaShoppingBasket } from "react-icons/fa";
 import { GiBoxUnpacking, GiUpgrade } from "react-icons/gi";
 import { Link } from "react-router-dom";
 
-const Sidebar = ({ sidebarToggle }) => {
+const AdminSidebar = ({ sidebarToggle }) => {
   return (
     <div
       className={` ${
         sidebarToggle ? " hidden " : " block "
-      } w-64 bg-white fixed h-[713px] py-4 px-4 ml-2 mt-2 rounded-lg`}
+      } w-[265px] bg-white fixed  h-full py-4 px-4`}
       style={{ transition: "width 0.3s ease" }}
     >
       <div className="my-3 mb-4">
@@ -75,4 +70,4 @@ const Sidebar = ({ sidebarToggle }) => {
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;

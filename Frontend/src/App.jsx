@@ -29,9 +29,13 @@ import AdminLogin from "./pages/Account/AdminLogin";
 import FPASS from "./pages/Account/ForgotPassword";
 import ChangePass from "./pages/Account/ChangePass";
 import AddProduct from "./pages/Admin/pages/AddProduct";
-import Dashboard from "./pages/Profile/pages/Dashboard";
 import Wishlist from "./pages/Wishlist/Wishlist";
 import TabsSetting from "./pages/Profile/pages/Settings/TabSetting";
+import Dashboard from "./pages/Admin/pages/Dashboard";
+import DefaultLayout from "./pages/Profile/layouts/DefaultLayout";
+import General from "./pages/Profile/pages/Settings/General";
+import Settings from "./pages/Profile/pages/Settings/Settings";
+import PaymentMethod from "./pages/Profile/pages/Settings/Payment";
 
 const Layout = () => {
   return (
@@ -71,7 +75,9 @@ const router = createBrowserRouter(
       <Route path="/forgotpassword" element={<FPASS />}></Route>
       <Route path="/changepass" element={<ChangePass />}></Route>
       {/* ====================== Profile Route ==================== */}
-      <Route path="/settings" element={<TabsSetting />}></Route>
+      <Route path="/general" element={<General/>}></Route>
+      <Route path="/settings" element={<Settings/>}></Route>
+      <Route path="/Managepayment" element={<PaymentMethod/>}></Route>
       {/* ====================== Admin Panel ====================== */}
       <Route path="/adminpanel" element={<Dashboard />}></Route>
       <Route path="/addproduct" element={<AddProduct />}></Route>

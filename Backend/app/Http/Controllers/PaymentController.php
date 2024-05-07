@@ -164,12 +164,14 @@ class PaymentController extends Controller
             'cvv' => ['required', 'string', 'max:255'],
         ]);
 
+        $maskedCardNumber = substr_replace($request->card_number, str_repeat('*', strlen($request->card_number) - 4), 4, -4);
+
         // Update the user's payment method
         $user->push(
             'payment',
             [
                 'id' => uniqid(),
-                'card_number' => $request->card_number,
+                'card_number' => $maskedCardNumber,
                 'card_type' => $request->card_type,
                 'expire_date' => $request->expire_date,
                 'cvv' => $request->cvv,

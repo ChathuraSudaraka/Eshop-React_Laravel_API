@@ -81,12 +81,11 @@ const Links = () => {
           {role === "admin" ? ( // Check if user is admin
             <>
               <NavLink to="/adminpanel" text="ADMIN PANEL" />
-              <NavLink to="/Vault" text="VAULT" />
+              <NavLink to="/general" text="PROFILE" />
             </>
           ) : (
             <>
               <NavLink to="/general" text="PROFILE" />
-              <NavLink to="/Vault" text="VAULT" />
             </>
           )}
           <li
@@ -106,4 +105,4 @@ const Links = () => {
   );
 };
 
-export default Links;
+export default Links

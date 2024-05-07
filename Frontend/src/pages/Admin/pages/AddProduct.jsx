@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaDollarSign, FaImages, FaTrash, FaWeight } from "react-icons/fa";
-import DefaultLayout from "../../Profile/layouts/DefaultLayout";
+import DefaultLayout from "../layouts/DefaultLayout";
 import {
   PrimaryDropdown,
   PrimaryInput,

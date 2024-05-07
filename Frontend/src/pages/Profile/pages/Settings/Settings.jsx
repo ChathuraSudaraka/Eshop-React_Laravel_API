@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { PrimaryInput } from "../../layouts/Inputs";
 import CustomButton from "../../layouts/Button";
 import useApiFetch from "../../../../hooks/useApiFetch";
+import DefaultLayout from "../../layouts/DefaultLayout";
 
 const Settings = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -69,42 +70,44 @@ const Settings = () => {
   };
 
   return (
-    <div className="mx-auto dark:bg-black">
-      <h2 className="text-2xl font-bold mb-4">Change Password</h2>
-      <div className="bg-white p-4 border  border-gray-400 shadow">
-        <div className="mb-4">
-          <PrimaryInput
-            labelText="Current Password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          />
-
-          <PrimaryInput
-            labelText="New Password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-
-          <PrimaryInput
-            labelText="Confirm New Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <div>
-            <CustomButton
-              text="CHANGE PASSWORD"
-              icon={<IoIosSave />}
-              textColor="text-white"
-              IconclassName="text-2xl mr-1"
-              Fsize="text-lg"
-              className="hover:bg-black duration-300 font-bold px-8 py-3"
-              onClick={handleChangePassword}
+    <DefaultLayout>
+      <div className="mx-auto dark:bg-black">
+        {/* <h2 className="text-2xl font-bold mb-4">Change Password</h2> */}
+        <div className="bg-white p-4 border  border-gray-400 shadow">
+          <div className="mb-4">
+            <PrimaryInput
+              labelText="Current Password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
             />
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+            <PrimaryInput
+              labelText="New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+
+            <PrimaryInput
+              labelText="Confirm New Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <div>
+              <CustomButton
+                text="CHANGE PASSWORD"
+                icon={<IoIosSave />}
+                textColor="text-white"
+                IconclassName="text-2xl mr-1"
+                Fsize="text-lg"
+                className="hover:bg-black duration-300 font-bold px-8 py-3"
+                onClick={handleChangePassword}
+              />
+              {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </DefaultLayout>
   );
 };
 

@@ -16,7 +16,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Navbar = ({ sidebarToggle, setSidebarToggle }) => {
+const AdminNavbar = ({ sidebarToggle, setSidebarToggle }) => {
   return (
     <div className="pr-2 pl-2">
       <nav className="bg-white px-4 py-3 flex justify-between rounded-lg mt-2 ">
@@ -226,4 +226,4 @@ const Navbar = ({ sidebarToggle, setSidebarToggle }) => {
   );
 };
 
-export default Navbar;
+export default AdminNavbar;

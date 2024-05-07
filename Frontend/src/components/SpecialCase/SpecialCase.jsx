@@ -40,7 +40,7 @@ const SpecialCase = () => {
           )}
         </div>
       </Link>
-      <DarkLight/>
+      {/* <DarkLight/> */}
     </div>
   );
 };
