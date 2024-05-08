@@ -309,23 +309,23 @@ const General = () => {
 
   return (
     <DefaultLayout>
-      <div className={`flex overflow-hidden bg-gray-100`}>
-        <main className="flex-1 p-4 md:order-2 overflow-y-auto">
-          <div className="mx-auto">
-            <div className="relative h-48 md:h-80 overflow-hidden">
-              <img
-                className="w-full h-full object-cover"
-                src={coverImage}
-                alt="Cover"
-              />
-              {/* <div className="absolute inset-0 bg-black opacity-40"></div> */}
-            </div>
+      <main className="flex-1">
+        <div className="mx-auto">
+          <div className="relative h-48 md:h-80 overflow-hidden rounded-lg mb-2">
+            <img
+              className="w-full h-full object-cover"
+              src={coverImage}
+              alt="Cover"
+            />
+            {/* <div className="absolute inset-0 bg-black opacity-40"></div> */}
+          </div>
+          <div className="bg-white p-4 border rounded-lg">
             {loading ? (
               <div className="text-center">
                 <p className="text-gray-600">Loading...</p>
               </div>
             ) : (
-              <div className="bg-white p-4 border border-gray-400 shadow rounded-lg">
+              <div>
                 <div className="flex items-center space-x-4 mb-4">
                   <div className="relative">
                     <div className="rounded-full overflow-hidden w-32 h-32 border-4 border-white">
@@ -423,7 +423,7 @@ const General = () => {
                     IconclassName="text-2xl mr-1"
                     Fsize="text-lg"
                     className={`hover:bg-black duration-300 font-bold px-8 py-3
-                  ${changesMade ? "" : "opacity-50 cursor-not-allowed"}`}
+                    ${changesMade ? "" : "opacity-50 cursor-not-allowed"}`}
                     onClick={handleUpload}
                   />
                   {/* Update Button */}
@@ -443,8 +443,8 @@ const General = () => {
               </div>
             )}
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </DefaultLayout>
   );
 };

@@ -69,94 +69,92 @@ const PaymentMethod = () => {
 
   return (
     <DefaultLayout>
-      <div className={`flex overflow-hidden bg-gray-100`}>
-        <main className="flex-1 p-4 md:order-2 overflow-y-auto">
-          <div className="mx-auto">
-            {/* <h2 className="text-2xl font-bold mb-4">Payment Methods</h2> */}
-            <div className="bg-white p-4 border border-gray-400 shadow rounded-lg">
-              {loading ? (
-                <p>Loading...</p>
-              ) : error ? (
-                <p>{error}</p>
-              ) : paymentMethods?.length > 0 ? (
-                paymentMethods.map((paymentMethod) => (
-                  <div
-                    key={paymentMethod.id}
-                    className="bg-white p-4 border border-gray-400 shadow rounded-lg mb-2"
-                  >
-                    <div className="mx-4">
-                      <div className="flex justify-between">
-                        <div className="flex">
-                          <PaymentIcon
-                            id={paymentMethod.card_type}
-                            style={{ margin: 10, width: 60 }}
-                            className="payment-icon"
-                          />
-                          <p className="text-lg pt-4">
-                            {paymentMethod.card_number}
-                          </p>
-                        </div>
-                        <div className="flex gap-9 pt-4">
-                          <FaRegEdit
-                            className="text-2xl cursor-pointer"
-                            onClick={() =>
-                              handleEditPaymentMethod(
-                                paymentMethod.card_number,
-                                paymentMethod.card_type,
-                                paymentMethod.id
-                              )
-                            }
-                          />
-                          <MdDeleteForever
-                            className="text-2xl cursor-pointer"
-                            onClick={() =>
-                              handleDeletePaymentMethod(paymentMethod.id)
-                            }
-                          />
-                        </div>
+      <main className="flex-1 h-[590px]">
+        <div className="mx-auto">
+          {/* <h2 className="text-2xl font-bold mb-4">Payment Methods</h2> */}
+          <div className="bg-white p-4 rounded-lg">
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>{error}</p>
+            ) : paymentMethods?.length > 0 ? (
+              paymentMethods.map((paymentMethod) => (
+                <div
+                  key={paymentMethod.id}
+                  className="bg-white p-4 border border-gray-400 shadow rounded-lg mb-2"
+                >
+                  <div className="mx-4">
+                    <div className="flex justify-between">
+                      <div className="flex">
+                        <PaymentIcon
+                          id={paymentMethod.card_type}
+                          style={{ margin: 10, width: 60 }}
+                          className="payment-icon"
+                        />
+                        <p className="text-lg pt-4">
+                          {paymentMethod.card_number}
+                        </p>
+                      </div>
+                      <div className="flex gap-9 pt-4">
+                        <FaRegEdit
+                          className="text-2xl cursor-pointer"
+                          onClick={() =>
+                            handleEditPaymentMethod(
+                              paymentMethod.card_number,
+                              paymentMethod.card_type,
+                              paymentMethod.id
+                            )
+                          }
+                        />
+                        <MdDeleteForever
+                          className="text-2xl cursor-pointer"
+                          onClick={() =>
+                            handleDeletePaymentMethod(paymentMethod.id)
+                          }
+                        />
                       </div>
                     </div>
                   </div>
-                ))
-              ) : (
-                <p>No payment methods available.</p>
-              )}
+                </div>
+              ))
+            ) : (
+              <p>No payment methods available.</p>
+            )}
 
-              <div className="flex mt-4">
-                <CustomButton
-                  onClick={handleAddPaymentMethod} // Pass the function to handle the click event
-                  text={"Add Payment"}
-                  icon={<AiOutlineFileAdd />}
-                  IconclassName={"text-xl mr-1"}
-                  textColor="text-black"
-                  bgColor="bg-blue-500"
-                  Fsize="text-lg"
-                  className="hover:bg-blue-700 duration-300 font-bold px-8 py-3"
-                />
-              </div>
+            <div className="flex mt-4">
+              <CustomButton
+                onClick={handleAddPaymentMethod} // Pass the function to handle the click event
+                text={"Add Payment"}
+                icon={<AiOutlineFileAdd />}
+                IconclassName={"text-xl mr-1"}
+                textColor="text-black"
+                bgColor="bg-blue-500"
+                Fsize="text-lg"
+                className="hover:bg-blue-700 duration-300 font-bold px-8 py-3"
+              />
             </div>
           </div>
-        </main>
-        {/* Render the modals */}
-        <AddPaymentMethodModal
-          isOpen={isModalOpen}
-          closeModal={() => setIsModalOpen(false)}
-          reloadPaymentMethods={reloadPaymentMethods}
-        />
-        <EditPaymentMethodModal
-          isOpen={isEditModalOpen}
-          closeModal={() => setIsEditModalOpen(false)}
-          reloadPaymentMethods={reloadPaymentMethods}
-          paymentMethodId={paymentMethodId}
-          paymentMethod={paymentMethod}
-        />
-        <DeletePaymentMethodModal
-          isOpen={isDeleteModalOpen}
-          closeModal={() => setIsDeleteModalOpen(false)}
-          reloadPaymentMethods={reloadPaymentMethods}
-          paymentMethodId={paymentMethodId}
-        />
-      </div>
+        </div>
+      </main>
+      {/* Render the modals */}
+      <AddPaymentMethodModal
+        isOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+        reloadPaymentMethods={reloadPaymentMethods}
+      />
+      <EditPaymentMethodModal
+        isOpen={isEditModalOpen}
+        closeModal={() => setIsEditModalOpen(false)}
+        reloadPaymentMethods={reloadPaymentMethods}
+        paymentMethodId={paymentMethodId}
+        paymentMethod={paymentMethod}
+      />
+      <DeletePaymentMethodModal
+        isOpen={isDeleteModalOpen}
+        closeModal={() => setIsDeleteModalOpen(false)}
+        reloadPaymentMethods={reloadPaymentMethods}
+        paymentMethodId={paymentMethodId}
+      />
     </DefaultLayout>
   );
 };

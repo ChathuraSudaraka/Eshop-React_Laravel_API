@@ -71,9 +71,9 @@ const Settings = () => {
 
   return (
     <DefaultLayout>
-      <div className="mx-auto dark:bg-black">
+      <div className="mx-auto dark:bg-black h-[590px]">
         {/* <h2 className="text-2xl font-bold mb-4">Change Password</h2> */}
-        <div className="bg-white p-4 border  border-gray-400 shadow">
+        <div className="bg-white p-4 rounded-md">
           <div className="mb-4">
             <PrimaryInput
               labelText="Current Password"
