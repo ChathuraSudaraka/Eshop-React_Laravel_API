@@ -222,36 +222,38 @@ const Dashboard = () => {
             />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-lg col-span-1 mt-2 md:ml-2 ">
-          <div className="p-4">
-            <h2 className="text-xl font-bold mb-2 uppercase">Top Products</h2>
-            <div className="rounded-md h-[480px] overflow-y-scroll">
-              {DataArray.map((data, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center border dark:border-slate-700 rounded-md p-2 mb-1"
-                >
-                  <div className="flex items-center">
-                    <img
-                      src={data.imageUrl}
-                      alt="img"
-                      className="w-12 border rounded-md"
-                    />
-                    <div className="ml-2">
-                      <h1 className="text-sm line-clamp-1">{data.text}</h1>
-                      <h1 className="text-xs">{data.date}</h1>
+        <div>
+          <div className="bg-white rounded-lg shadow-lg col-span-1 mt-2 md:ml-2 ">
+            <div className="p-4">
+              <h2 className="text-xl font-bold mb-2 uppercase">Top Products</h2>
+              <div className="rounded-md sm:h-[480px] overflow-y-scroll">
+                {DataArray.map((data, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center border dark:border-slate-700 rounded-md p-2 mb-1"
+                  >
+                    <div className="flex items-center">
+                      <img
+                        src={data.imageUrl}
+                        alt="img"
+                        className="w-12 border rounded-md"
+                      />
+                      <div className="ml-2">
+                        <h1 className="text-sm line-clamp-1">{data.text}</h1>
+                        <h1 className="text-xs">{data.date}</h1>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Link to="/signup">
+                        <FaTrashAlt
+                          className="text-xl text-red-700 cursor-pointer"
+                          onClick={() => deleteProduct(data._id)}
+                        />
+                      </Link>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Link to="/signup">
-                      <FaTrashAlt
-                        className="text-xl text-red-700 cursor-pointer"
-                        onClick={() => deleteProduct(data._id)}
-                      />
-                    </Link>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
