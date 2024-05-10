@@ -145,8 +145,8 @@ const Dashboard = () => {
         </div>
       </div>
       {/* Second Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12">
-        <div className="bg-white rounded-lg shadow-lg mt-2 col-span-9">
+      <div className="grid grid-cols-1 md:grid-cols-4">
+        <div className="bg-white rounded-lg shadow-lg mt-2 col-span-3">
           <div className="px-4 py-4">
             <h2 className="text-xl font-bold mb-2 uppercase">Revenue</h2>
             <div className="flex justify-end space-x-2">
@@ -222,7 +222,7 @@ const Dashboard = () => {
             />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-lg col-span-3 mt-2 md:ml-2 -md-2">
+        <div className="bg-white rounded-lg shadow-lg col-span-1 mt-2 md:ml-2 ">
           <div className="p-4">
             <h2 className="text-xl font-bold mb-2 uppercase">Top Products</h2>
             <div className="rounded-md h-[480px] overflow-y-scroll">
