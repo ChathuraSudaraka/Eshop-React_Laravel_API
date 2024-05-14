@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DefaultLayout from "../layouts/DefaultLayout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -21,6 +21,7 @@ import {
   FaTrashAlt,
 } from "react-icons/fa";
 import { RiArrowUpDoubleLine, RiRefund2Fill } from "react-icons/ri";
+import Cookies from "js-cookie";
 
 ChartJS.register(
   ArcElement,
@@ -33,6 +34,16 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
+  const navigateTo = useNavigate();
+  const cookies = Cookies.get("token");
+
+  useEffect(() => {
+    // Check if the user is logged in
+    if (!cookies) {
+      navigateTo("/signin");
+    }
+  }, []);
+
   const DataArray = [
     {
       imageUrl: "https://via.placeholder.com/150",

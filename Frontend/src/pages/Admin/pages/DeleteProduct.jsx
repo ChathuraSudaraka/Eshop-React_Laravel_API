@@ -13,6 +13,7 @@ import {
 import CustomButton from "../../Profile/layouts/Button";
 import { AiOutlineUnorderedList } from "react-icons/ai";
 import ProductRemoveModal from "../layouts/modal/ProductRemoveModal";
+import Cookies from "js-cookie";
 
 const DeleteProduct = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,7 +25,8 @@ const DeleteProduct = () => {
   const [selectedProductId, setSelectedProductId] = useState(null);
   const eshopProducts = useSelector((state) => state.eshopReducer.products); // Get products from Redux store
   const inputRef = useRef(null); // Ref for input element
-
+  const navigateTo = useNavigate();
+  const cookies = Cookies.get("token");
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
   };
@@ -34,6 +36,12 @@ const DeleteProduct = () => {
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
+
+  useEffect(() => {
+    if (!cookies) {
+      navigateTo("/signin");
+    }
+  }, []);
 
   useEffect(() => {
     loadProduct();

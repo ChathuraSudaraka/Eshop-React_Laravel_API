@@ -13,6 +13,7 @@ import {
 import { GiStabbedNote } from "react-icons/gi";
 import CustomButton from "../../Profile/layouts/Button";
 import { AiOutlineUnorderedList } from "react-icons/ai";
+import Cookies from "js-cookie";
 
 const UpdateProduct = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,6 +26,8 @@ const UpdateProduct = () => {
   const [selectedOption, setSelectedOption] = useState("");
   // Update Product Modal data Pass
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const navigateTo = useNavigate();
+  const cookies = Cookies.get("token");
 
   const options = ["PUBLIC", "HIDDEN"];
 
@@ -32,6 +35,11 @@ const UpdateProduct = () => {
     setSelectedOption(e.target.value);
   };
 
+  useEffect(() => {
+    if (!cookies) {
+      navigateTo("/signin");
+    }
+  }, []);
   useEffect(() => {
     loadProduct();
   }, []);

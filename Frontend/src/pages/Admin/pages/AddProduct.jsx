@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaDollarSign, FaImages, FaTrash, FaWeight } from "react-icons/fa";
 import DefaultLayout from "../layouts/DefaultLayout";
 import {
@@ -12,6 +12,8 @@ import CustomButton from "../../Profile/layouts/Button";
 import { IoIosSave, IoIosTrash } from "react-icons/io";
 import useApiFetch from "../../../hooks/useApiFetch";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
   const [productName, setProductName] = useState("");
@@ -30,6 +32,14 @@ const AddProduct = () => {
   const [files, setFiles] = useState([]);
   const [message, setMessage] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
+  const cookies = Cookies.get("token");
+  const navigateTo = useNavigate();
+
+  useEffect(() => {
+    if (!cookies) {
+      navigateTo("/signin");
+    }
+  }, []);
 
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
