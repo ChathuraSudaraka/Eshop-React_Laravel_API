@@ -5,6 +5,7 @@ import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 const Vault = () => {
   const location = useLocation();
   const [prevLocation, setPrevLocation] = useState("");
+  // const loading = setLoading();
   useEffect(() => {
     setPrevLocation(location.state.data);
   }, [location]);
@@ -23,6 +24,12 @@ const Vault = () => {
             Continue Shopping
           </button>
         </Link>
+      </div>
+      <div className="flex xl:px-52 md:52 pb-10">
+        <div className="bg-black p-14">
+          <img className="w-32 h-32" alt="productImage" />{" "}
+        </div>
+        <div className="bg-gray-600 p-14 w-full"></div>
       </div>
     </div>
   );
