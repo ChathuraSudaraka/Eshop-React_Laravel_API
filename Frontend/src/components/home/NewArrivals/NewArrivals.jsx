@@ -21,7 +21,10 @@ const NewArrivals = () => {
         url: "/product-load",
         success: (data) => {
           console.log("Data fetched successfully:", data);
-          const items = data.products.map((product) => ({ ...product, displayBadge: true }));
+          const items = data.products.map((product) => ({
+            ...product,
+            displayBadge: true,
+          }));
           setItemsFromDb(items);
           setCurrentItems(items.slice(0, itemsPerPage)); // Adjust as needed
         },
