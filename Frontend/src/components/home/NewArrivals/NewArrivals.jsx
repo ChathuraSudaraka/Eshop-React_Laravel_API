@@ -1,17 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import Heading from "../Products/Heading";
 import Product from "../Products/Product";
-import {
-  newArrOne,
-  newArrTwo,
-  newArrThree,
-  newArrFour,
-} from "../../../assets/images/index";
 import SampleNextArrow from "./SampleNextArrow";
 import SamplePrevArrow from "./SamplePrevArrow";
+import useApiFetch from "../../../hooks/useApiFetch";
 
 const NewArrivals = () => {
+  const [itemsFromDb, setItemsFromDb] = useState([]);
+  const [currentItems, setCurrentItems] = useState([]);
+
+  useEffect(() => {
+    fetchDataFromDb();
+  }, []);
+
+  const fetchDataFromDb = async () => {
+    try {
+      const response = await useApiFetch({
+        method: "GET",
+        url: "/product-load",
+        success: (data) => {
+          console.log("Data fetched successfully:", data);
+          const items = data.products.map((product) => ({ ...product, displayBadge: true }));
+          setItemsFromDb(items);
+          setCurrentItems(items.slice(0, itemsPerPage)); // Adjust as needed
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const itemsPerPage = 10; // Define how many items per page
+
   const settings = {
     infinite: true,
     speed: 500,
@@ -46,65 +67,24 @@ const NewArrivals = () => {
       },
     ],
   };
+
   return (
     <div className="w-full pb-16">
       <Heading heading="New Arrivals" />
       <Slider {...settings}>
-        <div className="px-2">
-          <Product
-            _id="100001"
-            img={newArrOne}
-            productName="Round Table Clock"
-            price="1500.00"
-            color="Black"
-            badge={true}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100002"
-            img={newArrTwo}
-            productName="Smart Watch"
-            price="5250.00"
-            color="Black"
-            badge={true}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100003"
-            img={newArrThree}
-            productName="cloth Basket"
-            price="1280.00"
-            color="Mixed"
-            badge={true}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100004"
-            img={newArrFour}
-            productName="Funny toys for babies"
-            price="460.00"
-            color="Mixed"
-            badge={false}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100005"
-            img={newArrTwo}
-            productName="Funny toys for babies"
-            price="760.00"
-            color="Mixed"
-            badge={false}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
+        {currentItems.map((item) => (
+          <div key={item._id} className="px-2 w-full">
+            <Product
+              _id={item._id}
+              product_img={item.product_img}
+              productName={item.productName}
+              price={item.price}
+              color={item.color}
+              badge={item.badge}
+              description={item.description}
+            />
+          </div>
+        ))}
       </Slider>
     </div>
   );
