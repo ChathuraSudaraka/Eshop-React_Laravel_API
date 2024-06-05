@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "../Products/Heading";
 import Product from "../Products/Product";
 import {
@@ -7,48 +7,54 @@ import {
   spfThree,
   spfFour,
 } from "../../../assets/images/index";
+import useApiFetch from "../../../hooks/useApiFetch";
 
 const SpecialOffers = () => {
+  const [itemsFromDb, setItemsFromDb] = useState([]);
+  const [currentItems, setCurrentItems] = useState([]);
+  const itemsPerPage = 4; // Define how many items per page
+
+  useEffect(() => {
+    fetchDataFromDb();
+  }, []);
+
+  const fetchDataFromDb = async () => {
+    try {
+      const response = await useApiFetch({
+        method: "GET",
+        url: "/product-load",
+        success: (data) => {
+          console.log("Data fetched successfully:", data);
+          const items = data.products.map((product) => ({
+            ...product,
+            displayBadge: true,
+          }));
+          setItemsFromDb(items);
+          setCurrentItems(items.slice(0, itemsPerPage)); // Adjust as needed
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <div className="w-full pb-20">
       <Heading heading="Special Offers" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:grid-cols-1 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10">
-        <Product
-          _id="1101"
-          product_img={spfOne}
-          productName="Cap for Boys"
-          price="35.00"
-          color="Blank and White"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1102"
-          product_img={spfTwo}
-          productName="Tea Table"
-          price="180.00"
-          color="Gray"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1103"
-          product_img={spfThree}
-          productName="Headphones"
-          price="25.00"
-          color="Mixed"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1104"
-          product_img={spfFour}
-          productName="Sun glasses"
-          price="220.00"
-          color="Black"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
+        {currentItems.map((item) => (
+          <div key={item._id}>
+            <Product
+              _id={item._id}
+              product_img={item.product_img}
+              productName={item.productName}
+              price={item.price}
+              color={item.color}
+              badge={item.badge}
+              description={item.description}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
