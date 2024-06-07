@@ -26,6 +26,16 @@ const UpdateProduct = () => {
   const [selectedOption, setSelectedOption] = useState("");
   // Update Product Modal data Pass
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedProductDetails, setSelectedProductDetails] = useState({
+    productName: "",
+    productPrice: "",
+    productDescription: "",
+    productColor: "",
+    files: [],
+    productQuantity: "",
+    message: "",
+  });
+
   const navigateTo = useNavigate();
   const cookies = Cookies.get("token");
 
@@ -68,7 +78,7 @@ const UpdateProduct = () => {
   const handleSearch = (e) => {
     const searchQuery = e.target.value.toLowerCase();
     setSearchQuery(searchQuery);
-    // perform search using filteredProducts state and set the result to filteredProducts state use name to filter
+    // Perform search using eshopProducts state and set the result to filteredProducts state
     const filteredProducts = eshopProducts.filter((product) => {
       return product.productName.toLowerCase().includes(searchQuery);
     });
@@ -77,7 +87,17 @@ const UpdateProduct = () => {
 
   const openModal = (product) => {
     setIsModalOpen(true);
-    setSelectedProductId(product);
+    setSelectedProductId(product._id); // Assuming _id is the productId field
+    // Pass all product details
+    setSelectedProductDetails({
+      productName: product.productName,
+      productPrice: product.price,
+      productDescription: product.description,
+      productColor: product.color,
+      files: product.product_img, // Assuming product_img contains files
+      productQuantity: product.qty,
+      message: product.message, // Assuming message is part of product details
+    });
   };
 
   const closeModal = () => {
@@ -124,11 +144,10 @@ const UpdateProduct = () => {
             <div className="flex w-full gap-1 uppercase justify-between">
               <div className="w-[500px]">
                 <PrimaryInputIcon
-                  labelText="search"
+                  labelText="Search"
                   rightIcon={<FaSearch />}
                   onChange={handleSearch}
                   value={searchQuery}
-                  ref={inputRef} // Attach the ref to the input field
                 />
               </div>
               <div>
@@ -183,7 +202,7 @@ const UpdateProduct = () => {
                     <div className="grid gap-1">
                       <CustomButton
                         onClick={() => {
-                          openModal(item._id);
+                          openModal(item);
                         }}
                         text="UPDATE"
                         textColor="text-black"
@@ -271,8 +290,8 @@ const UpdateProduct = () => {
         <ProductUpdate
           closeModal={closeModal}
           isOpen={isModalOpen}
-          loadProduct={loadProduct}
           productId={selectedProductId}
+          productDetails={selectedProductDetails} // Pass product details
         />
       )}
     </DefaultLayout>

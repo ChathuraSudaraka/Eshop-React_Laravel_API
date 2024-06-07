@@ -30,29 +30,42 @@ const customStyles = {
   },
 };
 
-const ProductUpdate = ({ closeModal, isOpen, productId }) => {
-  const [productName, setProductName] = useState("");
-  const [productDescription, setProductDescription] = useState("");
-  const [productPrice, setProductPrice] = useState("");
-  const [productColor, setProductColor] = useState("");
-  const [files, setFiles] = useState([]);
-  const [productQuantity, setProductQuantity] = useState("");
-  const [message, setMessage] = useState("");
+const ProductUpdate = ({ closeModal, isOpen, productId, productDetails }) => {
+  const {
+    productName: initialProductName,
+    productPrice: initialProductPrice,
+    productDescription: initialProductDescription,
+    productColor: initialProductColor,
+    files: initialFiles,
+    productQuantity: initialProductQuantity,
+    message,
+  } = productDetails;
+
+  const [productName, setProductName] = useState(initialProductName || "");
+  const [productDescription, setProductDescription] = useState(
+    initialProductDescription || ""
+  );
+  const [productPrice, setProductPrice] = useState(initialProductPrice || "");
+  const [productColor, setProductColor] = useState(initialProductColor || "");
+  const [files, setFiles] = useState(initialFiles || []);
+  const [productQuantity, setProductQuantity] = useState(
+    initialProductQuantity || ""
+  );
 
   const handleProductNameChange = (e) => {
-    setProductName((prevState) => e.target.value);
+    setProductName(e.target.value);
   };
 
   const handleProductDescriptionChange = (e) => {
-    setProductDescription((prevState) => e.target.value);
+    setProductDescription(e.target.value);
   };
 
   const handleProductPriceChange = (e) => {
-    setProductPrice((prevState) => e.target.value);
+    setProductPrice(e.target.value);
   };
 
   const handleProductColorChange = (e) => {
-    setProductColor((prevState) => e.target.value);
+    setProductColor(e.target.value);
   };
 
   const handleFile = (e) => {
@@ -89,32 +102,8 @@ const ProductUpdate = ({ closeModal, isOpen, productId }) => {
   };
 
   const handleProductQuantityChange = (e) => {
-    setProductQuantity((prevState) => e.target.value);
+    setProductQuantity(e.target.value);
   };
-
-  const loadProduct = async () => {
-    try {
-      const response = await useApiFetch({
-        method: "GET",
-        url: "/product-load",
-        success: (data) => {
-          setProductName(data.products[0].productName);
-          setProductDescription(data.products[0].description);
-          setProductPrice(data.products[0].price);
-          setProductColor(data.products[0].color);
-          setProductQuantity(data.products[0].qty);
-          setFiles(data.products[0].product_img || []);
-          console.log("Data fetched successfully:", data);
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadProduct();
-  }, []);
 
   const handleUpdate = async () => {
     try {
@@ -143,7 +132,6 @@ const ProductUpdate = ({ closeModal, isOpen, productId }) => {
             progress: undefined,
             theme: "light",
           });
-          loadProduct();
           closeModal();
           console.log("Product updated successfully:", data);
         },
